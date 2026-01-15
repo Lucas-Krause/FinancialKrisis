@@ -6,9 +6,10 @@ namespace FinancialKrisis.Application.Services;
 
 public class CreateAccountService(IAccountRepository pRepository)
 {
-    public async Task ExecuteAsync(CreateAccountDTO pCreateAccountDto)
+    public async Task<Account> ExecuteAsync(CreateAccountDTO pCreateAccountDto)
     {
         var account = new Account(pCreateAccountDto.Name, pCreateAccountDto.InitialBalance);
         await pRepository.AddAsync(account);
+        return account;
     }
 }

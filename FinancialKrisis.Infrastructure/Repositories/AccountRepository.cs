@@ -25,6 +25,14 @@ public class AccountRepository(FinancialKrisisDbContext pContext) : IAccountRepo
         return await pContext.Accounts.FindAsync(pId);
     }
 
+    public async Task<Account> GetByIdOrThrowAsync(Guid pId)
+    {
+        Account? account = await pContext.Accounts.FindAsync(pId);
+
+        return account is null ? throw new InvalidOperationException("Account not found.") : account;
+    }
+
+
     public async Task UpdateAsync(Account pAccount)
     {
         pContext.Accounts.Update(pAccount);
