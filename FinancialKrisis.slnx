@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+  </Folder>
+  <Project Path="FinancialKrisis.Application/FinancialKrisis.Application.csproj" />
+  <Project Path="FinancialKrisis.Domain/FinancialKrisis.Domain.csproj" />
+  <Project Path="FinancialKrisis.Infrastructure/FinancialKrisis.Infrastructure.csproj" />
+  <Project Path="FinancialKrisis.Tests/FinancialKrisis.Tests.csproj" Id="3d9a8e87-25ae-4f12-ae23-460b1006f35a" />
+  <Project Path="FinancialKrisis.Wpf/FinancialKrisis.Wpf.csproj" />
+</Solution>
