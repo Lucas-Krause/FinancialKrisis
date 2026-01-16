@@ -42,7 +42,13 @@ public static class TestServiceProviderFactory
             .AddScoped<GetAllSubCategoriesService>()
             .AddScoped<GetSubCategoryByIdService>()
             .AddScoped<UpdateSubCategoryService>()
-            .AddScoped<DeactivateSubCategoryService>();
+            .AddScoped<DeactivateSubCategoryService>()
+            .AddScoped<ITransactionRepository, TransactionRepository>()
+            .AddScoped<CreateTransactionService>()
+            .AddScoped<UpdateTransactionService>()
+            .AddScoped<DeleteTransactionService>()
+            .AddScoped<GetTransactionByIdService>()
+            .AddScoped<GetAllTransactionsService>();
 
         ServiceProvider provider = services.BuildServiceProvider();
 

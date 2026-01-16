@@ -9,4 +9,5 @@ public class FinancialKrisisDbContext(DbContextOptions<FinancialKrisisDbContext>
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Payee> Payees => Set<Payee>();
     public DbSet<SubCategory> SubCategories => Set<SubCategory>();
+    public DbSet<Transaction> Transactions => Set<Transaction>();
 }
