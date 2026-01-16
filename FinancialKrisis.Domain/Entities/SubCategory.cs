@@ -14,6 +14,8 @@ public class SubCategory
 
     public SubCategory(string name, Category category)
     {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("SubCategory name is required.");
         Id = Guid.NewGuid();
         Name = name;
         Category = category ?? throw new ArgumentNullException(nameof(category));
@@ -23,6 +25,8 @@ public class SubCategory
 
     public void Rename(string newName)
     {
+        if (string.IsNullOrWhiteSpace(newName))
+            throw new ArgumentException("SubCategory name is required.");
         Name = newName;
     }
 

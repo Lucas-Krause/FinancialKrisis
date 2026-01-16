@@ -12,6 +12,13 @@ public class Account
 
     public Account(string pName, string pAccountNumber, decimal pInitialBalance)
     {
+        if (string.IsNullOrWhiteSpace(pName))
+            throw new ArgumentException("Account name is required.");
+        if (string.IsNullOrWhiteSpace(pAccountNumber))
+            throw new ArgumentException("Account number is required.");
+        if (pInitialBalance < 0)
+            throw new ArgumentException("Initial balance cannot be negative.");
+
         Id = Guid.NewGuid();
         Name = pName;
         AccountNumber = pAccountNumber;
@@ -21,11 +28,15 @@ public class Account
 
     public void Rename(string pNewName)
     {
+        if (string.IsNullOrWhiteSpace(pNewName))
+            throw new ArgumentException("Account name is required.");
         Name = pNewName;
     }
 
     public void ChangeAccountNumber(string pNewAccountNumber)
     {
+        if (string.IsNullOrWhiteSpace(pNewAccountNumber))
+            throw new ArgumentException("Account number is required.");
         AccountNumber = pNewAccountNumber;
     }
 

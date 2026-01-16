@@ -10,6 +10,8 @@ public class Category
 
     public Category(string pName)
     {
+        if (string.IsNullOrWhiteSpace(pName))
+            throw new ArgumentException("Category name is required.");
         Id = Guid.NewGuid();
         Name = pName;
         IsActive = true;
@@ -17,6 +19,8 @@ public class Category
 
     public void Rename(string pNewName)
     {
+        if (string.IsNullOrWhiteSpace(pNewName))
+            throw new ArgumentException("Category name is required.");
         Name = pNewName;
     }
 

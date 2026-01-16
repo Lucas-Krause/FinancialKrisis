@@ -5,33 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FinancialKrisis.Infrastructure.Repositories;
 
-public class TransactionRepository(FinancialKrisisDbContext pContext) : ITransactionRepository
+public class TransactionRepository(FinancialKrisisDbContext pContext) : BaseRepository<Transaction>(pContext), ITransactionRepository
 {
-    public async Task AddAsync(Transaction pTransaction)
+    public override async Task<Transaction?> GetByIdAsync(Guid pId)
     {
-        pContext.Transactions.Add(pTransaction);
-        await pContext.SaveChangesAsync();
-    }
-
-    public async Task UpdateAsync(Transaction pTransaction)
-    {
-        pContext.Transactions.Update(pTransaction);
-        await pContext.SaveChangesAsync();
-    }
-
-    public async Task DeleteAsync(Guid pId)
-    {
-        Transaction? transaction = await pContext.Transactions.FindAsync(pId);
-        if (transaction is not null)
-        {
-            pContext.Transactions.Remove(transaction);
-            await pContext.SaveChangesAsync();
-        }
-    }
-
-    public async Task<Transaction?> GetByIdAsync(Guid pId)
-    {
-        return await pContext.Transactions
+        return await _dbSet
             .Include(t => t.Account)
             .Include(t => t.Payee)
             .Include(t => t.Category)
@@ -39,14 +17,9 @@ public class TransactionRepository(FinancialKrisisDbContext pContext) : ITransac
             .FirstOrDefaultAsync(t => t.Id == pId);
     }
 
-    public async Task<Transaction> GetByIdOrThrowAsync(Guid pId)
+    public override async Task<IReadOnlyList<Transaction>> GetAllAsync()
     {
-        return await GetByIdAsync(pId) ?? throw new InvalidOperationException("Transaction not found.");
-    }
-
-    public async Task<IReadOnlyList<Transaction>> GetAllAsync()
-    {
-        return await pContext.Transactions
+        return await _dbSet 
             .Include(t => t.Account)
             .Include(t => t.Payee)
             .Include(t => t.Category)

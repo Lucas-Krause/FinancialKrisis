@@ -10,6 +10,8 @@ public class Payee
 
     public Payee(string pName)
     {
+        if (string.IsNullOrWhiteSpace(pName))
+            throw new ArgumentException("Payee name is required.");
         Id = Guid.NewGuid();
         Name = pName;
         IsActive = true;
@@ -17,6 +19,8 @@ public class Payee
 
     public void Rename(string pNewName)
     {
+        if (string.IsNullOrWhiteSpace(pNewName))
+            throw new ArgumentException("Payee name is required.");
         Name = pNewName;
     }
 

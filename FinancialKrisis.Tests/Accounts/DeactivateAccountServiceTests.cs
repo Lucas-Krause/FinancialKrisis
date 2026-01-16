@@ -18,7 +18,7 @@ public class DeactivateAccountServiceTests
         GetAccountByIdService getAccountByIdService = scope.ServiceProvider.GetRequiredService<GetAccountByIdService>();
         DeactivateAccountService deactivateAccountService = scope.ServiceProvider.GetRequiredService<DeactivateAccountService>();
 
-        Account createdAccount = await createAccountService.ExecuteAsync(new CreateAccountDTO { Name = "Test Account", InitialBalance = 100 });
+        Account createdAccount = await createAccountService.ExecuteAsync(new CreateAccountDTO { Name = "Test Account", InitialBalance = 100, AccountNumber = "123" });
 
         await deactivateAccountService.ExecuteAsync(createdAccount.Id);
 
