@@ -1,14 +1,14 @@
-﻿using FinancialKrisis.Domain.Entities;
+﻿using FinancialKrisis.Application.DTOs;
+using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Repositories;
-using FinancialKrisis.Application.DTOs;
 
 namespace FinancialKrisis.Application.Services;
 
 public class CreateAccountService(IAccountRepository pRepository)
 {
-    public async Task<Account> ExecuteAsync(CreateAccountDTO pCreateAccountDto)
+    public async Task<Account> ExecuteAsync(CreateAccountDTO pCreateAccountDTO)
     {
-        var account = new Account(pCreateAccountDto.Name, pCreateAccountDto.InitialBalance);
+        var account = new Account(pCreateAccountDTO.Name, pCreateAccountDTO.AccountNumber, pCreateAccountDTO.InitialBalance);
         await pRepository.AddAsync(account);
         return account;
     }

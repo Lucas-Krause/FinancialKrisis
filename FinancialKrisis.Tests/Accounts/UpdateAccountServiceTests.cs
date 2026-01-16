@@ -17,9 +17,10 @@ public class UpdateAccountServiceTests
         CreateAccountService createAccountService = scope.ServiceProvider.GetRequiredService<CreateAccountService>();
         UpdateAccountService updateAccountService = scope.ServiceProvider.GetRequiredService<UpdateAccountService>();
 
-        Account createdAccount = await createAccountService.ExecuteAsync(new CreateAccountDTO { Name = "Old Name", InitialBalance = 100 });
-        Account updatedAccount = await updateAccountService.ExecuteAsync(new UpdateAccountDTO { Id = createdAccount.Id, Name = "New Name" });
+        Account createdAccount = await createAccountService.ExecuteAsync(new CreateAccountDTO { Name = "Old Name", AccountNumber = "111", InitialBalance = 100 });
+        Account updatedAccount = await updateAccountService.ExecuteAsync(new UpdateAccountDTO { Id = createdAccount.Id, Name = "New Name", AccountNumber = "222" });
 
         Assert.Equal("New Name", updatedAccount.Name);
+        Assert.Equal("222", updatedAccount.AccountNumber);
     }
 }

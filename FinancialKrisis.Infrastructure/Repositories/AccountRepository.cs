@@ -13,11 +13,10 @@ public class AccountRepository(FinancialKrisisDbContext pContext) : IAccountRepo
         await pContext.SaveChangesAsync();
     }
 
-    public async Task<IReadOnlyList<Account>> GetAllAsync()
+    public async Task UpdateAsync(Account pAccount)
     {
-        return await pContext.Accounts
-            .AsNoTracking()
-            .ToListAsync();
+        pContext.Accounts.Update(pAccount);
+        await pContext.SaveChangesAsync();
     }
 
     public async Task<Account?> GetByIdAsync(Guid pId)
@@ -27,24 +26,13 @@ public class AccountRepository(FinancialKrisisDbContext pContext) : IAccountRepo
 
     public async Task<Account> GetByIdOrThrowAsync(Guid pId)
     {
-        Account? account = await pContext.Accounts.FindAsync(pId);
-
-        return account is null ? throw new InvalidOperationException("Account not found.") : account;
+        return await pContext.Accounts.FindAsync(pId) ?? throw new InvalidOperationException("Account not found.");
     }
 
-
-    public async Task UpdateAsync(Account pAccount)
+    public async Task<IReadOnlyList<Account>> GetAllAsync()
     {
-        pContext.Accounts.Update(pAccount);
-        await pContext.SaveChangesAsync();
-    }
-
-    public async Task DeleteAsync(Guid pId)
-    {
-        Account? account = await pContext.Accounts.FindAsync(pId);
-        if (account is null) return;
-
-        pContext.Accounts.Remove(account);
-        await pContext.SaveChangesAsync();
+        return await pContext.Accounts
+            .AsNoTracking()
+            .ToListAsync();
     }
 }

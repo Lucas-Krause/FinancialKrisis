@@ -16,9 +16,10 @@ public class CreateAccountServiceTests
 
         CreateAccountService createAccountService = scope.ServiceProvider.GetRequiredService<CreateAccountService>();
 
-        Account createdAccount = await createAccountService.ExecuteAsync(new CreateAccountDTO { Name = "Test Account", InitialBalance = 500 });
+        Account createdAccount = await createAccountService.ExecuteAsync(new CreateAccountDTO { Name = "Test Account", AccountNumber = "123456", InitialBalance = 500 });
 
         Assert.Equal("Test Account", createdAccount.Name);
+        Assert.Equal("123456", createdAccount.AccountNumber);
         Assert.Equal(500, createdAccount.InitialBalance);
         Assert.True(createdAccount.IsActive);
     }

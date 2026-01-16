@@ -10,6 +10,7 @@ public class UpdateAccountService(IAccountRepository pRepository)
     {
         Account account = await pRepository.GetByIdOrThrowAsync(pUpdateAccountDTO.Id);
         account.Rename(pUpdateAccountDTO.Name);
+        account.ChangeAccountNumber(pUpdateAccountDTO.AccountNumber);
         await pRepository.UpdateAsync(account);
         return account;
     }

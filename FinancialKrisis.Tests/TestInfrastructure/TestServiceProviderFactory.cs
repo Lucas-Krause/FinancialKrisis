@@ -24,7 +24,25 @@ public static class TestServiceProviderFactory
             .AddScoped<GetAllAccountsService>()
             .AddScoped<GetAccountByIdService>()
             .AddScoped<UpdateAccountService>()
-            .AddScoped<DeactivateAccountService>();
+            .AddScoped<DeactivateAccountService>()
+            .AddScoped<ICategoryRepository, CategoryRepository>()
+            .AddScoped<CreateCategoryService>()
+            .AddScoped<GetAllCategoriesService>()
+            .AddScoped<GetCategoryByIdService>()
+            .AddScoped<UpdateCategoryService>()
+            .AddScoped<DeactivateCategoryService>()
+            .AddScoped<IPayeeRepository, PayeeRepository>()
+            .AddScoped<CreatePayeeService>()
+            .AddScoped<GetAllPayeesService>()
+            .AddScoped<GetPayeeByIdService>()
+            .AddScoped<UpdatePayeeService>()
+            .AddScoped<DeactivatePayeeService>()
+            .AddScoped<ISubCategoryRepository, SubCategoryRepository>()
+            .AddScoped<CreateSubCategoryService>()
+            .AddScoped<GetAllSubCategoriesService>()
+            .AddScoped<GetSubCategoryByIdService>()
+            .AddScoped<UpdateSubCategoryService>()
+            .AddScoped<DeactivateSubCategoryService>();
 
         ServiceProvider provider = services.BuildServiceProvider();
 
