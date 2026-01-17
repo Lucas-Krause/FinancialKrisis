@@ -1,6 +1,8 @@
-﻿namespace FinancialKrisis.Domain.Entities;
+﻿using FinancialKrisis.Domain.Common;
 
-public class Category
+namespace FinancialKrisis.Domain.Entities;
+
+public class Category : IActivatable
 {
     public Guid Id { get; private set; }
     public string Name { get; private set; } = null!;

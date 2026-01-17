@@ -2,11 +2,11 @@ using FinancialKrisis.Domain.Entities;
 
 namespace FinancialKrisis.Domain.Repositories;
 
-public interface ISubCategoryRepository
+public interface ISubcategoryRepository
 {
-    Task AddAsync(SubCategory subCategory);
-    Task UpdateAsync(SubCategory subCategory);
-    Task<SubCategory?> GetByIdAsync(Guid id);
-    Task<SubCategory> GetByIdOrThrowAsync(Guid id);
-    Task<IReadOnlyList<SubCategory>> GetAllAsync();
+    Task AddAsync(Subcategory subcategory);
+    Task UpdateAsync(Subcategory subcategory);
+    Task<Subcategory?> GetByIdAsync(Guid id);
+    Task<Subcategory> GetByIdOrThrowAsync(Guid id);
+    Task<IReadOnlyList<Subcategory>> GetAllAsync();
 }

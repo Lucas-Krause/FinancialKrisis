@@ -1,12 +1,14 @@
 using FinancialKrisis.Application.DTOs;
 using FinancialKrisis.Application.Services;
 using FinancialKrisis.Domain.Entities;
+using FinancialKrisis.Domain.Enums;
+using FinancialKrisis.Domain.Exceptions;
 using FinancialKrisis.Tests.TestInfrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FinancialKrisis.Tests.SubCategories;
 
-public class UpdateSubCategoryServiceTests
+public class UpdateSubcategoryServiceTests
 {
     [Fact]
     public async Task NormalSituation_ShouldUpdateNameAndCategorySuccessfully()
@@ -15,18 +17,18 @@ public class UpdateSubCategoryServiceTests
         using IServiceScope scope = provider.CreateScope();
 
         CreateCategoryService createCategoryService = scope.ServiceProvider.GetRequiredService<CreateCategoryService>();
-        CreateSubCategoryService createSubCategoryService = scope.ServiceProvider.GetRequiredService<CreateSubCategoryService>();
-        UpdateSubCategoryService updateSubCategoryService = scope.ServiceProvider.GetRequiredService<UpdateSubCategoryService>();
+        CreateSubcategoryService createSubcategoryService = scope.ServiceProvider.GetRequiredService<CreateSubcategoryService>();
+        UpdateSubcategoryService updateSubcategoryService = scope.ServiceProvider.GetRequiredService<UpdateSubcategoryService>();
 
         Category category1 = await createCategoryService.ExecuteAsync(new CreateCategoryDTO { Name = "Category 1" });
         Category category2 = await createCategoryService.ExecuteAsync(new CreateCategoryDTO { Name = "Category 2" });
-        SubCategory subCategory = await createSubCategoryService.ExecuteAsync(new CreateSubCategoryDTO { Name = "SubCat", CategoryId = category1.Id });
+        Subcategory subcategory = await createSubcategoryService.ExecuteAsync(new CreateSubcategoryDTO { Name = "SubCat", CategoryId = category1.Id });
 
-        SubCategory updatedSubCategory = await updateSubCategoryService.ExecuteAsync(new UpdateSubCategoryDTO { Id = subCategory.Id, Name = "Updated Name", CategoryId = category2.Id });
+        Subcategory updatedSubcategory = await updateSubcategoryService.ExecuteAsync(new UpdateSubcategoryDTO { Id = subcategory.Id, Name = "Updated Name", CategoryId = category2.Id });
 
-        Assert.Equal("Updated Name", updatedSubCategory.Name);
-        Assert.Equal(category2.Id, updatedSubCategory.CategoryId);
-        Assert.Equal("Category 2", updatedSubCategory.Category.Name);
+        Assert.Equal("Updated Name", updatedSubcategory.Name);
+        Assert.Equal(category2.Id, updatedSubcategory.CategoryId);
+        Assert.Equal("Category 2", updatedSubcategory.Category.Name);
     }
 
     [Fact]
@@ -36,16 +38,18 @@ public class UpdateSubCategoryServiceTests
         using IServiceScope scope = provider.CreateScope();
 
         CreateCategoryService createCategoryService = scope.ServiceProvider.GetRequiredService<CreateCategoryService>();
-        CreateSubCategoryService createSubCategoryService = scope.ServiceProvider.GetRequiredService<CreateSubCategoryService>();
-        UpdateSubCategoryService updateSubCategoryService = scope.ServiceProvider.GetRequiredService<UpdateSubCategoryService>();
+        CreateSubcategoryService createSubcategoryService = scope.ServiceProvider.GetRequiredService<CreateSubcategoryService>();
+        UpdateSubcategoryService updateSubcategoryService = scope.ServiceProvider.GetRequiredService<UpdateSubcategoryService>();
 
         Category category = await createCategoryService.ExecuteAsync(new CreateCategoryDTO { Name = "Category" });
-        SubCategory subCategory = await createSubCategoryService.ExecuteAsync(new CreateSubCategoryDTO { Name = "SubCat", CategoryId = category.Id });
+        Subcategory subcategory = await createSubcategoryService.ExecuteAsync(new CreateSubcategoryDTO { Name = "SubCat", CategoryId = category.Id });
         var nonExistentCategoryId = Guid.NewGuid();
 
-        await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+        DomainRuleException ex = await Assert.ThrowsAsync<DomainRuleException>(async () =>
         {
-            await updateSubCategoryService.ExecuteAsync(new UpdateSubCategoryDTO { Id = subCategory.Id, Name = "Any", CategoryId = nonExistentCategoryId });
+            await updateSubcategoryService.ExecuteAsync(new UpdateSubcategoryDTO { Id = subcategory.Id, Name = "Any", CategoryId = nonExistentCategoryId });
         });
+
+        Assert.Equal(DomainRuleErrorCode.EntityNotFound, ex.ErrorCode);
     }
 }

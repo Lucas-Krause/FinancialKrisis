@@ -3,12 +3,12 @@ using FinancialKrisis.Domain.Repositories;
 
 namespace FinancialKrisis.Application.Services;
 
-public class DeactivateSubCategoryService(ISubCategoryRepository pSubCategoryRepository)
+public class DeactivateSubcategoryService(ISubcategoryRepository pSubcategoryRepository)
 {
-    public async Task ExecuteAsync(Guid pSubCategoryId)
+    public async Task ExecuteAsync(Guid pSubcategoryId)
     {
-        SubCategory subCategory = await pSubCategoryRepository.GetByIdOrThrowAsync(pSubCategoryId);
-        subCategory.Deactivate();
-        await pSubCategoryRepository.UpdateAsync(subCategory);
+        Subcategory subcategory = await pSubcategoryRepository.GetByIdOrThrowAsync(pSubcategoryId);
+        subcategory.Deactivate();
+        await pSubcategoryRepository.UpdateAsync(subcategory);
     }
 }

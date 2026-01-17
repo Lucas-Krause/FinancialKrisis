@@ -3,10 +3,10 @@ using FinancialKrisis.Domain.Repositories;
 
 namespace FinancialKrisis.Application.Services;
 
-public class GetAllSubCategoriesService(ISubCategoryRepository pSubCategoryRepository)
+public class GetAllSubCategoriesService(ISubcategoryRepository pSubcategoryRepository)
 {
-    public async Task<IReadOnlyList<SubCategory>> ExecuteAsync()
+    public async Task<IReadOnlyList<Subcategory>> ExecuteAsync()
     {
-        return await pSubCategoryRepository.GetAllAsync();
+        return await pSubcategoryRepository.GetAllAsync();
     }
 }

@@ -1,18 +1,26 @@
 using FinancialKrisis.Application.DTOs;
+using FinancialKrisis.Application.Helpers;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Repositories;
 
 namespace FinancialKrisis.Application.Services;
 
-public class UpdateSubCategoryService(ISubCategoryRepository pSubCategoryRepository, ICategoryRepository pCategoryRepository)
+public class UpdateSubcategoryService(ISubcategoryRepository pSubcategoryRepository, ICategoryRepository pCategoryRepository)
 {
-    public async Task<SubCategory> ExecuteAsync(UpdateSubCategoryDTO pUpdateSubCategoryDTO)
+    public async Task<Subcategory> ExecuteAsync(UpdateSubcategoryDTO pUpdateSubcategoryDTO)
     {
-        SubCategory subCategory = await pSubCategoryRepository.GetByIdOrThrowAsync(pUpdateSubCategoryDTO.Id);
-        subCategory.Rename(pUpdateSubCategoryDTO.Name);
-        Category category = await pCategoryRepository.GetByIdOrThrowAsync(pUpdateSubCategoryDTO.CategoryId);
-        subCategory.ChangeCategory(category);
-        await pSubCategoryRepository.UpdateAsync(subCategory);
-        return subCategory;
+        try
+        {
+            Subcategory subcategory = await pSubcategoryRepository.GetByIdOrThrowAsync(pUpdateSubcategoryDTO.Id);
+            subcategory.Rename(pUpdateSubcategoryDTO.Name);
+            Category category = await pCategoryRepository.GetByIdOrThrowAsync(pUpdateSubcategoryDTO.CategoryId);
+            subcategory.ChangeCategory(category);
+            await pSubcategoryRepository.UpdateAsync(subcategory);
+            return subcategory;
+        }
+        catch (Exception pEx)
+        {
+            throw ErrorMessageResolver.Resolve(pEx);
+        }
     }
 }

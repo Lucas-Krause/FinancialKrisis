@@ -1,6 +1,8 @@
-﻿namespace FinancialKrisis.Domain.Entities;
+﻿using FinancialKrisis.Domain.Common;
 
-public class Account
+namespace FinancialKrisis.Domain.Entities;
+
+public class Account : IActivatable
 {
     public Guid Id { get; private set; }
     public string Name { get; private set; } = null!;

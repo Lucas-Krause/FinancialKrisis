@@ -6,26 +6,26 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FinancialKrisis.Tests.SubCategories;
 
-public class DeactivateSubCategoryServiceTests
+public class DeactivateSubcategoryServiceTests
 {
     [Fact]
-    public async Task NormalSituation_ShouldDeactivateSubCategorySuccessfully()
+    public async Task NormalSituation_ShouldDeactivateSubcategorySuccessfully()
     {
         ServiceProvider provider = TestServiceProviderFactory.Create();
         using IServiceScope scope = provider.CreateScope();
 
         CreateCategoryService createCategoryService = scope.ServiceProvider.GetRequiredService<CreateCategoryService>();
-        CreateSubCategoryService createSubCategoryService = scope.ServiceProvider.GetRequiredService<CreateSubCategoryService>();
-        GetSubCategoryByIdService getSubCategoryByIdService = scope.ServiceProvider.GetRequiredService<GetSubCategoryByIdService>();
-        DeactivateSubCategoryService deactivateSubCategoryService = scope.ServiceProvider.GetRequiredService<DeactivateSubCategoryService>();
+        CreateSubcategoryService createSubcategoryService = scope.ServiceProvider.GetRequiredService<CreateSubcategoryService>();
+        GetSubcategoryByIdService getSubcategoryByIdService = scope.ServiceProvider.GetRequiredService<GetSubcategoryByIdService>();
+        DeactivateSubcategoryService deactivateSubcategoryService = scope.ServiceProvider.GetRequiredService<DeactivateSubcategoryService>();
 
         Category category = await createCategoryService.ExecuteAsync(new CreateCategoryDTO { Name = "Category" });
-        SubCategory subCategory = await createSubCategoryService.ExecuteAsync(new CreateSubCategoryDTO { Name = "SubCat", CategoryId = category.Id });
+        Subcategory subcategory = await createSubcategoryService.ExecuteAsync(new CreateSubcategoryDTO { Name = "SubCat", CategoryId = category.Id });
 
-        await deactivateSubCategoryService.ExecuteAsync(subCategory.Id);
+        await deactivateSubcategoryService.ExecuteAsync(subcategory.Id);
 
-        SubCategory? subCategoryAfterDeactivation = await getSubCategoryByIdService.ExecuteAsync(subCategory.Id);
-        Assert.NotNull(subCategoryAfterDeactivation);
-        Assert.False(subCategoryAfterDeactivation.IsActive);
+        Subcategory? subcategoryAfterDeactivation = await getSubcategoryByIdService.ExecuteAsync(subcategory.Id);
+        Assert.NotNull(subcategoryAfterDeactivation);
+        Assert.False(subcategoryAfterDeactivation.IsActive);
     }
 }

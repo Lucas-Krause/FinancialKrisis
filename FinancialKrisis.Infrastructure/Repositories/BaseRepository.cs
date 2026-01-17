@@ -1,5 +1,9 @@
+using FinancialKrisis.Domain.Enums;
+using FinancialKrisis.Domain.Exceptions;
+using FinancialKrisis.Infrastructure.Errors;
 using FinancialKrisis.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 
 namespace FinancialKrisis.Infrastructure.Repositories;
 
@@ -7,26 +11,26 @@ public class BaseRepository<TEntity>(FinancialKrisisDbContext pContext) where TE
 {
     protected readonly DbSet<TEntity> _dbSet = pContext.Set<TEntity>();
 
-    public virtual async Task AddAsync(TEntity entity)
+    public virtual async Task AddAsync(TEntity pEntity)
     {
-        _dbSet.Add(entity);
+        _dbSet.Add(pEntity);
         await pContext.SaveChangesAsync();
     }
 
-    public virtual async Task UpdateAsync(TEntity entity)
+    public virtual async Task UpdateAsync(TEntity pEntity)
     {
-        _dbSet.Update(entity);
+        _dbSet.Update(pEntity);
         await pContext.SaveChangesAsync();
     }
 
-    public virtual async Task<TEntity?> GetByIdAsync(Guid id)
+    public virtual async Task<TEntity?> GetByIdAsync(Guid pId)
     {
-        return await _dbSet.FindAsync(id);
+        return await _dbSet.FindAsync(pId);
     }
 
-    public virtual async Task<TEntity> GetByIdOrThrowAsync(Guid id)
+    public virtual async Task<TEntity> GetByIdOrThrowAsync(Guid pId)
     {
-        return await GetByIdAsync(id) ?? throw new InvalidOperationException($"{typeof(TEntity).Name} not found.");
+        return await GetByIdAsync(pId) ?? throw new DomainRuleException(DomainRuleErrorCode.EntityNotFound, typeof(TEntity));
     }
 
     public virtual async Task<IReadOnlyList<TEntity>> GetAllAsync()

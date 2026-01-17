@@ -1,6 +1,8 @@
+using FinancialKrisis.Domain.Common;
+
 namespace FinancialKrisis.Domain.Entities;
 
-public class Payee
+public class Payee : IActivatable
 {
     public Guid Id { get; private set; }
     public string Name { get; private set; } = null!;

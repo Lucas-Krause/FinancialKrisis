@@ -1,16 +1,24 @@
 using FinancialKrisis.Application.DTOs;
+using FinancialKrisis.Application.Helpers;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Repositories;
 
 namespace FinancialKrisis.Application.Services;
 
-public class CreateSubCategoryService(ISubCategoryRepository pSubCategoryRepository, ICategoryRepository pCategoryRepository)
+public class CreateSubcategoryService(ISubcategoryRepository pSubcategoryRepository, ICategoryRepository pCategoryRepository)
 {
-    public async Task<SubCategory> ExecuteAsync(CreateSubCategoryDTO pCreateSubCategoryDTO)
+    public async Task<Subcategory> ExecuteAsync(CreateSubcategoryDTO pCreateSubcategoryDTO)
     {
-        Category category = await pCategoryRepository.GetByIdOrThrowAsync(pCreateSubCategoryDTO.CategoryId);
-        var subCategory = new SubCategory(pCreateSubCategoryDTO.Name, category);
-        await pSubCategoryRepository.AddAsync(subCategory);
-        return subCategory;
+        try
+        {
+            Category category = await pCategoryRepository.GetByIdOrThrowAsync(pCreateSubcategoryDTO.CategoryId);
+            var subcategory = new Subcategory(pCreateSubcategoryDTO.Name, category);
+            await pSubcategoryRepository.AddAsync(subcategory);
+            return subcategory;
+        }
+        catch (Exception pEx)
+        {
+            throw ErrorMessageResolver.Resolve(pEx);
+        }
     }
 }

@@ -8,6 +8,6 @@ public class UpdateTransactionDTO
     public Guid AccountId { get; set; }
     public Guid? PayeeId { get; set; }
     public Guid? CategoryId { get; set; }
-    public Guid? SubCategoryId { get; set; }
+    public Guid? SubcategoryId { get; set; }
     public decimal Amount { get; set; }
 }

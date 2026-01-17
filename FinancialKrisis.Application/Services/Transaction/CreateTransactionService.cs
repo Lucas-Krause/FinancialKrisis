@@ -1,4 +1,7 @@
 using FinancialKrisis.Application.DTOs;
+using FinancialKrisis.Application.Enums;
+using FinancialKrisis.Application.Exceptions;
+using FinancialKrisis.Application.Helpers;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Repositories;
 
@@ -7,28 +10,49 @@ namespace FinancialKrisis.Application.Services;
 public class CreateTransactionService(
     ITransactionRepository pTransactionRepository,
     IAccountRepository pAccountRepository,
-    IPayeeRepository pPayeeRepository,
     ICategoryRepository pCategoryRepository,
-    ISubCategoryRepository pSubCategoryRepository)
+    ISubcategoryRepository pSubcategoryRepository,
+    IPayeeRepository pPayeeRepository)
 {
     public async Task<Transaction> ExecuteAsync(CreateTransactionDTO pCreateTransactionDTO)
     {
-        Account account = await pAccountRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.AccountId);
-        Payee? payee = pCreateTransactionDTO.PayeeId.HasValue ? await pPayeeRepository.GetByIdAsync(pCreateTransactionDTO.PayeeId.Value) : null;
-        Category? category = pCreateTransactionDTO.CategoryId.HasValue ? await pCategoryRepository.GetByIdAsync(pCreateTransactionDTO.CategoryId.Value) : null;
-        SubCategory? subCategory = pCreateTransactionDTO.SubCategoryId.HasValue ? await pSubCategoryRepository.GetByIdAsync(pCreateTransactionDTO.SubCategoryId.Value) : null;
+        try
+        {
+            await pAccountRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.AccountId);
 
-        var transaction = new Transaction(
-            pCreateTransactionDTO.Identifier,
-            pCreateTransactionDTO.Description,
-            pCreateTransactionDTO.DateTime,
-            account,
-            payee,
-            category,
-            subCategory,
-            pCreateTransactionDTO.Amount);
+            if (pCreateTransactionDTO.CategoryId.HasValue)
+                await pCategoryRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.CategoryId.Value);
 
-        await pTransactionRepository.AddAsync(transaction);
-        return transaction;
+            if (pCreateTransactionDTO.SubcategoryId.HasValue)
+            {
+                Subcategory subcategory = await pSubcategoryRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.SubcategoryId.Value);
+
+                bool subcategoryDoesntBelongToCategory = pCreateTransactionDTO.CategoryId.HasValue && subcategory.CategoryId != pCreateTransactionDTO.CategoryId.Value;
+                if (subcategoryDoesntBelongToCategory)
+                    throw new ApplicationRuleException(ApplicationRuleErrorCode.SubcategoryDoesNotBelongToCategory, typeof(Subcategory), Subcategory.Fields.Category);
+            }
+
+            if (pCreateTransactionDTO.PayeeId.HasValue)
+                await pPayeeRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.PayeeId.Value);
+
+            Transaction transaction = new(
+                pCreateTransactionDTO.AccountId,
+                pCreateTransactionDTO.Direction,
+                pCreateTransactionDTO.Amount,
+                pCreateTransactionDTO.DateTime,
+                pCreateTransactionDTO.CategoryId,
+                pCreateTransactionDTO.SubcategoryId,
+                pCreateTransactionDTO.PayeeId,
+                pCreateTransactionDTO.Identifier,
+                pCreateTransactionDTO.Description);
+
+            await pTransactionRepository.AddAsync(transaction);
+
+            return transaction;
+        }
+        catch (Exception pEx)
+        {
+            throw ErrorMessageResolver.Resolve(pEx);
+        }
     }
 }

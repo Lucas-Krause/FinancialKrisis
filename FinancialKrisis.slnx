@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/BackEnd/">
     <Project Path="FinancialKrisis.Application/FinancialKrisis.Application.csproj" />
+    <Project Path="FinancialKrisis.Common/FinancialKrisis.Common.csproj" Id="7fd30bb2-19af-443e-a768-9efb24a5667c" />
     <Project Path="FinancialKrisis.Domain/FinancialKrisis.Domain.csproj" />
     <Project Path="FinancialKrisis.Infrastructure/FinancialKrisis.Infrastructure.csproj" />
   </Folder>

@@ -1,84 +1,131 @@
+using FinancialKrisis.Domain.Enums;
+using FinancialKrisis.Domain.Exceptions;
+using FinancialKrisis.Domain.Identity;
+
 namespace FinancialKrisis.Domain.Entities;
 
 public class Transaction
 {
+    public static class Fields
+    {
+        public static readonly FieldKey Amount = new("Amount");
+        public static readonly FieldKey DateTime = new("DateTime");
+        public static readonly FieldKey Category = new("Category");
+        public static readonly FieldKey Subcategory = new("Subcategory");
+        public static readonly FieldKey Payee = new("Payee");
+        public static readonly FieldKey Identifier = new("Identifier");
+        public static readonly FieldKey Description = new("Description");
+        public static readonly FieldKey Direction = new("Direction");
+    }
+
     public Guid Id { get; private set; }
-    public string Identifier { get; private set; } = null!;
-    public string Description { get; private set; } = null!;
-    public DateTime DateTime { get; private set; }
+
     public Guid AccountId { get; private set; }
-    public Account Account { get; private set; } = null!;
-    public Guid? PayeeId { get; private set; }
-    public Payee? Payee { get; private set; }
     public Guid? CategoryId { get; private set; }
-    public Category? Category { get; private set; }
-    public Guid? SubCategoryId { get; private set; }
-    public SubCategory? SubCategory { get; private set; }
+    public Guid? SubcategoryId { get; private set; }
+    public Guid? PayeeId { get; private set; }
+
     public decimal Amount { get; private set; }
+    public DateTime DateTime { get; private set; }
+
+    public string? Identifier { get; private set; }
+    public string? Description { get; private set; }
+
+    public TransactionDirection Direction { get; private set; }
 
     private Transaction() { }
 
     public Transaction(
-        string pIdentifier,
-        string pDescription,
-        DateTime pDateTime,
-        Account pAccount,
-        Payee? pPayee,
-        Category? pCategory,
-        SubCategory? pSubCategory,
-        decimal pAmount)
+       Guid pAccountId,
+       TransactionDirection pDirection,
+       decimal pAmount,
+       DateTime pDateTime,
+       Guid? pCategoryId = null,
+       Guid? pSubcategoryId = null,
+       Guid? pPayeeId = null,
+       string? pIdentifier = null,
+       string? pDescription = null)
     {
+        ValidateAccountId(pAccountId);
+        ValidateDirection(pDirection);
+        ValidateAmount(pAmount);
+        ValidateDateTime(pDateTime);
+
         Id = Guid.NewGuid();
+        AccountId = pAccountId;
+        Amount = pAmount;
+        DateTime = pDateTime;
+        CategoryId = pCategoryId;
+        SubcategoryId = pSubcategoryId;
+        PayeeId = pPayeeId;
         Identifier = pIdentifier;
         Description = pDescription;
-        DateTime = pDateTime;
-        Account = pAccount ?? throw new ArgumentNullException(nameof(pAccount));
-        AccountId = pAccount.Id;
-        Payee = pPayee;
-        PayeeId = pPayee?.Id;
-        Category = pCategory;
-        CategoryId = pCategory?.Id;
-        SubCategory = pSubCategory;
-        SubCategoryId = pSubCategory?.Id;
+    }
+
+    public void UpdateCategory(Guid? pCategoryId)
+    {
+        CategoryId = pCategoryId;
+    }
+
+    public void UpdateSubcategory(Guid? pSubcategoryId)
+    {
+        SubcategoryId = pSubcategoryId;
+    }
+
+    public void UpdatePayee(Guid? pPayeeId)
+    {
+        PayeeId = pPayeeId;
+    }
+
+    public void UpdateAmount(decimal pAmount)
+    {
+        ValidateAmount(pAmount);
         Amount = pAmount;
     }
 
-    public void ChangeDescription(string pDescription)
+    public void UpdateDateTime(DateTime pDateTime)
+    {
+        ValidateDateTime(pDateTime);
+        DateTime = pDateTime;
+    }
+
+    public void UpdateIdentifier(string? pIdentifier)
+    {
+        Identifier = pIdentifier;
+    }
+
+    public void UpdateDescription(string? pDescription)
     {
         Description = pDescription;
     }
 
-    public void ChangeAmount(decimal pAmount)
+    public void UpdateDirection(TransactionDirection pDirection)
     {
-        Amount = pAmount;
+        ValidateDirection(pDirection);
+        Direction = pDirection;
     }
 
-    public void ChangeDateTime(DateTime pDateTime)
+    private static void ValidateAmount(decimal pAmount)
     {
-        DateTime = pDateTime;
+        if (pAmount < 0)
+            throw new DomainRuleException(DomainRuleErrorCode.NumberCannotBeNegative, typeof(Transaction), Fields.Amount);
     }
 
-    public void ChangeAccount(Account pAccount)
+    private static void ValidateDateTime(DateTime pDateTime)
     {
-        Account = pAccount ?? throw new ArgumentNullException(nameof(pAccount));
-        AccountId = pAccount.Id;
+        if (pDateTime == default)
+            throw new DomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Transaction), Fields.DateTime);
     }
 
-    public void ChangePayee(Payee? pPayee)
+    private static void ValidateAccountId(Guid pAccountId)
     {
-        Payee = pPayee;
-        PayeeId = pPayee?.Id;
+        if (pAccountId == Guid.Empty)
+            throw new DomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Transaction), Fields.Identifier);
     }
 
-    public void ChangeCategory(Category? pCategory)
+    private static void ValidateDirection(TransactionDirection pDirection)
     {
-        Category = pCategory;
-        CategoryId = pCategory?.Id;
-    }
-
-    public void ChangeSubCategory(SubCategory? pSubCategory)
-    {
-        SubCategory = pSubCategory;
-        SubCategoryId = pSubCategory?.Id;
+        if (!Enum.IsDefined(pDirection))
+            throw new DomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Transaction), Fields.Direction);
     }
 }

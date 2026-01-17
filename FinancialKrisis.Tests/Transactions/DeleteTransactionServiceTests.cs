@@ -14,13 +14,13 @@ public class DeleteTransactionServiceTests
         ServiceProvider provider = TestServiceProviderFactory.Create();
         using IServiceScope scope = provider.CreateScope();
 
-        CreateAccountService pCreateAccountService = scope.ServiceProvider.GetRequiredService<CreateAccountService>();
-        CreateTransactionService pCreateTransactionService = scope.ServiceProvider.GetRequiredService<CreateTransactionService>();
-        DeleteTransactionService pDeleteTransactionService = scope.ServiceProvider.GetRequiredService<DeleteTransactionService>();
-        GetTransactionByIdService pGetTransactionByIdService = scope.ServiceProvider.GetRequiredService<GetTransactionByIdService>();
+        CreateAccountService createAccountService = scope.ServiceProvider.GetRequiredService<CreateAccountService>();
+        CreateTransactionService createTransactionService = scope.ServiceProvider.GetRequiredService<CreateTransactionService>();
+        DeleteTransactionService deleteTransactionService = scope.ServiceProvider.GetRequiredService<DeleteTransactionService>();
+        GetTransactionByIdService getTransactionByIdService = scope.ServiceProvider.GetRequiredService<GetTransactionByIdService>();
 
-        Account account = await pCreateAccountService.ExecuteAsync(new CreateAccountDTO { Name = "Test Account", AccountNumber = "123", InitialBalance = 100 });
-        Transaction transaction = await pCreateTransactionService.ExecuteAsync(new CreateTransactionDTO
+        Account account = await createAccountService.ExecuteAsync(new CreateAccountDTO { Name = "Test Account", AccountNumber = "123", InitialBalance = 100 });
+        Transaction transaction = await createTransactionService.ExecuteAsync(new CreateTransactionDTO
         {
             Identifier = "T1",
             Description = "Test Transaction",
@@ -29,8 +29,8 @@ public class DeleteTransactionServiceTests
             Amount = 50
         });
 
-        await pDeleteTransactionService.ExecuteAsync(transaction.Id);
-        Transaction? deleted = await pGetTransactionByIdService.ExecuteAsync(transaction.Id);
+        await deleteTransactionService.ExecuteAsync(transaction.Id);
+        Transaction? deleted = await getTransactionByIdService.ExecuteAsync(transaction.Id);
         Assert.Null(deleted);
     }
 
@@ -40,10 +40,10 @@ public class DeleteTransactionServiceTests
         ServiceProvider provider = TestServiceProviderFactory.Create();
         using IServiceScope scope = provider.CreateScope();
 
-        DeleteTransactionService pDeleteTransactionService = scope.ServiceProvider.GetRequiredService<DeleteTransactionService>();
+        DeleteTransactionService deleteTransactionService = scope.ServiceProvider.GetRequiredService<DeleteTransactionService>();
         var nonExistentId = Guid.NewGuid();
 
         // Não deve lançar exceção
-        await pDeleteTransactionService.ExecuteAsync(nonExistentId);
+        await deleteTransactionService.ExecuteAsync(nonExistentId);
     }
 }

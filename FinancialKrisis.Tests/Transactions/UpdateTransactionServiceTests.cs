@@ -1,6 +1,8 @@
 using FinancialKrisis.Application.DTOs;
 using FinancialKrisis.Application.Services;
 using FinancialKrisis.Domain.Entities;
+using FinancialKrisis.Domain.Enums;
+using FinancialKrisis.Domain.Exceptions;
 using FinancialKrisis.Tests.TestInfrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -53,7 +55,7 @@ public class UpdateTransactionServiceTests
         UpdateTransactionService updateTransactionService = scope.ServiceProvider.GetRequiredService<UpdateTransactionService>();
         var nonExistentId = Guid.NewGuid();
 
-        await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+        DomainRuleException ex = await Assert.ThrowsAsync<DomainRuleException>(async () =>
         {
             await updateTransactionService.ExecuteAsync(new UpdateTransactionDTO
             {
@@ -64,5 +66,7 @@ public class UpdateTransactionServiceTests
                 Amount = 1
             });
         });
+
+        Assert.Equal(DomainRuleErrorCode.EntityNotFound, ex.ErrorCode);
     }
 }
