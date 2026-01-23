@@ -38,9 +38,9 @@ public class BaseRepository<TEntity>(FinancialKrisisDbContext pContext) where TE
         return await _dbSet.AsNoTracking().ToListAsync();
     }
 
-    public virtual async Task DeleteAsync(Guid id)
+    public virtual async Task DeleteAsync(Guid pId)
     {
-        TEntity? entity = await GetByIdAsync(id);
+        TEntity? entity = await GetByIdAsync(pId);
         if (entity != null)
         {
             _dbSet.Remove(entity);

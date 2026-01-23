@@ -1,3 +1,4 @@
+using FinancialKrisis.Application.Helpers;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Repositories;
 
@@ -7,6 +8,13 @@ public class GetAllTransactionsService(ITransactionRepository pTransactionReposi
 {
     public async Task<IReadOnlyList<Transaction>> ExecuteAsync()
     {
-        return await pTransactionRepository.GetAllAsync();
+        try
+        {
+            return await pTransactionRepository.GetAllAsync();
+        }
+        catch (Exception pEx)
+        {
+            throw ErrorMessageResolver.Resolve(pEx);
+        }
     }
 }

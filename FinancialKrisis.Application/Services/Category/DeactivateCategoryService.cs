@@ -1,14 +1,22 @@
-﻿using FinancialKrisis.Domain.Entities;
+﻿using FinancialKrisis.Application.Helpers;
+using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Repositories;
 
 namespace FinancialKrisis.Application.Services;
 
-public class DeactivateCategoryService(ICategoryRepository pRepository)
+public class DeactivateCategoryService(ICategoryRepository pCategoryRepository, ISubcategoryRepository pSubcategoryRepository)
 {
     public async Task ExecuteAsync(Guid pCategoryId)
     {
-        Category category = await pRepository.GetByIdOrThrowAsync(pCategoryId);
-        category.Deactivate();
-        await pRepository.UpdateAsync(category);
+        try
+        {
+            Category category = await pCategoryRepository.GetByIdOrThrowAsync(pCategoryId);
+            category.Deactivate();
+            await pCategoryRepository.UpdateAsync(category);
+        }
+        catch (Exception pEx)
+        {
+            throw ErrorMessageResolver.Resolve(pEx);
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FinancialKrisis.Application.DTOs;
+using FinancialKrisis.Application.Helpers;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Repositories;
 
@@ -8,9 +9,16 @@ public class UpdateCategoryService(ICategoryRepository pRepository)
 {
     public async Task<Category> ExecuteAsync(UpdateCategoryDTO pUpdateCategoryDTO)
     {
-        Category category = await pRepository.GetByIdOrThrowAsync(pUpdateCategoryDTO.Id);
-        category.Rename(pUpdateCategoryDTO.Name);
-        await pRepository.UpdateAsync(category);
-        return category;
+        try
+        {
+            var category = (Category)ActiveEntityValidator.EnsureIsActive(await pRepository.GetByIdOrThrowAsync(pUpdateCategoryDTO.Id));
+            category.Rename(pUpdateCategoryDTO.Name);
+            await pRepository.UpdateAsync(category);
+            return category;
+        }
+        catch (Exception pEx)
+        {
+            throw ErrorMessageResolver.Resolve(pEx);
+        }
     }
 }

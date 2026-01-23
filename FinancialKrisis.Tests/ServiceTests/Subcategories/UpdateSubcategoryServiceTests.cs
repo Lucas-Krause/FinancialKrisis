@@ -6,7 +6,7 @@ using FinancialKrisis.Domain.Exceptions;
 using FinancialKrisis.Tests.TestInfrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FinancialKrisis.Tests.SubCategories;
+namespace FinancialKrisis.Tests.ServiceTests.Subcategories;
 
 public class UpdateSubcategoryServiceTests
 {

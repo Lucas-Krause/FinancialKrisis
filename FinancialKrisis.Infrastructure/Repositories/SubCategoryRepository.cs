@@ -7,13 +7,11 @@ namespace FinancialKrisis.Infrastructure.Repositories;
 
 public class SubcategoryRepository(FinancialKrisisDbContext pContext) : BaseRepository<Subcategory>(pContext), ISubcategoryRepository
 {
-    public override async Task<Subcategory?> GetByIdAsync(Guid id)
+    public async Task<IReadOnlyList<Subcategory>> GetByCategoryIdAsync(Guid pCategoryId)
     {
-        return await _dbSet.Include(sc => sc.Category).FirstOrDefaultAsync(sc => sc.Id == id);
-    }
-
-    public override async Task<IReadOnlyList<Subcategory>> GetAllAsync()
-    {
-        return await _dbSet.Include(sc => sc.Category).AsNoTracking().ToListAsync();
+        return await _dbSet
+            .Where(sc => sc.CategoryId == pCategoryId)
+            .AsNoTracking()
+            .ToListAsync();
     }
 }

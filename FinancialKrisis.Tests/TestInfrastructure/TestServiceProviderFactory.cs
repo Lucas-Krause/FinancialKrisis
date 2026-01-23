@@ -40,6 +40,7 @@ public static class TestServiceProviderFactory
             .AddScoped<ISubcategoryRepository, SubcategoryRepository>()
             .AddScoped<CreateSubcategoryService>()
             .AddScoped<GetAllSubCategoriesService>()
+            .AddScoped<GetSubcategoriesByCategoryIdService>()
             .AddScoped<GetSubcategoryByIdService>()
             .AddScoped<UpdateSubcategoryService>()
             .AddScoped<DeactivateSubcategoryService>()

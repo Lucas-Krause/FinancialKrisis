@@ -4,12 +4,11 @@ using FinancialKrisis.Domain.Identity;
 
 namespace FinancialKrisis.Application.Metadata;
 
-public class SubcategoryFieldCatalog
+public class CategoryFieldCatalog
 {
     public static readonly Dictionary<FieldKey, FieldMetadata> Fields =
         new()
         {
-            { Subcategory.Fields.Name, new("Nome", GrammaticalGender.Masculine) },
-            { Subcategory.Fields.Category, new("Categoria", GrammaticalGender.Feminine) },
+            { Category.Fields.Name, new("Nome", GrammaticalGender.Masculine) },
         };
 }

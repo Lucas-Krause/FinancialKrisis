@@ -4,7 +4,7 @@ using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Tests.TestInfrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FinancialKrisis.Tests.Accounts;
+namespace FinancialKrisis.Tests.ServiceTests.Accounts;
 
 public class CreateAccountServiceTests
 {

@@ -1,9 +1,15 @@
 using FinancialKrisis.Domain.Common;
+using FinancialKrisis.Domain.Identity;
 
 namespace FinancialKrisis.Domain.Entities;
 
 public class Payee : IActivatable
 {
+    public static class Fields
+    {
+        public static readonly FieldKey Name = new("Name");
+    }
+
     public Guid Id { get; private set; }
     public string Name { get; private set; } = null!;
     public bool IsActive { get; private set; }

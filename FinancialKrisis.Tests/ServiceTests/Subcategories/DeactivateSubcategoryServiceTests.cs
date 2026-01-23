@@ -4,7 +4,7 @@ using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Tests.TestInfrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FinancialKrisis.Tests.SubCategories;
+namespace FinancialKrisis.Tests.ServiceTests.Subcategories;
 
 public class DeactivateSubcategoryServiceTests
 {

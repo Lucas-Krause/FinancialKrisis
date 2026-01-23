@@ -1,7 +1,6 @@
 ﻿using FinancialKrisis.Application.Enums;
 using FinancialKrisis.Application.Exceptions;
 using FinancialKrisis.Application.Metadata;
-using FinancialKrisis.Application.Metadata.Fields;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Enums;
 using FinancialKrisis.Domain.Exceptions;
@@ -41,7 +40,7 @@ public static class ErrorMessageResolver
             DomainRuleErrorCode.RequiredField =>
                 $"{articleField.ToUpper()} {fieldMetadata.NamePt.ToLower()} d{articleEntity} {entityMetadata.NamePt.ToLower()} é obrigatóri{articleField}.",
 
-            DomainRuleErrorCode.NumberCannotBeNegative =>
+            DomainRuleErrorCode.AmountIsNegative =>
                 $"{articleField.ToUpper()} {fieldMetadata.NamePt.ToLower()} d{articleEntity} {entityMetadata.NamePt.ToLower()} não pode ser negativ{articleField}.",
 
             DomainRuleErrorCode.EntityNotFound =>
@@ -73,6 +72,9 @@ public static class ErrorMessageResolver
             ApplicationRuleErrorCode.SubcategoryDoesNotBelongToCategory =>
                 $"{articleEntity.ToUpper()} {entityMetadata.NamePt.ToLower()} não pertence à {fieldMetadata.NamePt.ToLower()} d{transactionArticle} {transactionMetadata.NamePt.ToLower()}.",
 
+            ApplicationRuleErrorCode.EntityIsNotActive =>
+                $"{articleEntity.ToUpper()} {entityMetadata.NamePt.ToLower()} não está ativ{articleEntity}.",
+
             _ => "Erro de validação."
         };
     }
@@ -81,8 +83,11 @@ public static class ErrorMessageResolver
     {
         return pEntityType switch
         {
-            _ when pEntityType == typeof(Transaction) => TransactionFieldCatalog.Fields[pFieldKey],
+            _ when pEntityType == typeof(Payee) => PayeeFieldCatalog.Fields[pFieldKey],
+            _ when pEntityType == typeof(Account) => AccountFieldCatalog.Fields[pFieldKey],
+            _ when pEntityType == typeof(Category) => CategoryFieldCatalog.Fields[pFieldKey],
             _ when pEntityType == typeof(Subcategory) => SubcategoryFieldCatalog.Fields[pFieldKey],
+            _ when pEntityType == typeof(Transaction) => TransactionFieldCatalog.Fields[pFieldKey],
             _ => throw new InvalidOperationException("Field metadata not registered.")
         };
     }

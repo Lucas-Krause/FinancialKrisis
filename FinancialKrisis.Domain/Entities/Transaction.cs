@@ -108,7 +108,7 @@ public class Transaction
     private static void ValidateAmount(decimal pAmount)
     {
         if (pAmount < 0)
-            throw new DomainRuleException(DomainRuleErrorCode.NumberCannotBeNegative, typeof(Transaction), Fields.Amount);
+            throw new DomainRuleException(DomainRuleErrorCode.AmountIsNegative, typeof(Transaction), Fields.Amount);
     }
 
     private static void ValidateDateTime(DateTime pDateTime)

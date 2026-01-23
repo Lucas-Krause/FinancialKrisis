@@ -4,13 +4,13 @@ using FinancialKrisis.Domain.Repositories;
 
 namespace FinancialKrisis.Application.Services;
 
-public class GetAllCategoriesService(ICategoryRepository pRepository)
+public class GetSubcategoriesByCategoryIdService(ISubcategoryRepository pSubcategoryRepository)
 {
-    public async Task<IReadOnlyList<Category>> ExecuteAsync()
+    public async Task<IReadOnlyList<Subcategory>> ExecuteAsync(Guid pCategoryId)
     {
         try
         {
-            return await pRepository.GetAllAsync();
+            return await pSubcategoryRepository.GetByCategoryIdAsync(pCategoryId);
         }
         catch (Exception pEx)
         {

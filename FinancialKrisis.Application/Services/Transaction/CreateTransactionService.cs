@@ -18,22 +18,25 @@ public class CreateTransactionService(
     {
         try
         {
-            await pAccountRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.AccountId);
+            ActiveEntityValidator.EnsureIsActive(await pAccountRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.AccountId));
 
             if (pCreateTransactionDTO.CategoryId.HasValue)
-                await pCategoryRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.CategoryId.Value);
+                ActiveEntityValidator.EnsureIsActive(await pCategoryRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.CategoryId.Value));
 
             if (pCreateTransactionDTO.SubcategoryId.HasValue)
             {
-                Subcategory subcategory = await pSubcategoryRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.SubcategoryId.Value);
+                Subcategory subcategory = (Subcategory)ActiveEntityValidator.EnsureIsActive(await pSubcategoryRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.SubcategoryId.Value));
 
-                bool subcategoryDoesntBelongToCategory = pCreateTransactionDTO.CategoryId.HasValue && subcategory.CategoryId != pCreateTransactionDTO.CategoryId.Value;
-                if (subcategoryDoesntBelongToCategory)
+                if (!pCreateTransactionDTO.CategoryId.HasValue)
+                    ActiveEntityValidator.EnsureIsActive(await pCategoryRepository.GetByIdOrThrowAsync(subcategory.CategoryId));
+
+                bool subcategoryDoesNotBelongToCategory = pCreateTransactionDTO.CategoryId.HasValue && subcategory.CategoryId != pCreateTransactionDTO.CategoryId.Value;
+                if (subcategoryDoesNotBelongToCategory)
                     throw new ApplicationRuleException(ApplicationRuleErrorCode.SubcategoryDoesNotBelongToCategory, typeof(Subcategory), Subcategory.Fields.Category);
             }
 
             if (pCreateTransactionDTO.PayeeId.HasValue)
-                await pPayeeRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.PayeeId.Value);
+                ActiveEntityValidator.EnsureIsActive(await pPayeeRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.PayeeId.Value));
 
             Transaction transaction = new(
                 pCreateTransactionDTO.AccountId,

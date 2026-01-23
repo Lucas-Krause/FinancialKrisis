@@ -1,9 +1,17 @@
 ﻿using FinancialKrisis.Domain.Common;
+using FinancialKrisis.Domain.Identity;
 
 namespace FinancialKrisis.Domain.Entities;
 
 public class Account : IActivatable
 {
+    public static class Fields
+    {
+        public static readonly FieldKey Name = new("Name");
+        public static readonly FieldKey AccountNumber = new("AccountNumber");
+        public static readonly FieldKey InitialBalance = new("InitialBalance");
+    }
+
     public Guid Id { get; private set; }
     public string Name { get; private set; } = null!;
     public string AccountNumber { get; private set; } = null!;

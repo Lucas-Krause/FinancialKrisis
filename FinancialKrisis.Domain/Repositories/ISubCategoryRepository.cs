@@ -6,7 +6,8 @@ public interface ISubcategoryRepository
 {
     Task AddAsync(Subcategory subcategory);
     Task UpdateAsync(Subcategory subcategory);
-    Task<Subcategory?> GetByIdAsync(Guid id);
-    Task<Subcategory> GetByIdOrThrowAsync(Guid id);
+    Task<IReadOnlyList<Subcategory>> GetByCategoryIdAsync(Guid pCategoryId);
+    Task<Subcategory?> GetByIdAsync(Guid pSubcategoryId);
+    Task<Subcategory> GetByIdOrThrowAsync(Guid pSubcategoryId);
     Task<IReadOnlyList<Subcategory>> GetAllAsync();
 }

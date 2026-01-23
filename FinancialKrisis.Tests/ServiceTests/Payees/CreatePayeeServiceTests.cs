@@ -4,7 +4,7 @@ using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Tests.TestInfrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FinancialKrisis.Tests.Payees;
+namespace FinancialKrisis.Tests.ServiceTests.Payees;
 
 public class CreatePayeeServiceTests
 {

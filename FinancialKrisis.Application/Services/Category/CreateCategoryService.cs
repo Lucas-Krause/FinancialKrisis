@@ -1,4 +1,5 @@
 ﻿using FinancialKrisis.Application.DTOs;
+using FinancialKrisis.Application.Helpers;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Repositories;
 
@@ -8,8 +9,15 @@ public class CreateCategoryService(ICategoryRepository pRepository)
 {
     public async Task<Category> ExecuteAsync(CreateCategoryDTO pCreateCategoryDTO)
     {
-        var category = new Category(pCreateCategoryDTO.Name);
-        await pRepository.AddAsync(category);
-        return category;
+        try
+        {
+            var category = new Category(pCreateCategoryDTO.Name);
+            await pRepository.AddAsync(category);
+            return category;
+        }
+        catch (Exception pEx)
+        {
+            throw ErrorMessageResolver.Resolve(pEx);
+        }
     }
 }

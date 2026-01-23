@@ -3,6 +3,6 @@
 public enum DomainRuleErrorCode
 {
     RequiredField,
-    NumberCannotBeNegative,
+    AmountIsNegative,
     EntityNotFound,
 }

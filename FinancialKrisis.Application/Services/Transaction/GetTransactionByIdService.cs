@@ -1,3 +1,4 @@
+using FinancialKrisis.Application.Helpers;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Repositories;
 
@@ -7,6 +8,13 @@ public class GetTransactionByIdService(ITransactionRepository pTransactionReposi
 {
     public async Task<Transaction?> ExecuteAsync(Guid pTransactionId)
     {
-        return await pTransactionRepository.GetByIdAsync(pTransactionId);
+        try
+        {
+            return await pTransactionRepository.GetByIdAsync(pTransactionId);
+        }
+        catch (Exception pEx)
+        {
+            throw ErrorMessageResolver.Resolve(pEx);
+        }
     }
 }
