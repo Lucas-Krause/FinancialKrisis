@@ -100,35 +100,6 @@ public sealed class TestContext : IDisposable
         return new TransactionScenario(this);
     }
 
-    public AccountScenario CreateAccountAndSetAsCurrent()
-    {
-        return Account()
-            .Create()
-            .AsCurrentAccount();
-    }
-
-    public PayeeScenario CreatePayeeAndSetAsCurrent()
-    {
-        return Payee()
-            .Create()
-            .AsCurrentPayee();
-    }
-
-    public CategoryScenario CreateCategoryAndSetAsCurrent()
-    {
-        return Category()
-            .Create()
-            .AsCurrentCategory();
-    }
-
-    public SubcategoryScenario CreateSubcategoryWithCurrentCategoryAndSetAsCurrent()
-    {
-        return Subcategory()
-            .WithCurrentCategory()
-            .Create()
-            .AsCurrentSubcategory();
-    }
-
     public void Dispose()
     {
         Scope.Dispose();
