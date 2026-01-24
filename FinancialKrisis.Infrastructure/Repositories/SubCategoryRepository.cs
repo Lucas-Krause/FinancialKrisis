@@ -9,9 +9,8 @@ public class SubcategoryRepository(FinancialKrisisDbContext pContext) : BaseRepo
 {
     public async Task<IReadOnlyList<Subcategory>> GetByCategoryIdAsync(Guid pCategoryId)
     {
-        return await _dbSet
-            .Where(sc => sc.CategoryId == pCategoryId)
-            .AsNoTracking()
-            .ToListAsync();
+        return await _dbSet.Where(sc => sc.CategoryId == pCategoryId)
+                           .AsNoTracking()
+                           .ToListAsync();
     }
 }

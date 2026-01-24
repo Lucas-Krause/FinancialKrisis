@@ -9,7 +9,7 @@ public static class ActiveEntityValidator
     public static IActivatable EnsureIsActive(IActivatable pEntity)
     {
         return !pEntity.IsActive
-            ? throw new ApplicationRuleException(ApplicationRuleErrorCode.EntityIsNotActive, pEntity.GetType())
+            ? throw new ApplicationRuleException(ApplicationRuleErrorCode.EntityInactive, pEntity.GetType())
             : pEntity;
     }
 }

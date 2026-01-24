@@ -3,5 +3,5 @@
 public enum ApplicationRuleErrorCode
 {
     SubcategoryDoesNotBelongToCategory,
-    EntityIsNotActive,
+    EntityInactive,
 }
