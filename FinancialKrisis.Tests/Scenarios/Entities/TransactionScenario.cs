@@ -3,35 +3,21 @@ using FinancialKrisis.Domain.Entities;
 
 namespace FinancialKrisis.Tests.Scenarios.Entities;
 
-public sealed class TransactionScenario : Scenario<TransactionScenario, CreateTransactionDTO>
+public sealed class TransactionScenario : Scenario<TransactionScenario, CreateTransactionDTO, Transaction>
 {
-    public override Type EntityType => typeof(Transaction);
-    public Transaction? CreatedEntity { get; private set; } = null;
-
     public TransactionScenario(TestContext pContext) : base(pContext)
     {
         Input.Identifier = "T1";
         Input.Description = "Test Transaction";
         Input.DateTime = DateTime.Now;
         Input.Amount = 100m;
-    }
 
-    public TransactionScenario Create()
-    {
-        ExecuteScenarioResultSync(async () => CreatedEntity = await Context.CreateTransactionService.ExecuteAsync(Input));
-        return this;
-    }
-
-    public TransactionScenario Delete()
-    {
-        ExecuteScenarioResultSync(async () => await Context.DeleteTransactionService.ExecuteAsync(Context.GetCurrentOrThrow<Transaction>().Id));
-        return this;
+        CreateFunc = Context.CreateTransactionService.ExecuteAsync;
     }
 
     public TransactionScenario AsCurrentTransaction()
     {
-        Context.SetCurrent(CreatedEntity);
-        return this;
+        return AsCurrent();
     }
 
     public TransactionScenario WithCurrentAccount()

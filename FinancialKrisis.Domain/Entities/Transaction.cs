@@ -1,10 +1,11 @@
+using FinancialKrisis.Domain.Common;
 using FinancialKrisis.Domain.Enums;
 using FinancialKrisis.Domain.Exceptions;
 using FinancialKrisis.Domain.Identity;
 
 namespace FinancialKrisis.Domain.Entities;
 
-public class Transaction
+public class Transaction : IEntity
 {
     public static class Fields
     {

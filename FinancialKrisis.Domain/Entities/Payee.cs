@@ -3,7 +3,7 @@ using FinancialKrisis.Domain.Identity;
 
 namespace FinancialKrisis.Domain.Entities;
 
-public class Payee : IActivatable
+public class Payee : IEntity, IActivatable
 {
     public static class Fields
     {

@@ -1,5 +1,6 @@
 ﻿using FinancialKrisis.Application.Enums;
 using FinancialKrisis.Application.Exceptions;
+using FinancialKrisis.Domain.Common;
 using FinancialKrisis.Domain.Enums;
 using FinancialKrisis.Domain.Exceptions;
 using System.Reflection;
@@ -9,50 +10,39 @@ namespace FinancialKrisis.Tests.Scenarios.Assertions;
 
 public static class BaseScenarioAssertions
 {
-    extension<TScenario, TInput>(Scenario<TScenario, TInput> pScenario)
-        where TScenario : Scenario<TScenario, TInput>
-        where TInput : new()
+    extension<TScenario, TInput, TEntity>(Scenario<TScenario, TInput, TEntity> pScenario)
+        where TScenario : Scenario<TScenario, TInput, TEntity>
+        where TEntity : IEntity, IActivatable
     {
         public TestContext ShouldBeInactive()
         {
-            Type entityType = pScenario.EntityType;
+            TEntity entity = pScenario.Context.GetCurrentOrThrow<TEntity>();
 
-            object entity = pScenario.Context.GetCurrentOrThrow(entityType);
-
-            PropertyInfo? isActiveProperty = entityType.GetProperty("IsActive");
-
-            if (isActiveProperty is null || isActiveProperty.PropertyType != typeof(bool))
-            {
-                throw new XunitException($"A entidade '{entityType.Name}' não possui a propriedade 'IsActive' do tipo booleano.");
-            }
-
-            bool isActive = (bool)isActiveProperty.GetValue(entity)!;
-
-            if (isActive)
-                throw new XunitException($"Esperava que a entidade '{entityType.Name}' estivesse inativa, mas está ativa.");
+            if (entity.IsActive)
+                throw new XunitException($"Esperava que a entidade '{typeof(TEntity).Name}' estivesse inativa, mas está ativa.");
 
             return pScenario.Context;
         }
+    }
 
+    extension<TScenario, TInput, TEntity>(Scenario<TScenario, TInput, TEntity> pScenario)
+        where TScenario : Scenario<TScenario, TInput, TEntity>
+        where TEntity : IEntity
+    {
         public TestContext ShouldMatchInput()
         {
             if (pScenario.LastException is not null)
                 throw pScenario.LastException;
 
             TInput input = pScenario.Input;
-            Type entityType = pScenario.EntityType;
-
-            if (!pScenario.Context.TryGetCurrent(entityType, out object? entity))
-                throw new XunitException(
-                    $"Nenhuma entidade do tipo '{entityType.Name}' foi encontrada no TestContext. " +
-                    $"Esqueceu de chamar Create() ou AsCurrent{entityType.Name}() ou WithCurrent{entityType.Name}()?");
+            TEntity entity = pScenario.Context.GetCurrentOrThrow<TEntity>();
 
             foreach (PropertyInfo inputProperty in typeof(TInput).GetProperties())
             {
                 if (!inputProperty.CanRead)
                     continue;
 
-                PropertyInfo? entityProperty = entityType.GetProperty(inputProperty.Name);
+                PropertyInfo? entityProperty = typeof(TEntity).GetProperty(inputProperty.Name);
 
                 if (entityProperty is null || !entityProperty.CanRead)
                     continue;
@@ -63,7 +53,7 @@ public static class BaseScenarioAssertions
                 if (!Equals(inputValue, entityValue))
                 {
                     throw new XunitException(
-                        $"Input não corresponde a entidade '{entityType.Name}'{Environment.NewLine}" +
+                        $"Input não corresponde a entidade '{typeof(TEntity).Name}'{Environment.NewLine}" +
                         $"Propriedade: {inputProperty.Name}{Environment.NewLine}" +
                         $"Valor do Input: {FormatValue(inputValue)}{Environment.NewLine}" +
                         $"Valor da Entidade: {FormatValue(entityValue)}");
@@ -81,7 +71,7 @@ public static class BaseScenarioAssertions
             Assert.NotNull(ex.Message);
             Assert.NotEqual(string.Empty, ex.Message);
             Assert.Equal(pErrorCode, ex.ErrorCode);
-            Assert.Equal(pEntityType ?? pScenario.EntityType, ex.EntityType);
+            Assert.Equal(pEntityType ?? typeof(TEntity), ex.EntityType);
         }
 
         public void ShouldFailWithDomainRuleException(DomainRuleErrorCode pErrorCode, Type? pEntityType = null)
@@ -92,7 +82,7 @@ public static class BaseScenarioAssertions
             Assert.NotNull(ex.Message);
             Assert.NotEqual(string.Empty, ex.Message);
             Assert.Equal(pErrorCode, ex.ErrorCode);
-            Assert.Equal(pEntityType ?? pScenario.EntityType, ex.EntityType);
+            Assert.Equal(pEntityType ?? typeof(TEntity), ex.EntityType);
         }
     }
 

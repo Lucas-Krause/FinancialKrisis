@@ -1,8 +1,7 @@
 ﻿using FinancialKrisis.Application.Services;
+using FinancialKrisis.Tests.Scenarios.Assertions;
 using FinancialKrisis.Tests.Scenarios.Entities;
 using FinancialKrisis.Tests.TestInfrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FinancialKrisis.Tests.Scenarios;
@@ -66,38 +65,21 @@ public sealed class TestContext : IDisposable
         return false;
     }
 
-    public bool TryGetCurrent(Type pEntityType, out object? pEntity)
-    {
-        return _entities.TryGetValue(pEntityType, out pEntity);
-    }
-
     public TEntity GetCurrentOrThrow<TEntity>()
     {
         if (!TryGetCurrent(out TEntity? entity))
-            ThrowEntityNotFoundOnTestContext(typeof(TEntity));
+            throw new InvalidOperationException(
+                $"Nenhuma entidade do tipo '{typeof(TEntity).Name}' foi encontrada no TestContext. " +
+                $"Esqueceu de chamar Create() ou AsCurrent{typeof(TEntity).Name}() ou WithCurrent{typeof(TEntity).Name}()?");
 
         return entity!;
-    }
-
-    public object GetCurrentOrThrow(Type pEntityType)
-    {
-        if (!TryGetCurrent(pEntityType, out object? entity))
-            ThrowEntityNotFoundOnTestContext(pEntityType);
-
-        return entity!;
-    }
-
-    private static void ThrowEntityNotFoundOnTestContext(Type pEntityType)
-    {
-        throw new InvalidOperationException(
-            $"Nenhuma entidade do tipo '{pEntityType.Name}' foi encontrada no TestContext. " +
-            $"Esqueceu de chamar Create() ou AsCurrent{pEntityType.Name}() ou WithCurrent{pEntityType.Name}()?");
     }
 
     public AccountScenario Account()
     {
         return new AccountScenario(this);
     }
+
     public PayeeScenario Payee()
     {
         return new PayeeScenario(this);
@@ -116,6 +98,35 @@ public sealed class TestContext : IDisposable
     public TransactionScenario Transaction()
     {
         return new TransactionScenario(this);
+    }
+
+    public AccountScenario CreateAccountAndSetAsCurrent()
+    {
+        return Account()
+            .Create()
+            .AsCurrentAccount();
+    }
+
+    public PayeeScenario CreatePayeeAndSetAsCurrent()
+    {
+        return Payee()
+            .Create()
+            .AsCurrentPayee();
+    }
+
+    public CategoryScenario CreateCategoryAndSetAsCurrent()
+    {
+        return Category()
+            .Create()
+            .AsCurrentCategory();
+    }
+
+    public SubcategoryScenario CreateSubcategoryWithCurrentCategoryAndSetAsCurrent()
+    {
+        return Subcategory()
+            .WithCurrentCategory()
+            .Create()
+            .AsCurrentSubcategory();
     }
 
     public void Dispose()

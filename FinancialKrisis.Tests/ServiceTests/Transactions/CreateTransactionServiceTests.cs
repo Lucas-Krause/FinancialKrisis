@@ -64,16 +64,12 @@ public class CreateTransactionServiceTests
     }
 
     [Fact]
-    public async Task SubcategoryDoesNotBelongToCategory_ShouldThrowCorrectException()
+    public void SubcategoryDoesNotBelongToCategory_ShouldThrowCorrectException()
     {
         new TestContext()
             .Account()
                 .Create()
                 .AsCurrentAccount()
-                .ShouldMatchInput()
-            .Payee()
-                .Create()
-                .AsCurrentPayee()
                 .ShouldMatchInput()
             .Category()
                 .Create()
@@ -90,7 +86,6 @@ public class CreateTransactionServiceTests
                 .ShouldMatchInput()
             .Transaction()
                 .WithCurrentAccount()
-                .WithCurrentPayee()
                 .WithCurrentCategory()
                 .WithCurrentSubcategory()
                 .Create()
@@ -98,7 +93,7 @@ public class CreateTransactionServiceTests
     }
 
     [Fact]
-    public async Task InactiveAccount_ShouldThrowCorrectException()
+    public void InactiveAccount_ShouldThrowCorrectException()
     {
         new TestContext()
             .Account()
@@ -113,7 +108,7 @@ public class CreateTransactionServiceTests
     }
 
     [Fact]
-    public async Task InactivePayee_ShouldThrowCorrectException()
+    public void InactivePayee_ShouldThrowCorrectException()
     {
         new TestContext()
             .Account()
@@ -133,7 +128,7 @@ public class CreateTransactionServiceTests
     }
 
     [Fact]
-    public async Task InactiveCategory_ShouldThrowCorrectException()
+    public void InactiveCategory_ShouldThrowCorrectException()
     {
         new TestContext()
             .Account()
@@ -153,7 +148,7 @@ public class CreateTransactionServiceTests
     }
 
     [Fact]
-    public async Task InactiveSubcategory_ShouldThrowCorrectException()
+    public void InactiveSubcategory_ShouldThrowCorrectException()
     {
         new TestContext()
             .Account()

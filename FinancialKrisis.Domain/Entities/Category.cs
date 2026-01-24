@@ -5,7 +5,7 @@ using FinancialKrisis.Domain.Identity;
 
 namespace FinancialKrisis.Domain.Entities;
 
-public class Category : IActivatable
+public class Category : IEntity, IActivatable
 {
     public static class Fields
     {
