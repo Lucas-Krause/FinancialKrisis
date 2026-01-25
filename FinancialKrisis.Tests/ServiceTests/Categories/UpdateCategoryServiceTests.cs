@@ -1,48 +1,55 @@
+using FinancialKrisis.Application.DTOs;
+using FinancialKrisis.Application.Enums;
+using FinancialKrisis.Domain.Entities;
+using FinancialKrisis.Domain.Enums;
+using FinancialKrisis.Tests.Scenarios;
+using FinancialKrisis.Tests.Scenarios.Assertions;
+
 namespace FinancialKrisis.Tests.ServiceTests.Categories;
 
 public class UpdateCategoryServiceTests
 {
-    //[Fact]
-    //public async Task ValidData_ShouldUpdateSuccessfully()
-    //{
-    //    var scenarioBuilder = new CategoryScenarioBuilder();
+    [Fact]
+    public void ValidInput_ShouldUpdateSuccessfully()
+    {
+        new TestContext()
+            .Category()
+            .Create()
+            .AsCurrentCategory()
+            .Update()
+            .ShouldUpdateSuccessfully();
+    }
 
-    //    CategoryScenario createScenario = await scenarioBuilder.WithName("Test Category").BuildAsync();
-    //    Category createdCategory = await createScenario.CreateAsync();
+    [Fact]
+    public void NonExistentCategory_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Category()
+            .Update()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.EntityNotFound, typeof(Category));
+    }
 
-    //    CategoryScenario updateScenario = await scenarioBuilder.WithName("Test Category 2").BuildAsync();
-    //    Category updatedCategory = await updateScenario.UpdateAsync(createdCategory.Id);
+    [Fact]
+    public void InactiveCategory_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Category()
+            .Create()
+            .AsCurrentCategory()
+            .Deactivate()
+            .Update()
+            .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.EntityInactive, typeof(Category));
+    }
 
-    //    Assert.Equal("Test Category 2", updatedCategory.Name);
-    //    Assert.True(updatedCategory.IsActive);
-    //}
-
-    //[Fact]
-    //public async Task NonExistentCategory_ShouldThrowException()
-    //{
-    //    CategoryScenario scenario = await new CategoryScenarioBuilder().BuildAsync();
-    //    await ExceptionAssert.AssertDomainRuleException<Category>(() => scenario.UpdateAsync(Guid.NewGuid()), DomainRuleErrorCode.EntityNotFound);
-    //}
-
-    //[Fact]
-    //public async Task InactiveCategory_ShouldThrowCorrectException()
-    //{
-    //    var scenarioBuilder = new CategoryScenarioBuilder();
-
-    //    CategoryScenario scenario = await scenarioBuilder.BuildAsync();
-    //    Category createdCategory = await scenario.CreateAsync();
-    //    await scenario.DeactivateAsync(createdCategory.Id);
-    //    await ExceptionAssert.AssertApplicationRuleException<Category>(() => scenario.UpdateAsync(createdCategory.Id), ApplicationRuleErrorCode.EntityInactive);
-    //}
-
-    //[Fact]
-    //public async Task InvalidName_ShouldThrowCorrectException()
-    //{
-    //    var scenarioBuilder = new CategoryScenarioBuilder();
-
-    //    CategoryScenario createScenario = await scenarioBuilder.WithName("Test Category").BuildAsync();
-    //    Category createdCategory = await createScenario.CreateAsync();
-    //    CategoryScenario updateScenario = await scenarioBuilder.WithName("").BuildAsync();
-    //    await ExceptionAssert.AssertDomainRuleException<Category>(() => updateScenario.UpdateAsync(createdCategory.Id), DomainRuleErrorCode.RequiredField);
-    //}
+    [Fact]
+    public void InvalidName_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Category()
+            .Create()
+            .AsCurrentCategory()
+            .UpdatingWith(UpdateInput => UpdateInput.Name = Optional<string>.Remove())
+            .Update()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Category), Category.Fields.Name);
+    }
 }

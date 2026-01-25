@@ -1,3 +1,5 @@
+using FinancialKrisis.Domain.Entities;
+using FinancialKrisis.Domain.Enums;
 using FinancialKrisis.Tests.Scenarios;
 using FinancialKrisis.Tests.Scenarios.Assertions;
 
@@ -14,5 +16,14 @@ public class DeactivatePayeeServiceTests
             .AsCurrentPayee()
             .Deactivate()
             .ShouldDeactivateSuccessfully();
+    }
+
+    [Fact]
+    public void NonExistantPayee_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Payee()
+            .Deactivate()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.EntityNotFound, typeof(Payee));
     }
 }

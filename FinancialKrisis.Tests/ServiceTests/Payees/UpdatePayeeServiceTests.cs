@@ -44,4 +44,13 @@ public class UpdatePayeeServiceTests
             .Update()
             .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.EntityInactive, typeof(Payee));
     }
+
+    [Fact]
+    public void NonExistantPayee_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Payee()
+            .Update()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.EntityNotFound, typeof(Payee));
+    }
 }

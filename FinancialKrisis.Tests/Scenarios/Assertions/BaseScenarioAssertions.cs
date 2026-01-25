@@ -20,6 +20,11 @@ public static class BaseScenarioAssertions
     {
         public TestContext ShouldDeactivateSuccessfully()
         {
+            return ShouldBeInactive(pScenario);
+        }
+
+        public TestContext ShouldBeInactive()
+        {
             TEntity entity = pScenario.Context.GetCurrentOrThrow<TEntity>();
 
             if (entity.IsActive)

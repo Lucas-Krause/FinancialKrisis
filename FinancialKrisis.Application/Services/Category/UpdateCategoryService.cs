@@ -12,7 +12,10 @@ public class UpdateCategoryService(ICategoryRepository pRepository)
         try
         {
             var category = (Category)ActiveEntityValidator.EnsureIsActive(await pRepository.GetByIdOrThrowAsync(pUpdateCategoryDTO.Id));
-            category.Rename(pUpdateCategoryDTO.Name);
+
+            if (pUpdateCategoryDTO.Name.IsDefined)
+                category.ChangeName(pUpdateCategoryDTO.Name.Value!);
+
             await pRepository.UpdateAsync(category);
             return category;
         }

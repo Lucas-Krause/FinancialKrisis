@@ -66,7 +66,7 @@ public abstract class Scenario<TScenario, TCreateInput, TUpdateInput, TEntity>(T
 
     public TScenario Deactivate()
     {
-        ExecuteScenarioResultSync(async () => await DeactivateFunc!(Context.GetCurrentOrThrow<TEntity>().Id));
+        ExecuteScenarioResultSync(async () => await DeactivateFunc!(Entity?.Id ?? Guid.NewGuid()));
         return (TScenario)this;
     }
 

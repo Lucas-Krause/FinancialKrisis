@@ -73,4 +73,13 @@ public class UpdateAccountServiceTests
             .Update()
             .ShouldFailWithDomainRuleException(DomainRuleErrorCode.NegativeValue, typeof(Account), Account.Fields.InitialBalance);
     }
+
+    [Fact]
+    public void NonExistantAccount_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Account()
+            .Update()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.EntityNotFound, typeof(Account));
+    }
 }

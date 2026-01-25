@@ -1,4 +1,6 @@
-﻿using FinancialKrisis.Tests.Scenarios;
+﻿using FinancialKrisis.Domain.Entities;
+using FinancialKrisis.Domain.Enums;
+using FinancialKrisis.Tests.Scenarios;
 using FinancialKrisis.Tests.Scenarios.Assertions;
 
 namespace FinancialKrisis.Tests.ServiceTests.Accounts;
@@ -14,5 +16,14 @@ public class DeactivateAccountServiceTests
             .AsCurrentAccount()
             .Deactivate()
             .ShouldDeactivateSuccessfully();
+    }
+
+    [Fact]
+    public void NonExistantAccount_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Account()
+            .Deactivate()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.EntityNotFound, typeof(Account));
     }
 }
