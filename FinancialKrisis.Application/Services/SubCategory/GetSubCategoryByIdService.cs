@@ -1,3 +1,4 @@
+using FinancialKrisis.Application.Helpers;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Repositories;
 
@@ -7,6 +8,13 @@ public class GetSubcategoryByIdService(ISubcategoryRepository pSubcategoryReposi
 {
     public async Task<Subcategory?> ExecuteAsync(Guid pSubcategoryId)
     {
-        return await pSubcategoryRepository.GetByIdAsync(pSubcategoryId);
+        try
+        {
+            return await pSubcategoryRepository.GetByIdAsync(pSubcategoryId);
+        }
+        catch (Exception pEx)
+        {
+            throw ErrorMessageResolver.Resolve(pEx);
+        }
     }
 }

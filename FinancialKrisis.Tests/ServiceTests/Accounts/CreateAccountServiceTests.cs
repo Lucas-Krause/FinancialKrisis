@@ -24,7 +24,6 @@ public class CreateAccountServiceTests
             .Account()
             .CreatingWith(CreateInput => CreateInput.Name = string.Empty)
             .Create()
-            .AsCurrentAccount()
             .ShouldFailWithDomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Account), Account.Fields.Name);
     }
 
@@ -35,7 +34,6 @@ public class CreateAccountServiceTests
             .Account()
             .CreatingWith(CreateInput => CreateInput.AccountNumber = string.Empty)
             .Create()
-            .AsCurrentAccount()
             .ShouldFailWithDomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Account), Account.Fields.AccountNumber);
     }
 
@@ -46,7 +44,6 @@ public class CreateAccountServiceTests
             .Account()
             .CreatingWith(CreateInput => CreateInput.InitialBalance = -100)
             .Create()
-            .AsCurrentAccount()
             .ShouldFailWithDomainRuleException(DomainRuleErrorCode.NegativeValue, typeof(Account), Account.Fields.InitialBalance);
     }
 }

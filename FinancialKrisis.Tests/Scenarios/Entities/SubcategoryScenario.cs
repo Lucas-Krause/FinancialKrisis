@@ -24,4 +24,10 @@ public class SubcategoryScenario : Scenario<SubcategoryScenario, CreateSubcatego
         CreateInput.CategoryId = Context.GetCurrentOrThrow<Category>().Id;
         return this;
     }
+
+    public SubcategoryScenario UpdatingWithCurrentCategory()
+    {
+        UpdateInput.CategoryId = Context.GetCurrentOrThrow<Category>().Id;
+        return this;
+    }
 }

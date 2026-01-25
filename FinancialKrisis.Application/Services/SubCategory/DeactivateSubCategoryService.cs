@@ -1,3 +1,4 @@
+using FinancialKrisis.Application.Helpers;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Repositories;
 
@@ -7,8 +8,15 @@ public class DeactivateSubcategoryService(ISubcategoryRepository pSubcategoryRep
 {
     public async Task ExecuteAsync(Guid pSubcategoryId)
     {
-        Subcategory subcategory = await pSubcategoryRepository.GetByIdOrThrowAsync(pSubcategoryId);
-        subcategory.Deactivate();
-        await pSubcategoryRepository.UpdateAsync(subcategory);
+        try
+        {
+            Subcategory subcategory = await pSubcategoryRepository.GetByIdOrThrowAsync(pSubcategoryId);
+            subcategory.Deactivate();
+            await pSubcategoryRepository.UpdateAsync(subcategory);
+        }
+        catch (Exception pEx)
+        {
+            throw ErrorMessageResolver.Resolve(pEx);
+        }
     }
 }

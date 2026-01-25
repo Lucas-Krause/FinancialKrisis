@@ -1,55 +1,93 @@
 using FinancialKrisis.Application.DTOs;
-using FinancialKrisis.Application.Services;
+using FinancialKrisis.Application.Enums;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Enums;
-using FinancialKrisis.Domain.Exceptions;
-using FinancialKrisis.Tests.TestInfrastructure;
-using Microsoft.Extensions.DependencyInjection;
+using FinancialKrisis.Tests.Scenarios;
+using FinancialKrisis.Tests.Scenarios.Assertions;
 
 namespace FinancialKrisis.Tests.ServiceTests.Subcategories;
 
 public class UpdateSubcategoryServiceTests
 {
     [Fact]
-    public async Task NormalSituation_ShouldUpdateNameAndCategorySuccessfully()
+    public void ValidInput_ShouldUpdateSuccessfully()
     {
-        ServiceProvider provider = TestServiceProviderFactory.Create();
-        using IServiceScope scope = provider.CreateScope();
-
-        CreateCategoryService createCategoryService = scope.ServiceProvider.GetRequiredService<CreateCategoryService>();
-        CreateSubcategoryService createSubcategoryService = scope.ServiceProvider.GetRequiredService<CreateSubcategoryService>();
-        UpdateSubcategoryService updateSubcategoryService = scope.ServiceProvider.GetRequiredService<UpdateSubcategoryService>();
-
-        Category category1 = await createCategoryService.ExecuteAsync(new CreateCategoryDTO { Name = "Category 1" });
-        Category category2 = await createCategoryService.ExecuteAsync(new CreateCategoryDTO { Name = "Category 2" });
-        Subcategory subcategory = await createSubcategoryService.ExecuteAsync(new CreateSubcategoryDTO { Name = "SubCat", CategoryId = category1.Id });
-
-        Subcategory updatedSubcategory = await updateSubcategoryService.ExecuteAsync(new UpdateSubcategoryDTO { Id = subcategory.Id, Name = "Updated Name", CategoryId = category2.Id });
-
-        Assert.Equal("Updated Name", updatedSubcategory.Name);
-        Assert.Equal(category2.Id, updatedSubcategory.CategoryId);
-        Assert.Equal("Category 2", updatedSubcategory.Category.Name);
+        new TestContext()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Subcategory().CreatingWithCurrentCategory().Create().AsCurrentSubcategory().ShouldCreateSuccessfully()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Subcategory()
+                .UpdatingWithCurrentCategory()
+                .UpdatingWith(UpdateInput => UpdateInput.Name = "Updated Subcategory Name")
+                .Update()
+                .ShouldUpdateSuccessfully();
     }
 
     [Fact]
-    public async Task NonExistentCategory_UpdateShouldThrowException()
+    public void InvalidName_ShouldFailWithDomainRuleException()
     {
-        ServiceProvider provider = TestServiceProviderFactory.Create();
-        using IServiceScope scope = provider.CreateScope();
+        new TestContext()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Subcategory()
+                .CreatingWithCurrentCategory()
+                .Create()
+                .AsCurrentSubcategory()
+                .UpdatingWith(UpdateInput => UpdateInput.Name = Optional<string>.Remove())
+                .Update()
+                .ShouldFailWithDomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Subcategory), Subcategory.Fields.Name);
+    }
 
-        CreateCategoryService createCategoryService = scope.ServiceProvider.GetRequiredService<CreateCategoryService>();
-        CreateSubcategoryService createSubcategoryService = scope.ServiceProvider.GetRequiredService<CreateSubcategoryService>();
-        UpdateSubcategoryService updateSubcategoryService = scope.ServiceProvider.GetRequiredService<UpdateSubcategoryService>();
+    [Fact]
+    public void NonExistantSubcategory_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Subcategory()
+            .Update()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.EntityNotFound, typeof(Subcategory));
+    }
 
-        Category category = await createCategoryService.ExecuteAsync(new CreateCategoryDTO { Name = "Category" });
-        Subcategory subcategory = await createSubcategoryService.ExecuteAsync(new CreateSubcategoryDTO { Name = "SubCat", CategoryId = category.Id });
-        var nonExistentCategoryId = Guid.NewGuid();
+    [Fact]
+    public void NonExistantCategory_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Subcategory()
+                .CreatingWithCurrentCategory()
+                .Create()
+                .AsCurrentSubcategory()
+                .UpdatingWith(UpdateInput => UpdateInput.CategoryId = Guid.NewGuid())
+                .Update()
+                .ShouldFailWithDomainRuleException(DomainRuleErrorCode.EntityNotFound, typeof(Category));
+    }
 
-        DomainRuleException ex = await Assert.ThrowsAsync<DomainRuleException>(async () =>
-        {
-            await updateSubcategoryService.ExecuteAsync(new UpdateSubcategoryDTO { Id = subcategory.Id, Name = "Any", CategoryId = nonExistentCategoryId });
-        });
+    [Fact]
+    public void InactiveSubcategory_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Subcategory()
+                .CreatingWithCurrentCategory()
+                .Create()
+                .AsCurrentSubcategory()
+                .Deactivate()
+                .Update()
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.EntityInactive, typeof(Subcategory));
+    }
 
-        Assert.Equal(DomainRuleErrorCode.EntityNotFound, ex.ErrorCode);
+    [Fact]
+    public void InactiveCategory_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Subcategory()
+                .CreatingWithCurrentCategory()
+                .Create()
+                .AsCurrentSubcategory()
+                .ShouldCreateSuccessfully()
+            .Category().Create().AsCurrentCategory().Deactivate().ShouldDeactivateSuccessfully()
+            .Subcategory()
+                .UpdatingWithCurrentCategory()
+                .Update()
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.EntityInactive, typeof(Category));
     }
 }

@@ -229,7 +229,7 @@ public class UpdateTransactionServiceTests
                 .Create()
                 .AsCurrentTransaction()
                 .ShouldCreateSuccessfully()
-            .Category().Create().AsCurrentCategory().Deactivate().ShouldDeactivateSuccessfully()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
             .Subcategory().CreatingWithCurrentCategory().Create().AsCurrentSubcategory().Deactivate().ShouldDeactivateSuccessfully()
             .Transaction()
                 .UpdatingWithCurrentSubcategory()

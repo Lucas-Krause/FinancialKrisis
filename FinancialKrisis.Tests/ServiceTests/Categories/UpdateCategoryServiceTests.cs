@@ -16,6 +16,7 @@ public class UpdateCategoryServiceTests
             .Category()
             .Create()
             .AsCurrentCategory()
+            .UpdatingWith(UpdateInput => UpdateInput.Name = "Updated Category Name")
             .Update()
             .ShouldUpdateSuccessfully();
     }

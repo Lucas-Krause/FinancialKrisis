@@ -9,42 +9,41 @@ public class Transaction : IEntity
     public static class Fields
     {
         public static readonly FieldKey Amount = new("Amount");
+        public static readonly FieldKey Memo = new("Memo");
+        public static readonly FieldKey Identifier = new("Identifier");
         public static readonly FieldKey DateTime = new("DateTime");
+        public static readonly FieldKey Direction = new("Direction");
+        public static readonly FieldKey Account = new("Account");
+        public static readonly FieldKey Payee = new("Payee");
         public static readonly FieldKey Category = new("Category");
         public static readonly FieldKey Subcategory = new("Subcategory");
-        public static readonly FieldKey Payee = new("Payee");
-        public static readonly FieldKey Identifier = new("Identifier");
-        public static readonly FieldKey Memo = new("Memo");
-        public static readonly FieldKey Direction = new("Direction");
     }
 
     public Guid Id { get; private set; }
+
+    public decimal Amount { get; private set; }
+    public string? Memo { get; private set; }
+    public string? Identifier { get; private set; }
+    public DateTime DateTime { get; private set; }
+    public TransactionDirection Direction { get; private set; }
 
     public Guid AccountId { get; private set; }
     public Guid? CategoryId { get; private set; }
     public Guid? SubcategoryId { get; private set; }
     public Guid? PayeeId { get; private set; }
 
-    public decimal Amount { get; private set; }
-    public DateTime DateTime { get; private set; }
-
-    public string? Identifier { get; private set; }
-    public string? Memo { get; private set; }
-
-    public TransactionDirection Direction { get; private set; }
-
     private Transaction() { }
 
     public Transaction(
        Guid pAccountId,
-       TransactionDirection pDirection,
        decimal pAmount,
        DateTime pDateTime,
-       Guid? pCategoryId = null,
-       Guid? pSubcategoryId = null,
-       Guid? pPayeeId = null,
+       TransactionDirection pDirection,
+       string? pMemo = null,
        string? pIdentifier = null,
-       string? pMemo = null)
+       Guid? pPayeeId = null,
+       Guid? pCategoryId = null,
+       Guid? pSubcategoryId = null)
     {
         ValidateAmount(pAmount);
         ValidateDateTime(pDateTime);
@@ -67,14 +66,14 @@ public class Transaction : IEntity
         Amount = pAmount;
     }
 
-    public void ChangeIdentifier(string? pIdentifier)
-    {
-        Identifier = pIdentifier;
-    }
-
     public void ChangeMemo(string? pMemo)
     {
         Memo = pMemo;
+    }
+
+    public void ChangeIdentifier(string? pIdentifier)
+    {
+        Identifier = pIdentifier;
     }
 
     public void ChangeDateTime(DateTime pDateTime)

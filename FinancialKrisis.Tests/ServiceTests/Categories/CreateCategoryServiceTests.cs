@@ -24,7 +24,6 @@ public class CreateCategoryServiceTests
             .Category()
             .CreatingWith(CreateInput => CreateInput.Name = string.Empty)
             .Create()
-            .AsCurrentCategory()
             .ShouldFailWithDomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Category), Category.Fields.Name);
     }
 }

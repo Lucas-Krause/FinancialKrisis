@@ -1,5 +1,6 @@
 ﻿using FinancialKrisis.Application.DTOs;
 using FinancialKrisis.Domain.Entities;
+using Xunit.Sdk;
 
 namespace FinancialKrisis.Tests.Scenarios;
 
@@ -16,6 +17,9 @@ public abstract class Scenario<TScenario, TCreateInput, TUpdateInput, TEntity>(T
     {
         get
         {
+            if (LastException is not null)
+                throw new XunitException($"Uma exceção ocorreu e o cenário ficou inválido:{Environment.NewLine}{LastException}");
+
             if (field is not null)
                 return field;
 

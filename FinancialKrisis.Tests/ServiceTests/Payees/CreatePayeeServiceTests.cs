@@ -24,7 +24,6 @@ public class CreatePayeeServiceTests
             .Payee()
             .CreatingWith(CreateInput => CreateInput.Name = string.Empty)
             .Create()
-            .AsCurrentPayee()
             .ShouldFailWithDomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Payee), Payee.Fields.Name);
     }
 }

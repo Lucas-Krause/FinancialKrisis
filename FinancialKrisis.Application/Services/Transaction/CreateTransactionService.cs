@@ -40,14 +40,14 @@ public class CreateTransactionService(
 
             Transaction transaction = new(
                 pCreateTransactionDTO.AccountId,
-                pCreateTransactionDTO.Direction,
                 pCreateTransactionDTO.Amount,
                 pCreateTransactionDTO.DateTime,
-                pCreateTransactionDTO.CategoryId,
-                pCreateTransactionDTO.SubcategoryId,
-                pCreateTransactionDTO.PayeeId,
+                pCreateTransactionDTO.Direction,
+                pCreateTransactionDTO.Memo,
                 pCreateTransactionDTO.Identifier,
-                pCreateTransactionDTO.Memo);
+                pCreateTransactionDTO.PayeeId,
+                pCreateTransactionDTO.CategoryId,
+                pCreateTransactionDTO.SubcategoryId);
 
             await pTransactionRepository.AddAsync(transaction);
 

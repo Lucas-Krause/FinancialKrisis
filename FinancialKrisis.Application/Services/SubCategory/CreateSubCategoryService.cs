@@ -11,7 +11,7 @@ public class CreateSubcategoryService(ISubcategoryRepository pSubcategoryReposit
     {
         try
         {
-            Category category = await pCategoryRepository.GetByIdOrThrowAsync(pCreateSubcategoryDTO.CategoryId);
+            var category = (Category)ActiveEntityValidator.EnsureIsActive(await pCategoryRepository.GetByIdOrThrowAsync(pCreateSubcategoryDTO.CategoryId));
             var subcategory = new Subcategory(pCreateSubcategoryDTO.Name, category);
             await pSubcategoryRepository.AddAsync(subcategory);
             return subcategory;

@@ -11,10 +11,17 @@ public class UpdateSubcategoryService(ISubcategoryRepository pSubcategoryReposit
     {
         try
         {
-            Subcategory subcategory = await pSubcategoryRepository.GetByIdOrThrowAsync(pUpdateSubcategoryDTO.Id);
-            subcategory.Rename(pUpdateSubcategoryDTO.Name);
-            Category category = await pCategoryRepository.GetByIdOrThrowAsync(pUpdateSubcategoryDTO.CategoryId);
-            subcategory.ChangeCategory(category);
+            var subcategory = (Subcategory)ActiveEntityValidator.EnsureIsActive(await pSubcategoryRepository.GetByIdOrThrowAsync(pUpdateSubcategoryDTO.Id));
+
+            if (pUpdateSubcategoryDTO.Name.IsDefined)
+                subcategory.ChangeName(pUpdateSubcategoryDTO.Name.Value!);
+
+            if (pUpdateSubcategoryDTO.CategoryId.IsDefined)
+            {
+                var category = (Category)ActiveEntityValidator.EnsureIsActive(await pCategoryRepository.GetByIdOrThrowAsync(pUpdateSubcategoryDTO.CategoryId.Value));
+                subcategory.ChangeCategory(category);
+            }
+
             await pSubcategoryRepository.UpdateAsync(subcategory);
             return subcategory;
         }

@@ -1,4 +1,6 @@
 using FinancialKrisis.Common.Records;
+using FinancialKrisis.Domain.Enums;
+using FinancialKrisis.Domain.Exceptions;
 
 namespace FinancialKrisis.Domain.Entities;
 
@@ -13,37 +15,43 @@ public class Subcategory : IEntity, IActivatable
     public Guid Id { get; private set; }
     public string Name { get; private set; } = null!;
     public bool IsActive { get; private set; }
+
     public Guid CategoryId { get; private set; }
     public Category Category { get; private set; } = null!;
 
     private Subcategory() { }
 
-    public Subcategory(string name, Category category)
+    public Subcategory(string pName, Category pCategory)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Subcategory name is required.");
+        ValidateName(pName);
+
         Id = Guid.NewGuid();
-        Name = name;
-        Category = category ?? throw new ArgumentNullException(nameof(category));
-        CategoryId = category.Id;
+        Name = pName;
+        Category = pCategory;
+        CategoryId = pCategory.Id;
         IsActive = true;
     }
 
-    public void Rename(string newName)
+    public void ChangeName(string pNewName)
     {
-        if (string.IsNullOrWhiteSpace(newName))
-            throw new ArgumentException("Subcategory name is required.");
-        Name = newName;
+        ValidateName(pNewName);
+        Name = pNewName;
     }
 
-    public void ChangeCategory(Category category)
+    public void ChangeCategory(Category pNewCategory)
     {
-        Category = category ?? throw new ArgumentNullException(nameof(category));
-        CategoryId = category.Id;
+        Category = pNewCategory;
+        CategoryId = pNewCategory.Id;
     }
 
     public void Deactivate()
     {
         IsActive = false;
+    }
+
+    private static void ValidateName(string pName)
+    {
+        if (string.IsNullOrWhiteSpace(pName))
+            throw new DomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Subcategory), Fields.Name);
     }
 }

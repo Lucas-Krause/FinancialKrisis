@@ -1,31 +1,31 @@
-using FinancialKrisis.Application.DTOs;
-using FinancialKrisis.Application.Services;
 using FinancialKrisis.Domain.Entities;
-using FinancialKrisis.Tests.TestInfrastructure;
-using Microsoft.Extensions.DependencyInjection;
+using FinancialKrisis.Domain.Enums;
+using FinancialKrisis.Tests.Scenarios;
+using FinancialKrisis.Tests.Scenarios.Assertions;
 
 namespace FinancialKrisis.Tests.ServiceTests.Subcategories;
 
 public class DeactivateSubcategoryServiceTests
 {
     [Fact]
-    public async Task NormalSituation_ShouldDeactivateSubcategorySuccessfully()
+    public void ValidInput_ShouldDeactivateSuccessfully()
     {
-        ServiceProvider provider = TestServiceProviderFactory.Create();
-        using IServiceScope scope = provider.CreateScope();
+        new TestContext()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Subcategory()
+                .CreatingWithCurrentCategory()
+                .Create()
+                .AsCurrentSubcategory()
+                .Deactivate()
+                .ShouldDeactivateSuccessfully();
+    }
 
-        CreateCategoryService createCategoryService = scope.ServiceProvider.GetRequiredService<CreateCategoryService>();
-        CreateSubcategoryService createSubcategoryService = scope.ServiceProvider.GetRequiredService<CreateSubcategoryService>();
-        GetSubcategoryByIdService getSubcategoryByIdService = scope.ServiceProvider.GetRequiredService<GetSubcategoryByIdService>();
-        DeactivateSubcategoryService deactivateSubcategoryService = scope.ServiceProvider.GetRequiredService<DeactivateSubcategoryService>();
-
-        Category category = await createCategoryService.ExecuteAsync(new CreateCategoryDTO { Name = "Category" });
-        Subcategory subcategory = await createSubcategoryService.ExecuteAsync(new CreateSubcategoryDTO { Name = "SubCat", CategoryId = category.Id });
-
-        await deactivateSubcategoryService.ExecuteAsync(subcategory.Id);
-
-        Subcategory? subcategoryAfterDeactivation = await getSubcategoryByIdService.ExecuteAsync(subcategory.Id);
-        Assert.NotNull(subcategoryAfterDeactivation);
-        Assert.False(subcategoryAfterDeactivation.IsActive);
+    [Fact]
+    public void NonExistantSubcategory_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Subcategory()
+            .Deactivate()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.EntityNotFound, typeof(Subcategory));
     }
 }
