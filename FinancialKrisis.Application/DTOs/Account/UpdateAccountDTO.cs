@@ -1,8 +1,9 @@
 ﻿namespace FinancialKrisis.Application.DTOs;
 
-public class UpdateAccountDTO
+public class UpdateAccountDTO : IUpdateDTO
 {
     public Guid Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string AccountNumber { get; set; } = string.Empty;
+    public Optional<string> Name { get; set; } = Optional<string>.Undefined();
+    public Optional<string> AccountNumber { get; set; } = Optional<string>.Undefined();
+    public Optional<decimal> InitialBalance { get; set; } = Optional<decimal>.Undefined();
 }

@@ -1,9 +1,7 @@
 using FinancialKrisis.Domain.Enums;
 using FinancialKrisis.Domain.Exceptions;
-using FinancialKrisis.Infrastructure.Errors;
 using FinancialKrisis.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography;
 
 namespace FinancialKrisis.Infrastructure.Repositories;
 

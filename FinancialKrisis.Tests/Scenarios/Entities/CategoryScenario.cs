@@ -3,11 +3,11 @@ using FinancialKrisis.Domain.Entities;
 
 namespace FinancialKrisis.Tests.Scenarios.Entities;
 
-public class CategoryScenario : Scenario<CategoryScenario, CreateCategoryDTO, Category>
+public class CategoryScenario : Scenario<CategoryScenario, CreateCategoryDTO, UpdateCategoryDTO, Category>
 {
     public CategoryScenario(TestContext pContext) : base(pContext)
     {
-        Input.Name = "Test Category";
+        CreateInput.Name = "Test Category";
 
         CreateFunc = Context.CreateCategoryService.ExecuteAsync;
         DeactivateFunc = Context.DeactivateCategoryService.ExecuteAsync;

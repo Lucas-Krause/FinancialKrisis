@@ -1,6 +1,6 @@
 ﻿using FinancialKrisis.Application.Enums;
+using FinancialKrisis.Common.Records;
 using FinancialKrisis.Domain.Entities;
-using FinancialKrisis.Domain.Identity;
 
 namespace FinancialKrisis.Application.Metadata;
 

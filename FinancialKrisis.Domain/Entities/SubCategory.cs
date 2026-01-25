@@ -1,5 +1,4 @@
-using FinancialKrisis.Domain.Common;
-using FinancialKrisis.Domain.Identity;
+using FinancialKrisis.Common.Records;
 
 namespace FinancialKrisis.Domain.Entities;
 

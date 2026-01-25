@@ -1,29 +1,66 @@
-﻿using FinancialKrisis.Domain.Common;
+﻿using FinancialKrisis.Application.DTOs;
+using FinancialKrisis.Domain.Entities;
 
 namespace FinancialKrisis.Tests.Scenarios;
 
-public abstract class Scenario<TScenario, TInput, TEntity>(TestContext pContext)
-    where TScenario : Scenario<TScenario, TInput, TEntity>
+public abstract class Scenario<TScenario, TCreateInput, TUpdateInput, TEntity>(TestContext pContext)
+    where TScenario : Scenario<TScenario, TCreateInput, TUpdateInput, TEntity>
     where TEntity : IEntity
+    where TUpdateInput : IUpdateDTO
 {
     public TestContext Context { get; } = pContext;
-    public TInput Input { get; } = Activator.CreateInstance<TInput>();
+    public TCreateInput CreateInput { get; } = Activator.CreateInstance<TCreateInput>();
+    public TUpdateInput UpdateInput { get; } = Activator.CreateInstance<TUpdateInput>();
 
-    public TEntity? CreatedEntity { get; protected set; }
+    public TEntity? Entity
+    {
+        get
+        {
+            if (field is not null)
+                return field;
+
+            if (Context.TryGetCurrent(out TEntity? current))
+                return current;
+
+            return default;
+        }
+        protected set;
+    }
+
     public Exception? LastException { get; private set; }
 
-    protected Func<TInput, Task<TEntity>>? CreateFunc { get; init; }
+    protected Func<TCreateInput, Task<TEntity>>? CreateFunc { get; init; }
+    protected Func<TUpdateInput, Task<TEntity>>? UpdateFunc { get; init; }
     protected Func<Guid, Task>? DeactivateFunc { get; init; }
 
-    public TScenario With(Action<TInput> pConfigure)
+    public TScenario CreatingWith(Action<TCreateInput> pConfigure)
     {
-        pConfigure(Input);
+        pConfigure(CreateInput);
+        return (TScenario)this;
+    }
+
+    public TScenario UpdatingWith(Action<TUpdateInput> pConfigure)
+    {
+        pConfigure(UpdateInput);
         return (TScenario)this;
     }
 
     public TScenario Create()
     {
-        ExecuteScenarioResultSync(async () => CreatedEntity = await CreateFunc!(Input));
+        ExecuteScenarioResultSync(async () => Entity = await CreateFunc!(CreateInput));
+        return (TScenario)this;
+    }
+
+    public TScenario Update()
+    {
+        UpdateInput.Id = Entity?.Id ?? Guid.NewGuid();
+
+        ExecuteScenarioResultSync(async () =>
+        {
+            Entity = await UpdateFunc!(UpdateInput);
+            Context.SetCurrent(Entity);
+        });
+
         return (TScenario)this;
     }
 
@@ -35,7 +72,7 @@ public abstract class Scenario<TScenario, TInput, TEntity>(TestContext pContext)
 
     protected TScenario AsCurrent()
     {
-        Context.SetCurrent(CreatedEntity);
+        Context.SetCurrent(Entity);
         return (TScenario)this;
     }
 

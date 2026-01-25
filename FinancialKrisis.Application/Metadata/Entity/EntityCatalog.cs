@@ -11,7 +11,7 @@ public static class EntityCatalog
             { typeof(Account), new("Conta", GrammaticalGender.Feminine) },
             { typeof(Category), new("Categoria", GrammaticalGender.Feminine) },
             { typeof(Subcategory), new("Subcategoria", GrammaticalGender.Feminine) },
-            { typeof(Payee), new("Favorecido", GrammaticalGender.Masculine) },
+            { typeof(Payee), new("Beneficiário", GrammaticalGender.Masculine) },
             { typeof(Transaction), new("Transação", GrammaticalGender.Feminine) }
         };
 }

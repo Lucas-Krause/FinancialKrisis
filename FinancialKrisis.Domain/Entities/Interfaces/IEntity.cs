@@ -1,4 +1,4 @@
-﻿namespace FinancialKrisis.Domain.Common;
+﻿namespace FinancialKrisis.Domain.Entities;
 
 public interface IEntity
 {

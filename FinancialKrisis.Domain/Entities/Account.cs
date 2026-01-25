@@ -1,5 +1,6 @@
-﻿using FinancialKrisis.Domain.Common;
-using FinancialKrisis.Domain.Identity;
+﻿using FinancialKrisis.Common.Records;
+using FinancialKrisis.Domain.Enums;
+using FinancialKrisis.Domain.Exceptions;
 
 namespace FinancialKrisis.Domain.Entities;
 
@@ -22,12 +23,9 @@ public class Account : IEntity, IActivatable
 
     public Account(string pName, string pAccountNumber, decimal pInitialBalance)
     {
-        if (string.IsNullOrWhiteSpace(pName))
-            throw new ArgumentException("Account name is required.");
-        if (string.IsNullOrWhiteSpace(pAccountNumber))
-            throw new ArgumentException("Account number is required.");
-        if (pInitialBalance < 0)
-            throw new ArgumentException("Initial balance cannot be negative.");
+        ValidateName(pName);
+        ValidateAccountNumber(pAccountNumber);
+        ValidateInitialBalance(pInitialBalance);
 
         Id = Guid.NewGuid();
         Name = pName;
@@ -38,20 +36,41 @@ public class Account : IEntity, IActivatable
 
     public void Rename(string pNewName)
     {
-        if (string.IsNullOrWhiteSpace(pNewName))
-            throw new ArgumentException("Account name is required.");
+        ValidateName(pNewName);
         Name = pNewName;
     }
 
     public void ChangeAccountNumber(string pNewAccountNumber)
     {
-        if (string.IsNullOrWhiteSpace(pNewAccountNumber))
-            throw new ArgumentException("Account number is required.");
+        ValidateAccountNumber(pNewAccountNumber);
         AccountNumber = pNewAccountNumber;
+    }
+
+    public void ChangeInitialBalance(decimal pNewInitialBalance)
+    {
+        ValidateInitialBalance(pNewInitialBalance);
+        InitialBalance = pNewInitialBalance;
     }
 
     public void Deactivate()
     {
         IsActive = false;
+    }
+
+    private static void ValidateName(string pName)
+    {
+        if (string.IsNullOrWhiteSpace(pName))
+            throw new DomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Account), Fields.Name);
+    }
+
+    private static void ValidateAccountNumber(string pAccountNumber)
+    {
+        if (string.IsNullOrWhiteSpace(pAccountNumber))
+            throw new DomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Account), Fields.AccountNumber);
+    }
+    private static void ValidateInitialBalance(decimal pInitialBalance)
+    {
+        if (pInitialBalance < 0)
+            throw new DomainRuleException(DomainRuleErrorCode.NegativeValue, typeof(Account), Fields.InitialBalance);
     }
 }

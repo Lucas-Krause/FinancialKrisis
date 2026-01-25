@@ -13,18 +13,23 @@ public sealed class TestContext : IDisposable
     public ServiceProvider Provider { get; }
 
     public CreateAccountService CreateAccountService { get; }
+    public UpdateAccountService UpdateAccountService { get; }
     public DeactivateAccountService DeactivateAccountService { get; }
 
     public CreateCategoryService CreateCategoryService { get; }
+    public UpdateCategoryService UpdateCategoryService { get; }
     public DeactivateCategoryService DeactivateCategoryService { get; }
 
     public CreateSubcategoryService CreateSubcategoryService { get; }
+    public UpdateSubcategoryService UpdateSubcategoryService { get; }
     public DeactivateSubcategoryService DeactivateSubcategoryService { get; }
 
     public CreatePayeeService CreatePayeeService { get; }
+    public UpdatePayeeService UpdatePayeeService { get; }
     public DeactivatePayeeService DeactivatePayeeService { get; }
 
     public CreateTransactionService CreateTransactionService { get; }
+    public UpdateTransactionService UpdateTransactionService { get; }
     public DeleteTransactionService DeleteTransactionService { get; }
 
     public TestContext()
@@ -33,18 +38,23 @@ public sealed class TestContext : IDisposable
         Scope = Provider.CreateScope();
 
         CreateAccountService = Scope.ServiceProvider.GetRequiredService<CreateAccountService>();
+        UpdateAccountService = Scope.ServiceProvider.GetRequiredService<UpdateAccountService>();
         DeactivateAccountService = Scope.ServiceProvider.GetRequiredService<DeactivateAccountService>();
 
         CreateCategoryService = Scope.ServiceProvider.GetRequiredService<CreateCategoryService>();
+        UpdateCategoryService = Scope.ServiceProvider.GetRequiredService<UpdateCategoryService>();
         DeactivateCategoryService = Scope.ServiceProvider.GetRequiredService<DeactivateCategoryService>();
 
         CreateSubcategoryService = Scope.ServiceProvider.GetRequiredService<CreateSubcategoryService>();
+        UpdateSubcategoryService = Scope.ServiceProvider.GetRequiredService<UpdateSubcategoryService>();
         DeactivateSubcategoryService = Scope.ServiceProvider.GetRequiredService<DeactivateSubcategoryService>();
 
         CreatePayeeService = Scope.ServiceProvider.GetRequiredService<CreatePayeeService>();
+        UpdatePayeeService = Scope.ServiceProvider.GetRequiredService<UpdatePayeeService>();
         DeactivatePayeeService = Scope.ServiceProvider.GetRequiredService<DeactivatePayeeService>();
 
         CreateTransactionService = Scope.ServiceProvider.GetRequiredService<CreateTransactionService>();
+        UpdateTransactionService = Scope.ServiceProvider.GetRequiredService<UpdateTransactionService>();
         DeleteTransactionService = Scope.ServiceProvider.GetRequiredService<DeleteTransactionService>();
     }
 

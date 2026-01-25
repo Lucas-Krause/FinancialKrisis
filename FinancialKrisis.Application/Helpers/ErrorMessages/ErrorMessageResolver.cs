@@ -1,10 +1,10 @@
 ﻿using FinancialKrisis.Application.Enums;
 using FinancialKrisis.Application.Exceptions;
 using FinancialKrisis.Application.Metadata;
+using FinancialKrisis.Common.Records;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Enums;
 using FinancialKrisis.Domain.Exceptions;
-using FinancialKrisis.Domain.Identity;
 
 namespace FinancialKrisis.Application.Helpers;
 
@@ -40,11 +40,11 @@ public static class ErrorMessageResolver
             DomainRuleErrorCode.RequiredField =>
                 $"{articleField.ToUpper()} {fieldMetadata.NamePt.ToLower()} d{articleEntity} {entityMetadata.NamePt.ToLower()} é obrigatóri{articleField}.",
 
-            DomainRuleErrorCode.NegativeAmount =>
+            DomainRuleErrorCode.NegativeValue =>
                 $"{articleField.ToUpper()} {fieldMetadata.NamePt.ToLower()} d{articleEntity} {entityMetadata.NamePt.ToLower()} não pode ser negativ{articleField}.",
 
             DomainRuleErrorCode.EntityNotFound =>
-                $"{articleEntity.ToUpper()} {entityMetadata.NamePt.ToLower()} não foi encontrada.",
+                $"{articleEntity.ToUpper()} {entityMetadata.NamePt.ToLower()} não foi encontrad{articleEntity}.",
 
             _ => "Erro de validação."
         };

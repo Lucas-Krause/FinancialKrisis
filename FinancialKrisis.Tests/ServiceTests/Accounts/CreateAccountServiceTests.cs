@@ -1,26 +1,52 @@
-﻿using FinancialKrisis.Application.DTOs;
-using FinancialKrisis.Application.Services;
-using FinancialKrisis.Domain.Entities;
-using FinancialKrisis.Tests.TestInfrastructure;
-using Microsoft.Extensions.DependencyInjection;
+﻿using FinancialKrisis.Domain.Entities;
+using FinancialKrisis.Domain.Enums;
+using FinancialKrisis.Tests.Scenarios;
+using FinancialKrisis.Tests.Scenarios.Assertions;
 
 namespace FinancialKrisis.Tests.ServiceTests.Accounts;
 
 public class CreateAccountServiceTests
 {
     [Fact]
-    public async Task NormalSituation_ShouldCreateSuccessfully()
+    public void ValidInput_ShouldCreateSuccessfully()
     {
-        ServiceProvider provider = TestServiceProviderFactory.Create();
-        using IServiceScope scope = provider.CreateScope();
+        new TestContext()
+            .Account()
+            .Create()
+            .AsCurrentAccount()
+            .ShouldCreateSuccessfully();
+    }
 
-        CreateAccountService createAccountService = scope.ServiceProvider.GetRequiredService<CreateAccountService>();
+    [Fact]
+    public void InvalidName_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Account()
+            .CreatingWith(CreateInput => CreateInput.Name = string.Empty)
+            .Create()
+            .AsCurrentAccount()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Account), Account.Fields.Name);
+    }
 
-        Account createdAccount = await createAccountService.ExecuteAsync(new CreateAccountDTO { Name = "Test Account", AccountNumber = "123456", InitialBalance = 500 });
+    [Fact]
+    public void InvalidAccountNumber_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Account()
+            .CreatingWith(CreateInput => CreateInput.AccountNumber = string.Empty)
+            .Create()
+            .AsCurrentAccount()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Account), Account.Fields.AccountNumber);
+    }
 
-        Assert.Equal("Test Account", createdAccount.Name);
-        Assert.Equal("123456", createdAccount.AccountNumber);
-        Assert.Equal(500, createdAccount.InitialBalance);
-        Assert.True(createdAccount.IsActive);
+    [Fact]
+    public void NegativeInitialBalance_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Account()
+            .CreatingWith(CreateInput => CreateInput.InitialBalance = -100)
+            .Create()
+            .AsCurrentAccount()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.NegativeValue, typeof(Account), Account.Fields.InitialBalance);
     }
 }

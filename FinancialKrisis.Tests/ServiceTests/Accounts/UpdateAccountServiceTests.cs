@@ -1,26 +1,76 @@
 ﻿using FinancialKrisis.Application.DTOs;
-using FinancialKrisis.Application.Services;
+using FinancialKrisis.Application.Enums;
 using FinancialKrisis.Domain.Entities;
-using FinancialKrisis.Tests.TestInfrastructure;
-using Microsoft.Extensions.DependencyInjection;
+using FinancialKrisis.Domain.Enums;
+using FinancialKrisis.Tests.Scenarios;
+using FinancialKrisis.Tests.Scenarios.Assertions;
 
 namespace FinancialKrisis.Tests.ServiceTests.Accounts;
 
 public class UpdateAccountServiceTests
 {
     [Fact]
-    public async Task NormalSituation_ShouldUpdateNameSuccessfully()
+    public async Task ValidInput_ShouldUpdateSuccessfully()
     {
-        ServiceProvider provider = TestServiceProviderFactory.Create();
-        using IServiceScope scope = provider.CreateScope();
+        new TestContext()
+            .Account()
+            .Create()
+            .AsCurrentAccount()
+            .UpdatingWith(UpdateInput =>
+            {
+                UpdateInput.Name = "New Name";
+                UpdateInput.AccountNumber = "123123123";
+                UpdateInput.InitialBalance = 1000;
+            })
+            .Update()
+            .ShouldUpdateSuccessfully();
+    }
 
-        CreateAccountService createAccountService = scope.ServiceProvider.GetRequiredService<CreateAccountService>();
-        UpdateAccountService updateAccountService = scope.ServiceProvider.GetRequiredService<UpdateAccountService>();
+    [Fact]
+    public async Task InactiveAccount_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Account()
+            .Create()
+            .AsCurrentAccount()
+            .Deactivate()
+            .Update()
+            .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.EntityInactive, typeof(Account));
+    }
 
-        Account createdAccount = await createAccountService.ExecuteAsync(new CreateAccountDTO { Name = "Old Name", AccountNumber = "111", InitialBalance = 100 });
-        Account updatedAccount = await updateAccountService.ExecuteAsync(new UpdateAccountDTO { Id = createdAccount.Id, Name = "New Name", AccountNumber = "222" });
+    [Fact]
+    public async Task InvalidName_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Account()
+            .Create()
+            .AsCurrentAccount()
+            .UpdatingWith(UpdateInput => UpdateInput.Name = Optional<string>.Remove())
+            .Update()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Account), Account.Fields.Name);
+    }
 
-        Assert.Equal("New Name", updatedAccount.Name);
-        Assert.Equal("222", updatedAccount.AccountNumber);
+    [Fact]
+    public async Task InvalidAccountNumber_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Account()
+            .Create()
+            .AsCurrentAccount()
+            .UpdatingWith(UpdateInput => UpdateInput.AccountNumber = Optional<string>.Remove())
+            .Update()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Account), Account.Fields.AccountNumber);
+    }
+
+    [Fact]
+    public async Task NegativeInitialBalance_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Account()
+            .Create()
+            .AsCurrentAccount()
+            .UpdatingWith(UpdateInput => UpdateInput.InitialBalance = -100)
+            .Update()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.NegativeValue, typeof(Account), Account.Fields.InitialBalance);
     }
 }

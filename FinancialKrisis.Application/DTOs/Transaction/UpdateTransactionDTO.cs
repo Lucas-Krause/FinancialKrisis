@@ -1,13 +1,18 @@
+using FinancialKrisis.Domain.Enums;
+
 namespace FinancialKrisis.Application.DTOs;
 
-public class UpdateTransactionDTO
+public class UpdateTransactionDTO : IUpdateDTO
 {
     public Guid Id { get; set; }
-    public string Identifier { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public DateTime DateTime { get; set; }
-    public Guid? PayeeId { get; set; }
-    public Guid? CategoryId { get; set; }
-    public Guid? SubcategoryId { get; set; }
-    public decimal Amount { get; set; }
+    
+    public Optional<string> Identifier { get; set; } = Optional<string>.Undefined();
+    public Optional<string> Memo { get; set; } = Optional<string>.Undefined();
+    public Optional<decimal> Amount { get; set; } = Optional<decimal>.Undefined();
+    public Optional<DateTime> DateTime { get; set; } = Optional<DateTime>.Undefined();
+    public Optional<TransactionDirection> Direction { get; set; } = Optional<TransactionDirection>.Undefined();
+
+    public Optional<Guid> PayeeId { get; set; } = Optional<Guid>.Undefined();
+    public Optional<Guid> CategoryId { get; set; } = Optional<Guid>.Undefined();
+    public Optional<Guid> SubcategoryId { get; set; } = Optional<Guid>.Undefined();
 }

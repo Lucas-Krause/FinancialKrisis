@@ -3,16 +3,17 @@ using FinancialKrisis.Domain.Entities;
 
 namespace FinancialKrisis.Tests.Scenarios.Entities;
 
-public sealed class TransactionScenario : Scenario<TransactionScenario, CreateTransactionDTO, Transaction>
+public sealed class TransactionScenario : Scenario<TransactionScenario, CreateTransactionDTO, UpdateTransactionDTO, Transaction>
 {
     public TransactionScenario(TestContext pContext) : base(pContext)
     {
-        Input.Identifier = "T1";
-        Input.Description = "Test Transaction";
-        Input.DateTime = DateTime.Now;
-        Input.Amount = 100m;
+        CreateInput.Identifier = "T1";
+        CreateInput.Memo = "Test Transaction";
+        CreateInput.DateTime = DateTime.Now;
+        CreateInput.Amount = 100m;
 
         CreateFunc = Context.CreateTransactionService.ExecuteAsync;
+        UpdateFunc = Context.UpdateTransactionService.ExecuteAsync;
     }
 
     public TransactionScenario AsCurrentTransaction()
@@ -20,27 +21,45 @@ public sealed class TransactionScenario : Scenario<TransactionScenario, CreateTr
         return AsCurrent();
     }
 
-    public TransactionScenario WithCurrentAccount()
+    public TransactionScenario CreatingWithCurrentAccount()
     {
-        Input.AccountId = Context.GetCurrentOrThrow<Account>().Id;
+        CreateInput.AccountId = Context.GetCurrentOrThrow<Account>().Id;
         return this;
     }
 
-    public TransactionScenario WithCurrentPayee()
+    public TransactionScenario CreatingWithCurrentPayee()
     {
-        Input.PayeeId = Context.GetCurrentOrThrow<Payee>().Id;
+        CreateInput.PayeeId = Context.GetCurrentOrThrow<Payee>().Id;
         return this;
     }
 
-    public TransactionScenario WithCurrentCategory()
+    public TransactionScenario CreatingWithCurrentCategory()
     {
-        Input.CategoryId = Context.GetCurrentOrThrow<Category>().Id;
+        CreateInput.CategoryId = Context.GetCurrentOrThrow<Category>().Id;
         return this;
     }
 
-    public TransactionScenario WithCurrentSubcategory()
+    public TransactionScenario CreatingWithCurrentSubcategory()
     {
-        Input.SubcategoryId = Context.GetCurrentOrThrow<Subcategory>().Id;
+        CreateInput.SubcategoryId = Context.GetCurrentOrThrow<Subcategory>().Id;
+        return this;
+    }
+
+    public TransactionScenario UpdatingWithCurrentPayee()
+    {
+        UpdateInput.PayeeId = Context.GetCurrentOrThrow<Payee>().Id;
+        return this;
+    }
+
+    public TransactionScenario UpdatingWithCurrentCategory()
+    {
+        UpdateInput.CategoryId = Context.GetCurrentOrThrow<Category>().Id;
+        return this;
+    }
+
+    public TransactionScenario UpdatingWithCurrentSubcategory()
+    {
+        UpdateInput.SubcategoryId = Context.GetCurrentOrThrow<Subcategory>().Id;
         return this;
     }
 }

@@ -3,11 +3,11 @@ using FinancialKrisis.Domain.Entities;
 
 namespace FinancialKrisis.Tests.Scenarios.Entities;
 
-public class SubcategoryScenario : Scenario<SubcategoryScenario, CreateSubcategoryDTO, Subcategory>
+public class SubcategoryScenario : Scenario<SubcategoryScenario, CreateSubcategoryDTO, UpdateSubcategoryDTO, Subcategory>
 {
     public SubcategoryScenario(TestContext pContext) : base(pContext)
     {
-        Input.Name = "Test Subcategory";
+        CreateInput.Name = "Test Subcategory";
 
         CreateFunc = Context.CreateSubcategoryService.ExecuteAsync;
         DeactivateFunc = Context.DeactivateSubcategoryService.ExecuteAsync;
@@ -18,9 +18,9 @@ public class SubcategoryScenario : Scenario<SubcategoryScenario, CreateSubcatego
         return AsCurrent();
     }
 
-    public SubcategoryScenario WithCurrentCategory()
+    public SubcategoryScenario CreatingWithCurrentCategory()
     {
-        Input.CategoryId = Context.GetCurrentOrThrow<Category>().Id;
+        CreateInput.CategoryId = Context.GetCurrentOrThrow<Category>().Id;
         return this;
     }
 }

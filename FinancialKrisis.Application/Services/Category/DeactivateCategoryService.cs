@@ -4,7 +4,7 @@ using FinancialKrisis.Domain.Repositories;
 
 namespace FinancialKrisis.Application.Services;
 
-public class DeactivateCategoryService(ICategoryRepository pCategoryRepository, ISubcategoryRepository pSubcategoryRepository)
+public class DeactivateCategoryService(ICategoryRepository pCategoryRepository)
 {
     public async Task ExecuteAsync(Guid pCategoryId)
     {

@@ -1,6 +1,4 @@
-﻿using FinancialKrisis.Domain.Enums;
-
-namespace FinancialKrisis.Infrastructure.Errors;
+﻿namespace FinancialKrisis.Infrastructure.Errors;
 
 public class EntityNotFoundException(Type pEntityType, Guid pId) : Exception
 {

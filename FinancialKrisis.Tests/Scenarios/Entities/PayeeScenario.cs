@@ -3,11 +3,11 @@ using FinancialKrisis.Domain.Entities;
 
 namespace FinancialKrisis.Tests.Scenarios.Entities;
 
-public class PayeeScenario : Scenario<PayeeScenario, CreatePayeeDTO, Payee>
+public class PayeeScenario : Scenario<PayeeScenario, CreatePayeeDTO, UpdatePayeeDTO, Payee>
 {
     public PayeeScenario(TestContext pContext) : base(pContext)
     {
-        Input.Name = "Test Payee";
+        CreateInput.Name = "Test Payee";
 
         CreateFunc = Context.CreatePayeeService.ExecuteAsync;
         DeactivateFunc = Context.DeactivatePayeeService.ExecuteAsync;

@@ -12,50 +12,58 @@ public class CreateTransactionServiceTests
     public void ValidInput_ShouldCreateSuccessfully()
     {
         new TestContext()
-            .Account()
-                .Create()
-                .AsCurrentAccount()
-                .ShouldMatchInput()
-            .Payee()
-                .Create()
-                .AsCurrentPayee()
-                .ShouldMatchInput()
-            .Category()
-                .Create()
-                .AsCurrentCategory()
-                .ShouldMatchInput()
-            .Subcategory()
-                .WithCurrentCategory()
-                .Create()
-                .AsCurrentSubcategory()
-                .ShouldMatchInput()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .Payee().Create().AsCurrentPayee().ShouldCreateSuccessfully()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Subcategory().CreatingWithCurrentCategory().Create().AsCurrentSubcategory().ShouldCreateSuccessfully()
             .Transaction()
-                .WithCurrentAccount()
-                .WithCurrentPayee()
-                .WithCurrentCategory()
-                .WithCurrentSubcategory()
+                .CreatingWithCurrentAccount()
+                .CreatingWithCurrentPayee()
+                .CreatingWithCurrentCategory()
+                .CreatingWithCurrentSubcategory()
                 .Create()
                 .AsCurrentTransaction()
-                .ShouldMatchInput();
+                .ShouldCreateSuccessfully();
     }
 
     [Fact]
-    public void NegativeAmount_ShouldThrowCorrectException()
+    public void InvalidDateTime_ShouldFailWithDomainRuleException()
     {
         new TestContext()
-            .Account()
-                .Create()
-                .AsCurrentAccount()
-                .ShouldMatchInput()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
             .Transaction()
-                .WithCurrentAccount()
-                .With(input => input.Amount = -1)
+                .CreatingWithCurrentAccount()
+                .CreatingWith(CreateInput => CreateInput.DateTime = default)
                 .Create()
-                .ShouldFailWithDomainRuleException(DomainRuleErrorCode.NegativeAmount);
+                .ShouldFailWithDomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Transaction), Transaction.Fields.DateTime);
     }
 
     [Fact]
-    public void NonExistentAccount_ShouldThrowCorrectException()
+    public void InvalidDirection_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .Transaction()
+                .CreatingWithCurrentAccount()
+                .CreatingWith(CreateInput => CreateInput.Direction = (TransactionDirection)3)
+                .Create()
+                .ShouldFailWithDomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Transaction), Transaction.Fields.Direction);
+    }
+
+    [Fact]
+    public void NegativeAmount_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .Transaction()
+                .CreatingWithCurrentAccount()
+                .CreatingWith(CreateInput => CreateInput.Amount = -1)
+                .Create()
+                .ShouldFailWithDomainRuleException(DomainRuleErrorCode.NegativeValue, typeof(Transaction), Transaction.Fields.Amount);
+    }
+
+    [Fact]
+    public void NonExistentAccount_ShouldFailWithDomainRuleException()
     {
         new TestContext()
             .Transaction()
@@ -64,110 +72,104 @@ public class CreateTransactionServiceTests
     }
 
     [Fact]
-    public void SubcategoryDoesNotBelongToCategory_ShouldThrowCorrectException()
+    public void NonExistentPayee_ShouldFailWithDomainRuleException()
     {
         new TestContext()
-            .Account()
-                .Create()
-                .AsCurrentAccount()
-                .ShouldMatchInput()
-            .Category()
-                .Create()
-                .AsCurrentCategory()
-                .ShouldMatchInput()
-            .Subcategory()
-                .WithCurrentCategory()
-                .Create()
-                .AsCurrentSubcategory()
-                .ShouldMatchInput()
-            .Category()
-                .Create()
-                .AsCurrentCategory()
-                .ShouldMatchInput()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
             .Transaction()
-                .WithCurrentAccount()
-                .WithCurrentCategory()
-                .WithCurrentSubcategory()
+                .CreatingWithCurrentAccount()
+                .CreatingWith(CreateInput => CreateInput.PayeeId = Guid.NewGuid())
                 .Create()
-                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.SubcategoryDoesNotBelongToCategory, typeof(Subcategory));
+                .ShouldFailWithDomainRuleException(DomainRuleErrorCode.EntityNotFound, typeof(Payee));
     }
 
     [Fact]
-    public void InactiveAccount_ShouldThrowCorrectException()
+    public void NonExistentCategory_ShouldFailWithDomainRuleException()
     {
         new TestContext()
-            .Account()
-                .Create()
-                .AsCurrentAccount()
-                .Deactivate()
-                .ShouldBeInactive()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
             .Transaction()
-                .WithCurrentAccount()
+                .CreatingWithCurrentAccount()
+                .CreatingWith(CreateInput => CreateInput.CategoryId = Guid.NewGuid())
+                .Create()
+                .ShouldFailWithDomainRuleException(DomainRuleErrorCode.EntityNotFound, typeof(Category));
+    }
+
+    [Fact]
+    public void NonExistentSubcategory_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .Transaction()
+                .CreatingWithCurrentAccount()
+                .CreatingWith(CreateInput => CreateInput.SubcategoryId = Guid.NewGuid())
+                .Create()
+                .ShouldFailWithDomainRuleException(DomainRuleErrorCode.EntityNotFound, typeof(Subcategory));
+    }
+
+    [Fact]
+    public void SubcategoryDoesNotBelongToCategory_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Subcategory().CreatingWithCurrentCategory().Create().AsCurrentSubcategory().ShouldCreateSuccessfully()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Transaction()
+                .CreatingWithCurrentAccount()
+                .CreatingWithCurrentCategory()
+                .CreatingWithCurrentSubcategory()
+                .Create()
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.SubcategoryDoesNotBelongToCategory, typeof(Subcategory), Subcategory.Fields.Category);
+    }
+
+    [Fact]
+    public void InactiveAccount_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Account().Create().AsCurrentAccount().Deactivate().ShouldDeactivateSuccessfully()
+            .Transaction()
+                .CreatingWithCurrentAccount()
                 .Create()
                 .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.EntityInactive, typeof(Account));
     }
 
     [Fact]
-    public void InactivePayee_ShouldThrowCorrectException()
+    public void InactivePayee_ShouldFailWithApplicationRuleException()
     {
         new TestContext()
-            .Account()
-                .Create()
-                .AsCurrentAccount()
-                .ShouldMatchInput()
-            .Payee()
-                .Create()
-                .AsCurrentPayee()
-                .Deactivate()
-                .ShouldBeInactive()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .Payee().Create().AsCurrentPayee().Deactivate().ShouldDeactivateSuccessfully()
             .Transaction()
-                .WithCurrentAccount()
-                .WithCurrentPayee()
+                .CreatingWithCurrentAccount()
+                .CreatingWithCurrentPayee()
                 .Create()
                 .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.EntityInactive, typeof(Payee));
     }
 
     [Fact]
-    public void InactiveCategory_ShouldThrowCorrectException()
+    public void InactiveCategory_ShouldFailWithApplicationRuleException()
     {
         new TestContext()
-            .Account()
-                .Create()
-                .AsCurrentAccount()
-                .ShouldMatchInput()
-            .Category()
-                .Create()
-                .AsCurrentCategory()
-                .Deactivate()
-                .ShouldBeInactive()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .Category().Create().AsCurrentCategory().Deactivate().ShouldDeactivateSuccessfully()
             .Transaction()
-                .WithCurrentAccount()
-                .WithCurrentCategory()
+                .CreatingWithCurrentAccount()
+                .CreatingWithCurrentCategory()
                 .Create()
                 .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.EntityInactive, typeof(Category));
     }
 
     [Fact]
-    public void InactiveSubcategory_ShouldThrowCorrectException()
+    public void InactiveSubcategory_ShouldFailWithApplicationRuleException()
     {
         new TestContext()
-            .Account()
-                .Create()
-                .AsCurrentAccount()
-                .ShouldMatchInput()
-            .Category()
-                .Create()
-                .AsCurrentCategory()
-                .ShouldMatchInput()
-            .Subcategory()
-                .WithCurrentCategory()
-                .Create()
-                .AsCurrentSubcategory()
-                .Deactivate()
-                .ShouldBeInactive()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Subcategory().CreatingWithCurrentCategory().Create().AsCurrentSubcategory().Deactivate().ShouldDeactivateSuccessfully()
             .Transaction()
-                .WithCurrentAccount()
-                .WithCurrentSubcategory()
+                .CreatingWithCurrentAccount()
+                .CreatingWithCurrentSubcategory()
                 .Create()
                 .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.EntityInactive, typeof(Subcategory));
     }

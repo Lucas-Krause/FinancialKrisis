@@ -1,6 +1,9 @@
-﻿using FinancialKrisis.Application.Enums;
+﻿using FinancialKrisis.Application.DTOs;
+using FinancialKrisis.Application.Enums;
 using FinancialKrisis.Application.Exceptions;
-using FinancialKrisis.Domain.Common;
+using FinancialKrisis.Common.Exceptions;
+using FinancialKrisis.Common.Records;
+using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Enums;
 using FinancialKrisis.Domain.Exceptions;
 using System.Reflection;
@@ -10,11 +13,12 @@ namespace FinancialKrisis.Tests.Scenarios.Assertions;
 
 public static class BaseScenarioAssertions
 {
-    extension<TScenario, TInput, TEntity>(Scenario<TScenario, TInput, TEntity> pScenario)
-        where TScenario : Scenario<TScenario, TInput, TEntity>
+    extension<TScenario, TCreateInput, TUpdateInput, TEntity>(Scenario<TScenario, TCreateInput, TUpdateInput, TEntity> pScenario)
+        where TScenario : Scenario<TScenario, TCreateInput, TUpdateInput, TEntity>
         where TEntity : IEntity, IActivatable
+        where TUpdateInput : IUpdateDTO
     {
-        public TestContext ShouldBeInactive()
+        public TestContext ShouldDeactivateSuccessfully()
         {
             TEntity entity = pScenario.Context.GetCurrentOrThrow<TEntity>();
 
@@ -25,75 +29,111 @@ public static class BaseScenarioAssertions
         }
     }
 
-    extension<TScenario, TInput, TEntity>(Scenario<TScenario, TInput, TEntity> pScenario)
-        where TScenario : Scenario<TScenario, TInput, TEntity>
+    extension<TScenario, TCreateInput, TUpdateInput, TEntity>(Scenario<TScenario, TCreateInput, TUpdateInput, TEntity> pScenario)
+        where TScenario : Scenario<TScenario, TCreateInput, TUpdateInput, TEntity>
         where TEntity : IEntity
+        where TUpdateInput : IUpdateDTO
     {
-        public TestContext ShouldMatchInput()
+        public TestContext ShouldCreateSuccessfully()
         {
             if (pScenario.LastException is not null)
                 throw pScenario.LastException;
 
-            TInput input = pScenario.Input;
-            TEntity entity = pScenario.Context.GetCurrentOrThrow<TEntity>();
-
-            foreach (PropertyInfo inputProperty in typeof(TInput).GetProperties())
-            {
-                if (!inputProperty.CanRead)
-                    continue;
-
-                PropertyInfo? entityProperty = typeof(TEntity).GetProperty(inputProperty.Name);
-
-                if (entityProperty is null || !entityProperty.CanRead)
-                    continue;
-
-                object? inputValue = inputProperty.GetValue(input);
-                object? entityValue = entityProperty.GetValue(entity);
-
-                if (!Equals(inputValue, entityValue))
-                {
-                    throw new XunitException(
-                        $"Input não corresponde a entidade '{typeof(TEntity).Name}'{Environment.NewLine}" +
-                        $"Propriedade: {inputProperty.Name}{Environment.NewLine}" +
-                        $"Valor do Input: {FormatValue(inputValue)}{Environment.NewLine}" +
-                        $"Valor da Entidade: {FormatValue(entityValue)}");
-                }
-            }
+            InputShouldMatchEntity(pScenario.CreateInput, pScenario.Context.GetCurrentOrThrow<TEntity>());
 
             return pScenario.Context;
         }
 
-        public void ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode pErrorCode, Type? pEntityType = null)
+        public TestContext ShouldUpdateSuccessfully()
         {
-            if (pScenario.LastException is not ApplicationRuleException ex)
-                throw new XunitException($"Expected ApplicationRuleException but got {pScenario.LastException}");
+            if (pScenario.LastException is not null)
+                throw pScenario.LastException;
 
-            Assert.NotNull(ex.Message);
-            Assert.NotEqual(string.Empty, ex.Message);
-            Assert.Equal(pErrorCode, ex.ErrorCode);
-            Assert.Equal(pEntityType ?? typeof(TEntity), ex.EntityType);
+            InputShouldMatchEntity(pScenario.UpdateInput, pScenario.Context.GetCurrentOrThrow<TEntity>());
+
+            return pScenario.Context;
         }
 
-        public void ShouldFailWithDomainRuleException(DomainRuleErrorCode pErrorCode, Type? pEntityType = null)
+        public void ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode pErrorCode, Type pEntityType, FieldKey? pFieldKey = null)
         {
-            if (pScenario.LastException is not DomainRuleException ex)
-                throw new XunitException($"Expected DomainRuleException but got {pScenario.LastException}");
+            ShouldFailWithRuleException<ApplicationRuleException, ApplicationRuleErrorCode>(pScenario.LastException, pErrorCode, pEntityType, pFieldKey);
+        }
 
-            Assert.NotNull(ex.Message);
-            Assert.NotEqual(string.Empty, ex.Message);
-            Assert.Equal(pErrorCode, ex.ErrorCode);
-            Assert.Equal(pEntityType ?? typeof(TEntity), ex.EntityType);
+        public void ShouldFailWithDomainRuleException(DomainRuleErrorCode pErrorCode, Type pEntityType, FieldKey? pFieldKey = null)
+        {
+            ShouldFailWithRuleException<DomainRuleException, DomainRuleErrorCode>(pScenario.LastException, pErrorCode, pEntityType, pFieldKey);
         }
     }
 
-    private static string FormatValue(object? value)
+    private static void ShouldFailWithRuleException<TException, TErrorCode>(Exception? pLastException, TErrorCode pErrorCode, Type pEntityType, FieldKey? pFieldKey = null)
+        where TException : RuleException<TErrorCode>
+        where TErrorCode : Enum
     {
-        if (value is null)
+        if (pLastException is null)
+            throw new XunitException("Esperava exceção, mas deu sucesso!");
+
+        if (pLastException is not TException ex)
+            throw new XunitException($"Esperava exceção do tipo '{typeof(TException).Name}', mas veio '{pLastException.GetType().Name}'");
+
+        Assert.NotNull(ex.Message);
+        Assert.NotEqual(string.Empty, ex.Message);
+        Assert.Equal(pErrorCode, ex.ErrorCode);
+        Assert.Equal(pEntityType, ex.EntityType);
+
+        if (ex.Field is not null)
+            Assert.Equal(pFieldKey, ex.Field);
+    }
+
+    private static void InputShouldMatchEntity<TInput, TEntity>(TInput pInput, TEntity pEntity)
+    {
+        foreach (PropertyInfo inputProperty in typeof(TInput).GetProperties())
+        {
+            object? expectedValue;
+
+            if (!inputProperty.CanRead)
+                continue;
+
+            Type propertyType = inputProperty.PropertyType;
+            PropertyInfo? entityProperty = typeof(TEntity).GetProperty(inputProperty.Name);
+
+            if (entityProperty is null || !entityProperty.CanRead)
+                continue;
+
+            expectedValue = inputProperty.GetValue(pInput);
+            object? entityValue = entityProperty.GetValue(pEntity);
+
+            if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Optional<>))
+            {
+                PropertyInfo isDefinedProperty = propertyType.GetProperty(nameof(Optional<>.IsDefined))!;
+                PropertyInfo valueProperty = propertyType.GetProperty(nameof(Optional<>.Value))!;
+
+                bool isDefined = (bool)isDefinedProperty.GetValue(expectedValue)!;
+
+                if (!isDefined)
+                    continue;
+
+                expectedValue = valueProperty.GetValue(expectedValue);
+            }
+
+            if (!Equals(expectedValue, entityValue))
+            {
+                throw new XunitException(
+                    $"Input não corresponde a entidade '{typeof(TEntity).Name}'{Environment.NewLine}" +
+                    $"Propriedade: {inputProperty.Name}{Environment.NewLine}" +
+                    $"Valor do Input: {FormatValue(expectedValue)}{Environment.NewLine}" +
+                    $"Valor da Entidade: {FormatValue(entityValue)}");
+            }
+        }
+    }
+
+    private static string FormatValue(object? pValue)
+    {
+        if (pValue is null)
             return "<null>";
 
-        if (value is DateTime dateTime)
+        if (pValue is DateTime dateTime)
             return dateTime.ToString("O");
 
-        return value.ToString()!;
+        return pValue.ToString()!;
     }
 }

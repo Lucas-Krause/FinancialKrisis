@@ -47,7 +47,7 @@ public class CreateTransactionService(
                 pCreateTransactionDTO.SubcategoryId,
                 pCreateTransactionDTO.PayeeId,
                 pCreateTransactionDTO.Identifier,
-                pCreateTransactionDTO.Description);
+                pCreateTransactionDTO.Memo);
 
             await pTransactionRepository.AddAsync(transaction);
 

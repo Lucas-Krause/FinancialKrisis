@@ -1,7 +1,6 @@
-﻿using FinancialKrisis.Domain.Common;
+﻿using FinancialKrisis.Common.Records;
 using FinancialKrisis.Domain.Enums;
 using FinancialKrisis.Domain.Exceptions;
-using FinancialKrisis.Domain.Identity;
 
 namespace FinancialKrisis.Domain.Entities;
 
@@ -15,6 +14,7 @@ public class Category : IEntity, IActivatable
     public Guid Id { get; private set; }
     public string Name { get; private set; } = null!;
     public bool IsActive { get; private set; }
+
     public List<Subcategory> Subcategories { get; private set; } = [];
 
     private Category() { }

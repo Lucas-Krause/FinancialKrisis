@@ -1,6 +1,6 @@
 ﻿using FinancialKrisis.Application.Enums;
+using FinancialKrisis.Common.Records;
 using FinancialKrisis.Domain.Entities;
-using FinancialKrisis.Domain.Identity;
 
 namespace FinancialKrisis.Application.Metadata;
 
@@ -15,7 +15,7 @@ public static class TransactionFieldCatalog
             { Transaction.Fields.Subcategory, new("Subcategoria", GrammaticalGender.Feminine) },
             { Transaction.Fields.Payee, new("Beneficiário", GrammaticalGender.Masculine) },
             { Transaction.Fields.Identifier, new("Identificador", GrammaticalGender.Masculine) },
-            { Transaction.Fields.Description, new("Descrição", GrammaticalGender.Feminine) },
+            { Transaction.Fields.Memo, new("Memo", GrammaticalGender.Feminine) },
             { Transaction.Fields.Direction, new("Direção", GrammaticalGender.Feminine) },
         };
 }

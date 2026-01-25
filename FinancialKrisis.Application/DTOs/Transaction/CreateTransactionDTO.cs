@@ -6,7 +6,7 @@ public class CreateTransactionDTO
 {
     public decimal Amount { get; set; }
     public string? Identifier { get; set; }
-    public string? Description { get; set; }
+    public string? Memo { get; set; }
     public DateTime DateTime { get; set; }
 
     public Guid AccountId { get; set; }
