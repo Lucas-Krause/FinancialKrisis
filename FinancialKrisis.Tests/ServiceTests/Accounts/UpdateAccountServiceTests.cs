@@ -10,7 +10,7 @@ namespace FinancialKrisis.Tests.ServiceTests.Accounts;
 public class UpdateAccountServiceTests
 {
     [Fact]
-    public async Task ValidInput_ShouldUpdateSuccessfully()
+    public void ValidInput_ShouldUpdateSuccessfully()
     {
         new TestContext()
             .Account()
@@ -27,7 +27,7 @@ public class UpdateAccountServiceTests
     }
 
     [Fact]
-    public async Task InactiveAccount_ShouldFailWithDomainRuleException()
+    public void InactiveAccount_ShouldFailWithApplicationRuleException()
     {
         new TestContext()
             .Account()
@@ -39,7 +39,7 @@ public class UpdateAccountServiceTests
     }
 
     [Fact]
-    public async Task InvalidName_ShouldFailWithDomainRuleException()
+    public void InvalidName_ShouldFailWithDomainRuleException()
     {
         new TestContext()
             .Account()
@@ -51,7 +51,7 @@ public class UpdateAccountServiceTests
     }
 
     [Fact]
-    public async Task InvalidAccountNumber_ShouldFailWithDomainRuleException()
+    public void InvalidAccountNumber_ShouldFailWithDomainRuleException()
     {
         new TestContext()
             .Account()
@@ -63,7 +63,7 @@ public class UpdateAccountServiceTests
     }
 
     [Fact]
-    public async Task NegativeInitialBalance_ShouldFailWithDomainRuleException()
+    public void NegativeInitialBalance_ShouldFailWithDomainRuleException()
     {
         new TestContext()
             .Account()

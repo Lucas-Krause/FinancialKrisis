@@ -10,6 +10,7 @@ public class PayeeScenario : Scenario<PayeeScenario, CreatePayeeDTO, UpdatePayee
         CreateInput.Name = "Test Payee";
 
         CreateFunc = Context.CreatePayeeService.ExecuteAsync;
+        UpdateFunc = Context.UpdatePayeeService.ExecuteAsync;
         DeactivateFunc = Context.DeactivatePayeeService.ExecuteAsync;
     }
 

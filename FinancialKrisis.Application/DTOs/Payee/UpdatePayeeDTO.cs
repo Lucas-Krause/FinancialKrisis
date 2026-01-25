@@ -3,5 +3,5 @@ namespace FinancialKrisis.Application.DTOs;
 public class UpdatePayeeDTO : IUpdateDTO
 {
     public Guid Id { get; set; }
-    public string Name { get; set; } = string.Empty;
+    public Optional<string> Name { get; set; } = Optional<string>.Undefined();
 }

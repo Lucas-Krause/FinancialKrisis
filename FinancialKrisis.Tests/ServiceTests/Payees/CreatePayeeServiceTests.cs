@@ -1,24 +1,30 @@
-using FinancialKrisis.Application.DTOs;
-using FinancialKrisis.Application.Services;
 using FinancialKrisis.Domain.Entities;
-using FinancialKrisis.Tests.TestInfrastructure;
-using Microsoft.Extensions.DependencyInjection;
+using FinancialKrisis.Domain.Enums;
+using FinancialKrisis.Tests.Scenarios;
+using FinancialKrisis.Tests.Scenarios.Assertions;
 
 namespace FinancialKrisis.Tests.ServiceTests.Payees;
 
 public class CreatePayeeServiceTests
 {
     [Fact]
-    public async Task NormalSituation_ShouldCreateSuccessfully()
+    public void ValidInput_ShouldCreateSuccessfully()
     {
-        ServiceProvider provider = TestServiceProviderFactory.Create();
-        using IServiceScope scope = provider.CreateScope();
+        new TestContext()
+            .Payee()
+            .Create()
+            .AsCurrentPayee()
+            .ShouldCreateSuccessfully();
+    }
 
-        CreatePayeeService createPayeeService = scope.ServiceProvider.GetRequiredService<CreatePayeeService>();
-
-        Payee createdPayee = await createPayeeService.ExecuteAsync(new CreatePayeeDTO { Name = "Test Payee" });
-
-        Assert.Equal("Test Payee", createdPayee.Name);
-        Assert.True(createdPayee.IsActive);
+    [Fact]
+    public void InvalidName_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Payee()
+            .CreatingWith(CreateInput => CreateInput.Name = string.Empty)
+            .Create()
+            .AsCurrentPayee()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Payee), Payee.Fields.Name);
     }
 }

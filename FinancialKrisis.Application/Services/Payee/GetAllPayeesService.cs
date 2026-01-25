@@ -1,3 +1,4 @@
+using FinancialKrisis.Application.Helpers;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Repositories;
 
@@ -7,6 +8,13 @@ public class GetAllPayeesService(IPayeeRepository pRepository)
 {
     public async Task<IReadOnlyList<Payee>> ExecuteAsync()
     {
-        return await pRepository.GetAllAsync();
+        try
+        {
+            return await pRepository.GetAllAsync();
+        }
+        catch (Exception pEx)
+        {
+            throw ErrorMessageResolver.Resolve(pEx);
+        }
     }
 }

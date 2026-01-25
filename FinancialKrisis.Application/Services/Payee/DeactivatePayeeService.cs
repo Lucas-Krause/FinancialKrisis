@@ -1,3 +1,4 @@
+using FinancialKrisis.Application.Helpers;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Repositories;
 
@@ -7,8 +8,15 @@ public class DeactivatePayeeService(IPayeeRepository pRepository)
 {
     public async Task ExecuteAsync(Guid pPayeeId)
     {
-        Payee payee = await pRepository.GetByIdOrThrowAsync(pPayeeId);
-        payee.Deactivate();
-        await pRepository.UpdateAsync(payee);
+        try
+        {
+            Payee payee = await pRepository.GetByIdOrThrowAsync(pPayeeId);
+            payee.Deactivate();
+            await pRepository.UpdateAsync(payee);
+        }
+        catch (Exception pEx)
+        {
+            throw ErrorMessageResolver.Resolve(pEx);
+        }
     }
 }

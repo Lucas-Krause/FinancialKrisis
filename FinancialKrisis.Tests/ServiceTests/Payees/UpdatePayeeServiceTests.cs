@@ -1,25 +1,47 @@
 using FinancialKrisis.Application.DTOs;
-using FinancialKrisis.Application.Services;
+using FinancialKrisis.Application.Enums;
 using FinancialKrisis.Domain.Entities;
-using FinancialKrisis.Tests.TestInfrastructure;
-using Microsoft.Extensions.DependencyInjection;
+using FinancialKrisis.Domain.Enums;
+using FinancialKrisis.Tests.Scenarios;
+using FinancialKrisis.Tests.Scenarios.Assertions;
 
 namespace FinancialKrisis.Tests.ServiceTests.Payees;
 
 public class UpdatePayeeServiceTests
 {
     [Fact]
-    public async Task NormalSituation_ShouldUpdateNameSuccessfully()
+    public void ValidInput_ShouldUpdateSuccessfully()
     {
-        ServiceProvider provider = TestServiceProviderFactory.Create();
-        using IServiceScope scope = provider.CreateScope();
+        new TestContext()
+            .Payee()
+            .Create()
+            .AsCurrentPayee()
+            .UpdatingWith(UpdateInput => UpdateInput.Name = "Updated Payee Name")
+            .Update()
+            .ShouldUpdateSuccessfully();
+    }
 
-        CreatePayeeService createPayeeService = scope.ServiceProvider.GetRequiredService<CreatePayeeService>();
-        UpdatePayeeService updatePayeeService = scope.ServiceProvider.GetRequiredService<UpdatePayeeService>();
+    [Fact]
+    public void InvalidName_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Payee()
+            .Create()
+            .AsCurrentPayee()
+            .UpdatingWith(UpdateInput => UpdateInput.Name = Optional<string>.Remove())
+            .Update()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Payee), Payee.Fields.Name);
+    }
 
-        Payee createdPayee = await createPayeeService.ExecuteAsync(new CreatePayeeDTO { Name = "Old Name" });
-        Payee updatedPayee = await updatePayeeService.ExecuteAsync(new UpdatePayeeDTO { Id = createdPayee.Id, Name = "New Name" });
-
-        Assert.Equal("New Name", updatedPayee.Name);
+    [Fact]
+    public void InactivePayee_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Payee()
+            .Create()
+            .AsCurrentPayee()
+            .Deactivate()
+            .Update()
+            .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.EntityInactive, typeof(Payee));
     }
 }

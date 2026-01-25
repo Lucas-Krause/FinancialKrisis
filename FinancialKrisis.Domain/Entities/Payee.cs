@@ -1,4 +1,6 @@
 using FinancialKrisis.Common.Records;
+using FinancialKrisis.Domain.Enums;
+using FinancialKrisis.Domain.Exceptions;
 
 namespace FinancialKrisis.Domain.Entities;
 
@@ -17,8 +19,8 @@ public class Payee : IEntity, IActivatable
 
     public Payee(string pName)
     {
-        if (string.IsNullOrWhiteSpace(pName))
-            throw new ArgumentException("Payee name is required.");
+        ValidateName(pName);
+
         Id = Guid.NewGuid();
         Name = pName;
         IsActive = true;
@@ -26,13 +28,18 @@ public class Payee : IEntity, IActivatable
 
     public void Rename(string pNewName)
     {
-        if (string.IsNullOrWhiteSpace(pNewName))
-            throw new ArgumentException("Payee name is required.");
+        ValidateName(pNewName);
         Name = pNewName;
     }
 
     public void Deactivate()
     {
         IsActive = false;
+    }
+
+    private static void ValidateName(string pName)
+    {
+        if (string.IsNullOrWhiteSpace(pName))
+            throw new DomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Payee), Fields.Name);
     }
 }

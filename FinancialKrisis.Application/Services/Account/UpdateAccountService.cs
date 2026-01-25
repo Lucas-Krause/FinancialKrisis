@@ -14,7 +14,7 @@ public class UpdateAccountService(IAccountRepository pRepository)
             var account = (Account)ActiveEntityValidator.EnsureIsActive(await pRepository.GetByIdOrThrowAsync(pUpdateAccountDTO.Id));
 
             if (pUpdateAccountDTO.Name.IsDefined)
-                account.Rename(pUpdateAccountDTO.Name.Value!);
+                account.ChangeName(pUpdateAccountDTO.Name.Value!);
 
             if (pUpdateAccountDTO.AccountNumber.IsDefined)
                 account.ChangeAccountNumber(pUpdateAccountDTO.AccountNumber.Value!);

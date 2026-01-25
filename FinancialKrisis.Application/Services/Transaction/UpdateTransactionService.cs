@@ -23,26 +23,26 @@ public class UpdateTransactionService(
             ActiveEntityValidator.EnsureIsActive(await pAccountRepository.GetByIdOrThrowAsync(transaction.AccountId));
 
             if (pUpdateTransactionDTO.Memo.IsDefined)
-                transaction.UpdateMemo(pUpdateTransactionDTO.Memo.Value);
+                transaction.ChangeMemo(pUpdateTransactionDTO.Memo.Value);
 
             if (pUpdateTransactionDTO.Amount.IsDefined)
-                transaction.UpdateAmount(pUpdateTransactionDTO.Amount.Value);
+                transaction.ChangeAmount(pUpdateTransactionDTO.Amount.Value);
 
             if (pUpdateTransactionDTO.Identifier.IsDefined)
-                transaction.UpdateIdentifier(pUpdateTransactionDTO.Identifier.Value);
+                transaction.ChangeIdentifier(pUpdateTransactionDTO.Identifier.Value);
 
             if (pUpdateTransactionDTO.DateTime.IsDefined)
-                transaction.UpdateDateTime(pUpdateTransactionDTO.DateTime.Value);
+                transaction.ChangeDateTime(pUpdateTransactionDTO.DateTime.Value);
 
             if (pUpdateTransactionDTO.Direction.IsDefined)
-                transaction.UpdateDirection(pUpdateTransactionDTO.Direction.Value);
+                transaction.ChangeDirection(pUpdateTransactionDTO.Direction.Value);
 
             if (pUpdateTransactionDTO.PayeeId.IsDefined)
             {
                 if (pUpdateTransactionDTO.PayeeId.Value != Guid.Empty)
                     ActiveEntityValidator.EnsureIsActive(await pPayeeRepository.GetByIdOrThrowAsync(pUpdateTransactionDTO.PayeeId.Value));
 
-                transaction.UpdatePayee(pUpdateTransactionDTO.PayeeId.Value);
+                transaction.ChangePayee(pUpdateTransactionDTO.PayeeId.Value);
             }
 
             if (pUpdateTransactionDTO.CategoryId.IsDefined)
@@ -50,7 +50,7 @@ public class UpdateTransactionService(
                 if (pUpdateTransactionDTO.CategoryId.Value != Guid.Empty)
                     ActiveEntityValidator.EnsureIsActive(await pCategoryRepository.GetByIdOrThrowAsync(pUpdateTransactionDTO.CategoryId.Value));
 
-                transaction.UpdateCategory(pUpdateTransactionDTO.CategoryId.Value);
+                transaction.ChangeCategory(pUpdateTransactionDTO.CategoryId.Value);
             }
 
             if (pUpdateTransactionDTO.SubcategoryId.IsDefined)
@@ -64,7 +64,7 @@ public class UpdateTransactionService(
                         throw new ApplicationRuleException(ApplicationRuleErrorCode.SubcategoryDoesNotBelongToCategory, typeof(Subcategory), Subcategory.Fields.Category);
                 }
 
-                transaction.UpdateSubcategory(pUpdateTransactionDTO.SubcategoryId.Value);
+                transaction.ChangeSubcategory(pUpdateTransactionDTO.SubcategoryId.Value);
             }
 
             await pTransactionRepository.UpdateAsync(transaction);

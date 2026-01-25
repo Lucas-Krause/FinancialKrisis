@@ -10,6 +10,7 @@ public class CategoryScenario : Scenario<CategoryScenario, CreateCategoryDTO, Up
         CreateInput.Name = "Test Category";
 
         CreateFunc = Context.CreateCategoryService.ExecuteAsync;
+        UpdateFunc = Context.UpdateCategoryService.ExecuteAsync;
         DeactivateFunc = Context.DeactivateCategoryService.ExecuteAsync;
     }
 

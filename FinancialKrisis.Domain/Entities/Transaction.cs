@@ -61,45 +61,45 @@ public class Transaction : IEntity
         Memo = pMemo;
     }
 
-    public void UpdateAmount(decimal pAmount)
+    public void ChangeAmount(decimal pAmount)
     {
         ValidateAmount(pAmount);
         Amount = pAmount;
     }
 
-    public void UpdateIdentifier(string? pIdentifier)
+    public void ChangeIdentifier(string? pIdentifier)
     {
         Identifier = pIdentifier;
     }
 
-    public void UpdateMemo(string? pMemo)
+    public void ChangeMemo(string? pMemo)
     {
         Memo = pMemo;
     }
 
-    public void UpdateDateTime(DateTime pDateTime)
+    public void ChangeDateTime(DateTime pDateTime)
     {
         ValidateDateTime(pDateTime);
         DateTime = pDateTime;
     }
 
-    public void UpdateDirection(TransactionDirection pDirection)
+    public void ChangeDirection(TransactionDirection pDirection)
     {
         ValidateDirection(pDirection);
         Direction = pDirection;
     }
 
-    public void UpdatePayee(Guid? pPayeeId)
+    public void ChangePayee(Guid? pPayeeId)
     {
         PayeeId = pPayeeId;
     }
 
-    public void UpdateCategory(Guid? pCategoryId)
+    public void ChangeCategory(Guid? pCategoryId)
     {
         CategoryId = pCategoryId;
     }
 
-    public void UpdateSubcategory(Guid? pSubcategoryId)
+    public void ChangeSubcategory(Guid? pSubcategoryId)
     {
         SubcategoryId = pSubcategoryId;
     }

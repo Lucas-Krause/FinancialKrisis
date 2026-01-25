@@ -79,9 +79,7 @@ public static class BaseScenarioAssertions
         Assert.NotEqual(string.Empty, ex.Message);
         Assert.Equal(pErrorCode, ex.ErrorCode);
         Assert.Equal(pEntityType, ex.EntityType);
-
-        if (ex.Field is not null)
-            Assert.Equal(pFieldKey, ex.Field);
+        Assert.Equal(pFieldKey, ex.Field);
     }
 
     private static void InputShouldMatchEntity<TInput, TEntity>(TInput pInput, TEntity pEntity)

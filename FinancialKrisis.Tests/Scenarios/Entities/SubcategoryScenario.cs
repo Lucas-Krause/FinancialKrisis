@@ -10,6 +10,7 @@ public class SubcategoryScenario : Scenario<SubcategoryScenario, CreateSubcatego
         CreateInput.Name = "Test Subcategory";
 
         CreateFunc = Context.CreateSubcategoryService.ExecuteAsync;
+        UpdateFunc = Context.UpdateSubcategoryService.ExecuteAsync;
         DeactivateFunc = Context.DeactivateSubcategoryService.ExecuteAsync;
     }
 

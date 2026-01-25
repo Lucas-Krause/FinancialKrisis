@@ -6,7 +6,7 @@ namespace FinancialKrisis.Tests.ServiceTests.Accounts;
 public class DeactivateAccountServiceTests
 {
     [Fact]
-    public async Task ValidInput_ShouldDeactivateSuccessfully()
+    public void ValidInput_ShouldDeactivateSuccessfully()
     {
         new TestContext()
             .Account()
