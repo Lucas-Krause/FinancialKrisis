@@ -1,4 +1,4 @@
-﻿namespace FinancialKrisis.Domain.Entities;
+﻿namespace FinancialKrisis.Domain.Abstractions;
 
 public interface IActivatable
 {

@@ -1,4 +1,5 @@
 ﻿using FinancialKrisis.Common.Records;
+using FinancialKrisis.Domain.Abstractions;
 using FinancialKrisis.Domain.Enums;
 using FinancialKrisis.Domain.Exceptions;
 
