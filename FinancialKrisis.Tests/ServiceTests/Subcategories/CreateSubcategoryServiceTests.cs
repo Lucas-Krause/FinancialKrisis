@@ -37,8 +37,8 @@ public class CreateSubcategoryServiceTests
     {
         new TestContext()
             .Subcategory()
-                .Create()
-                .ShouldFailWithDomainRuleException(DomainRuleErrorCode.EntityNotFound, typeof(Category));
+            .Create()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.EntityNotFound, typeof(Category));
     }
 
     [Fact]
