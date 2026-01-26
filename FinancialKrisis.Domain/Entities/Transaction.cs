@@ -28,36 +28,60 @@ public class Transaction : IEntity
     public TransactionDirection Direction { get; private set; }
 
     public Guid AccountId { get; private set; }
+    public Account Account { get; private set; } = null!;
+
     public Guid? CategoryId { get; private set; }
+    public Category? Category { get; private set; }
+
     public Guid? SubcategoryId { get; private set; }
+    public Subcategory? Subcategory { get; private set; }
+
     public Guid? PayeeId { get; private set; }
+    public Payee? Payee { get; private set; }
 
     private Transaction() { }
 
     public Transaction(
-       Guid pAccountId,
+       Account pAccount,
        decimal pAmount,
        DateTime pDateTime,
        TransactionDirection pDirection,
        string? pMemo = null,
        string? pIdentifier = null,
-       Guid? pPayeeId = null,
-       Guid? pCategoryId = null,
-       Guid? pSubcategoryId = null)
+       Payee? pPayee = null,
+       Category? pCategory = null,
+       Subcategory? pSubcategory = null)
     {
         ValidateAmount(pAmount);
         ValidateDateTime(pDateTime);
         ValidateDirection(pDirection);
 
         Id = Guid.NewGuid();
-        AccountId = pAccountId;
+        AccountId = pAccount.Id;
+        Account = pAccount;
+
         Amount = pAmount;
-        DateTime = pDateTime;
-        CategoryId = pCategoryId;
-        SubcategoryId = pSubcategoryId;
-        PayeeId = pPayeeId;
-        Identifier = pIdentifier;
         Memo = pMemo;
+        Identifier = pIdentifier;
+        DateTime = pDateTime;
+
+        if (pPayee is not null)
+        {
+            PayeeId = pPayee.Id;
+            Payee = pPayee;
+        }
+
+        if (pCategory is not null)
+        {
+            CategoryId = pCategory.Id;
+            Category = pCategory;
+        }
+
+        if (pSubcategory is not null)
+        {
+            SubcategoryId = pSubcategory.Id;
+            Subcategory = pSubcategory;
+        }
     }
 
     public void ChangeAmount(decimal pAmount)
@@ -88,19 +112,40 @@ public class Transaction : IEntity
         Direction = pDirection;
     }
 
-    public void ChangePayee(Guid? pPayeeId)
+    public void ChangePayee(Payee pPayee)
     {
-        PayeeId = pPayeeId;
+        PayeeId = pPayee.Id;
+        Payee = pPayee;
     }
 
-    public void ChangeCategory(Guid? pCategoryId)
+    public void ChangeCategory(Category pCategory)
     {
-        CategoryId = pCategoryId;
+        CategoryId = pCategory.Id;
+        Category = pCategory;
     }
 
-    public void ChangeSubcategory(Guid? pSubcategoryId)
+    public void ChangeSubcategory(Subcategory pSubcategory)
     {
-        SubcategoryId = pSubcategoryId;
+        SubcategoryId = pSubcategory.Id;
+        Subcategory = pSubcategory;
+    }
+
+    public void RemovePayee()
+    {
+        PayeeId = null;
+        Payee = null;
+    }
+
+    public void RemoveCategory()
+    {
+        CategoryId = null;
+        Category = null;
+    }
+
+    public void RemoveSubcategory()
+    {
+        SubcategoryId = null;
+        Subcategory = null;
     }
 
     private static void ValidateAmount(decimal pAmount)

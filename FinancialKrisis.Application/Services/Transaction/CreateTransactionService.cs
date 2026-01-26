@@ -18,36 +18,36 @@ public class CreateTransactionService(
     {
         try
         {
-            ActiveEntityValidator.EnsureIsActive(await pAccountRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.AccountId));
+            Payee? payee = null;
+            Category? category = null;
+            Subcategory? subcategory = null;
+
+            var account = (Account)ActiveEntityValidator.EnsureIsActive(await pAccountRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.AccountId));
+
+            if (pCreateTransactionDTO.PayeeId.HasValue)
+                payee = (Payee)ActiveEntityValidator.EnsureIsActive(await pPayeeRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.PayeeId.Value));
 
             if (pCreateTransactionDTO.CategoryId.HasValue)
-                ActiveEntityValidator.EnsureIsActive(await pCategoryRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.CategoryId.Value));
+                category = (Category)ActiveEntityValidator.EnsureIsActive(await pCategoryRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.CategoryId.Value));
 
             if (pCreateTransactionDTO.SubcategoryId.HasValue)
             {
-                Subcategory subcategory = (Subcategory)ActiveEntityValidator.EnsureIsActive(await pSubcategoryRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.SubcategoryId.Value));
+                subcategory = (Subcategory)ActiveEntityValidator.EnsureIsActive(await pSubcategoryRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.SubcategoryId.Value));
 
-                if (!pCreateTransactionDTO.CategoryId.HasValue)
-                    ActiveEntityValidator.EnsureIsActive(await pCategoryRepository.GetByIdOrThrowAsync(subcategory.CategoryId));
-
-                bool subcategoryDoesNotBelongToCategory = pCreateTransactionDTO.CategoryId.HasValue && subcategory.CategoryId != pCreateTransactionDTO.CategoryId.Value;
-                if (subcategoryDoesNotBelongToCategory)
+                if (category is not null && !subcategory.BelongsToCategory(category))
                     throw new ApplicationRuleException(ApplicationRuleErrorCode.SubcategoryDoesNotBelongToCategory, typeof(Subcategory), Subcategory.Fields.Category);
             }
 
-            if (pCreateTransactionDTO.PayeeId.HasValue)
-                ActiveEntityValidator.EnsureIsActive(await pPayeeRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.PayeeId.Value));
-
             Transaction transaction = new(
-                pCreateTransactionDTO.AccountId,
+                account,
                 pCreateTransactionDTO.Amount,
                 pCreateTransactionDTO.DateTime,
                 pCreateTransactionDTO.Direction,
                 pCreateTransactionDTO.Memo,
                 pCreateTransactionDTO.Identifier,
-                pCreateTransactionDTO.PayeeId,
-                pCreateTransactionDTO.CategoryId,
-                pCreateTransactionDTO.SubcategoryId);
+                payee,
+                category,
+                subcategory);
 
             await pTransactionRepository.AddAsync(transaction);
 

@@ -16,11 +16,8 @@ public class UpdateSubcategoryService(ISubcategoryRepository pSubcategoryReposit
             if (pUpdateSubcategoryDTO.Name.IsDefined)
                 subcategory.ChangeName(pUpdateSubcategoryDTO.Name.Value!);
 
-            if (pUpdateSubcategoryDTO.CategoryId.IsDefined)
-            {
-                var category = (Category)ActiveEntityValidator.EnsureIsActive(await pCategoryRepository.GetByIdOrThrowAsync(pUpdateSubcategoryDTO.CategoryId.Value));
-                subcategory.ChangeCategory(category);
-            }
+            if (EntityRelationUpdateHelper.ShouldAssign(pUpdateSubcategoryDTO.CategoryId))
+                subcategory.ChangeCategory((Category)ActiveEntityValidator.EnsureIsActive(await pCategoryRepository.GetByIdOrThrowAsync(pUpdateSubcategoryDTO.CategoryId.Value)));
 
             await pSubcategoryRepository.UpdateAsync(subcategory);
             return subcategory;

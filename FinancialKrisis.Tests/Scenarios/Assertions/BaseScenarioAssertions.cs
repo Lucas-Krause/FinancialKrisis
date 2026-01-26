@@ -118,6 +118,9 @@ public static class BaseScenarioAssertions
                 expectedValue = valueProperty.GetValue(expectedValue);
             }
 
+            if (expectedValue is Guid guid && guid == Guid.Empty && entityValue is null)
+                continue;
+
             if (!Equals(expectedValue, entityValue))
             {
                 throw new XunitException(

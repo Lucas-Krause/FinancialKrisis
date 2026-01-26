@@ -37,34 +37,29 @@ public class UpdateTransactionService(
             if (pUpdateTransactionDTO.Direction.IsDefined)
                 transaction.ChangeDirection(pUpdateTransactionDTO.Direction.Value);
 
-            if (pUpdateTransactionDTO.PayeeId.IsDefined)
+            if (EntityRelationUpdateHelper.ShouldRemove(pUpdateTransactionDTO.PayeeId))
+                transaction.RemovePayee();
+
+            if (EntityRelationUpdateHelper.ShouldRemove(pUpdateTransactionDTO.CategoryId))
+                transaction.RemoveCategory();
+
+            if (EntityRelationUpdateHelper.ShouldRemove(pUpdateTransactionDTO.SubcategoryId))
+                transaction.RemoveSubcategory();
+
+            if (EntityRelationUpdateHelper.ShouldAssign(pUpdateTransactionDTO.PayeeId))
+                transaction.ChangePayee((Payee)ActiveEntityValidator.EnsureIsActive(await pPayeeRepository.GetByIdOrThrowAsync(pUpdateTransactionDTO.PayeeId.Value)));
+
+            if (EntityRelationUpdateHelper.ShouldAssign(pUpdateTransactionDTO.CategoryId))
+                transaction.ChangeCategory((Category)ActiveEntityValidator.EnsureIsActive(await pCategoryRepository.GetByIdOrThrowAsync(pUpdateTransactionDTO.CategoryId.Value)));
+
+            if (EntityRelationUpdateHelper.ShouldAssign(pUpdateTransactionDTO.SubcategoryId))
             {
-                if (pUpdateTransactionDTO.PayeeId.Value != Guid.Empty)
-                    ActiveEntityValidator.EnsureIsActive(await pPayeeRepository.GetByIdOrThrowAsync(pUpdateTransactionDTO.PayeeId.Value));
+                var subcategory = (Subcategory)ActiveEntityValidator.EnsureIsActive(await pSubcategoryRepository.GetByIdOrThrowAsync(pUpdateTransactionDTO.SubcategoryId.Value));
 
-                transaction.ChangePayee(pUpdateTransactionDTO.PayeeId.Value);
-            }
+                if (transaction.CategoryId.HasValue && !subcategory.BelongsToCategory(transaction.Category!))
+                    throw new ApplicationRuleException(ApplicationRuleErrorCode.SubcategoryDoesNotBelongToCategory, typeof(Subcategory), Subcategory.Fields.Category);
 
-            if (pUpdateTransactionDTO.CategoryId.IsDefined)
-            {
-                if (pUpdateTransactionDTO.CategoryId.Value != Guid.Empty)
-                    ActiveEntityValidator.EnsureIsActive(await pCategoryRepository.GetByIdOrThrowAsync(pUpdateTransactionDTO.CategoryId.Value));
-
-                transaction.ChangeCategory(pUpdateTransactionDTO.CategoryId.Value);
-            }
-
-            if (pUpdateTransactionDTO.SubcategoryId.IsDefined)
-            {
-                if (pUpdateTransactionDTO.SubcategoryId.Value != Guid.Empty)
-                {
-                    var subcategory = (Subcategory)ActiveEntityValidator.EnsureIsActive(await pSubcategoryRepository.GetByIdOrThrowAsync(pUpdateTransactionDTO.SubcategoryId.Value));
-
-                    bool subcategoryDoesNotBelongToCategory = transaction.CategoryId.HasValue && subcategory.CategoryId != transaction.CategoryId.Value;
-                    if (subcategoryDoesNotBelongToCategory)
-                        throw new ApplicationRuleException(ApplicationRuleErrorCode.SubcategoryDoesNotBelongToCategory, typeof(Subcategory), Subcategory.Fields.Category);
-                }
-
-                transaction.ChangeSubcategory(pUpdateTransactionDTO.SubcategoryId.Value);
+                transaction.ChangeSubcategory(subcategory);
             }
 
             await pTransactionRepository.UpdateAsync(transaction);

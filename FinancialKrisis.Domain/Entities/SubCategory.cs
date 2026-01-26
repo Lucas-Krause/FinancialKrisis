@@ -19,6 +19,8 @@ public class Subcategory : IEntity, IActivatable
     public Guid CategoryId { get; private set; }
     public Category Category { get; private set; } = null!;
 
+    public List<Transaction> Transactions { get; private set; } = [];
+
     private Subcategory() { }
 
     public Subcategory(string pName, Category pCategory)
@@ -53,5 +55,10 @@ public class Subcategory : IEntity, IActivatable
     {
         if (string.IsNullOrWhiteSpace(pName))
             throw new DomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Subcategory), Fields.Name);
+    }
+
+    public bool BelongsToCategory(Category category)
+    {
+        return CategoryId == category.Id;
     }
 }

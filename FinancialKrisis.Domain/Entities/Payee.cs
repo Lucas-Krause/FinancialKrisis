@@ -15,6 +15,8 @@ public class Payee : IEntity, IActivatable
     public string Name { get; private set; } = null!;
     public bool IsActive { get; private set; }
 
+    public List<Transaction> Transactions { get; private set; } = [];
+
     private Payee() { }
 
     public Payee(string pName)

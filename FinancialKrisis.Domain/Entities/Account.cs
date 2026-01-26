@@ -19,6 +19,8 @@ public class Account : IEntity, IActivatable
     public decimal InitialBalance { get; private set; }
     public bool IsActive { get; private set; }
 
+    public List<Transaction> Transactions { get; private set; } = [];
+
     private Account() { }
 
     public Account(string pName, string pAccountNumber, decimal pInitialBalance)
