@@ -1,22 +1,11 @@
-﻿using FinancialKrisis.Domain.Enums;
+﻿using FinancialKrisis.Domain.ValueObjects;
 
 namespace FinancialKrisis.Domain.Entities;
 
 public partial class PlannedTransaction
 {
-    public void ChangePlannedDateTime(DateTime pDateTime)
+    public void ChangeSchedule(PlannedSchedule pSchedule)
     {
-        ValidatePlannedDateTime(pDateTime);
-        PlannedDateTime = pDateTime;
-    }
-
-    public void MarkAsFulfilled()
-    {
-        Status = PlannedTransactionStatus.Fulfilled;
-    }
-
-    public void MarkAsIgnored()
-    {
-        Status = PlannedTransactionStatus.Ignored;
+        Schedule = pSchedule;
     }
 }

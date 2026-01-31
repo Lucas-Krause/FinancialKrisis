@@ -53,7 +53,13 @@ public static class TestServiceProviderFactory
             .AddScoped<UpdateTransactionService>()
             .AddScoped<DeleteTransactionService>()
             .AddScoped<GetTransactionByIdService>()
-            .AddScoped<GetAllTransactionsService>();
+            .AddScoped<GetAllTransactionsService>()
+            .AddScoped<IPlannedTransactionRepository, PlannedTransactionRepository>()
+            .AddScoped<CreatePlannedTransactionService>()
+            .AddScoped<UpdatePlannedTransactionService>()
+            .AddScoped<DeletePlannedTransactionService>()
+            .AddScoped<GetPlannedTransactionByIdService>()
+            .AddScoped<GetAllPlannedTransactionsService>();
 
         ServiceProvider provider = services.BuildServiceProvider();
 

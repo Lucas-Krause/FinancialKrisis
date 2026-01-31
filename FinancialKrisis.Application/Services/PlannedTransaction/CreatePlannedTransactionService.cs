@@ -1,6 +1,7 @@
 ﻿using FinancialKrisis.Application.DTOs;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Interfaces;
+using FinancialKrisis.Domain.ValueObjects;
 
 namespace FinancialKrisis.Application.Services;
 
@@ -17,15 +18,23 @@ public class CreatePlannedTransactionService(
         pSubcategoryRepository,
         pPayeeRepository)
 {
-    protected override PlannedTransaction CreateMovement(CreatePlannedTransactionDTO pDTO, Account pAccount, Payee? pPayee, Category? pCategory, Subcategory? pSubcategory)
+    protected override PlannedTransaction CreateMovement(CreatePlannedTransactionDTO pCreateDTO, Account pAccount, Payee? pPayee, Category? pCategory, Subcategory? pSubcategory)
     {
+        var schedule = new PlannedSchedule(
+            pCreateDTO.RecurrenceType,
+            pCreateDTO.StartDate,
+            pCreateDTO.EndDate,
+            pCreateDTO.Interval,
+            pCreateDTO.DaysOfWeek,
+            pCreateDTO.DayOfMonth);
+
         return new(
                 pAccount,
-                pDTO.Amount,
-                pDTO.Direction,
-                pDTO.PlannedDateTime,
-                pDTO.Memo,
-                pDTO.Identifier,
+                pCreateDTO.Amount,
+                pCreateDTO.Direction,
+                schedule,
+                pCreateDTO.Memo,
+                pCreateDTO.Identifier,
                 pPayee,
                 pCategory,
                 pSubcategory);

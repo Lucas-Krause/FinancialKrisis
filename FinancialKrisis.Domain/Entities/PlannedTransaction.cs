@@ -1,4 +1,5 @@
 ﻿using FinancialKrisis.Domain.Enums;
+using FinancialKrisis.Domain.ValueObjects;
 
 namespace FinancialKrisis.Domain.Entities;
 
@@ -8,7 +9,7 @@ public partial class PlannedTransaction : FinancialMovement
         Account pAccount,
         decimal pAmount,
         FinancialMovementDirection pDirection,
-        DateTime pPlannedDateTime,
+        PlannedSchedule pSchedule,
         string? pMemo = null,
         string? pIdentifier = null,
         Payee? pPayee = null,
@@ -24,9 +25,7 @@ public partial class PlannedTransaction : FinancialMovement
             pCategory,
             pSubcategory)
     {
-        ValidatePlannedDateTime(pPlannedDateTime);
-
-        PlannedDateTime = pPlannedDateTime;
+        Schedule = pSchedule;
         Status = PlannedTransactionStatus.Planned;
     }
 }

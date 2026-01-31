@@ -1,5 +1,6 @@
 ﻿using FinancialKrisis.Common.Records;
 using FinancialKrisis.Domain.Enums;
+using FinancialKrisis.Domain.ValueObjects;
 
 namespace FinancialKrisis.Domain.Entities;
 
@@ -18,10 +19,10 @@ public partial class PlannedTransaction
         public static FieldKey Category => FinancialMovement.Fields.Category;
         public static FieldKey Subcategory => FinancialMovement.Fields.Subcategory;
 
-        public static readonly FieldKey PlannedDateTime = new("PlannedDateTime");
+        public static readonly FieldKey Schedule = new("Schedule");
         public static readonly FieldKey Status = new("Status");
     }
 
-    public DateTime PlannedDateTime { get; private set; }
+    public PlannedSchedule Schedule { get; private set; } = null!;
     public PlannedTransactionStatus Status { get; private set; }
 }

@@ -5,4 +5,6 @@ public enum DomainRuleErrorCode
     RequiredField,
     NegativeValue,
     EntityNotFound,
+    WeeklyScheduleRequiresDaysOfWeek,
+    MonthlyScheduleRequiresValidDayOfMonth,
 }

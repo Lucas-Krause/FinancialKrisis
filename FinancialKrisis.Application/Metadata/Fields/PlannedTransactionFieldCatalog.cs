@@ -10,7 +10,7 @@ public class PlannedTransactionFieldCatalog
     public static readonly Dictionary<FieldKey, FieldMetadata> Fields = new()
     {
         { PlannedTransaction.Fields.Status, new("Status", GrammaticalGender.Masculine) },
-        { PlannedTransaction.Fields.PlannedDateTime, new("Data planejada", GrammaticalGender.Feminine) },
+        { PlannedTransaction.Fields.Schedule, new("recorrência", GrammaticalGender.Feminine) },
     };
 
     static PlannedTransactionFieldCatalog()

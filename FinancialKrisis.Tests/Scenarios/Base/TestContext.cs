@@ -1,4 +1,7 @@
-﻿using FinancialKrisis.Application.Services;
+﻿using FinancialKrisis.Application.DTOs;
+using FinancialKrisis.Application.Services;
+using FinancialKrisis.Domain.Entities;
+using FinancialKrisis.Domain.Interfaces;
 using FinancialKrisis.Tests.Scenarios.Assertions;
 using FinancialKrisis.Tests.Scenarios.Entities;
 using FinancialKrisis.Tests.TestInfrastructure;
@@ -32,6 +35,10 @@ public sealed class TestContext : IDisposable
     public UpdateTransactionService UpdateTransactionService { get; }
     public DeleteTransactionService DeleteTransactionService { get; }
 
+    public CreatePlannedTransactionService CreatePlannedTransactionService { get; }
+    public UpdatePlannedTransactionService UpdatePlannedTransactionService { get; }
+    public DeletePlannedTransactionService DeletePlannedTransactionService { get; }
+
     public TestContext()
     {
         Provider = TestServiceProviderFactory.Create();
@@ -56,6 +63,10 @@ public sealed class TestContext : IDisposable
         CreateTransactionService = Scope.ServiceProvider.GetRequiredService<CreateTransactionService>();
         UpdateTransactionService = Scope.ServiceProvider.GetRequiredService<UpdateTransactionService>();
         DeleteTransactionService = Scope.ServiceProvider.GetRequiredService<DeleteTransactionService>();
+
+        CreatePlannedTransactionService = Scope.ServiceProvider.GetRequiredService<CreatePlannedTransactionService>();
+        UpdatePlannedTransactionService = Scope.ServiceProvider.GetRequiredService<UpdatePlannedTransactionService>();
+        DeletePlannedTransactionService = Scope.ServiceProvider.GetRequiredService<DeletePlannedTransactionService>();
     }
 
     public void SetCurrent<TEntity>(TEntity pEntity)
@@ -108,6 +119,11 @@ public sealed class TestContext : IDisposable
     public TransactionScenario Transaction()
     {
         return new TransactionScenario(this);
+    }
+
+    public PlannedTransactionScenario PlannedTransaction()
+    {
+        return new PlannedTransactionScenario(this);
     }
 
     public void Dispose()
