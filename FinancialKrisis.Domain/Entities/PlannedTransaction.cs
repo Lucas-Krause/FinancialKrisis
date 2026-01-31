@@ -1,12 +1,9 @@
-﻿using FinancialKrisis.Domain.Abstractions;
-using FinancialKrisis.Domain.Enums;
+﻿using FinancialKrisis.Domain.Enums;
 
 namespace FinancialKrisis.Domain.Entities;
 
 public partial class PlannedTransaction : FinancialMovement
 {
-    private PlannedTransaction() : base() { }
-
     public PlannedTransaction(
         Account pAccount,
         decimal pAmount,

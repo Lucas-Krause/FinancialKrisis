@@ -1,5 +1,5 @@
 using FinancialKrisis.Domain.Entities;
-using FinancialKrisis.Domain.Repositories;
+using FinancialKrisis.Domain.Interfaces;
 using FinancialKrisis.Infrastructure.Persistence;
 
 namespace FinancialKrisis.Infrastructure.Repositories;

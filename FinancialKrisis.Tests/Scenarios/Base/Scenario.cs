@@ -1,5 +1,5 @@
 ﻿using FinancialKrisis.Application.DTOs;
-using FinancialKrisis.Domain.Abstractions;
+using FinancialKrisis.Domain.Interfaces;
 using Xunit.Sdk;
 
 namespace FinancialKrisis.Tests.Scenarios;

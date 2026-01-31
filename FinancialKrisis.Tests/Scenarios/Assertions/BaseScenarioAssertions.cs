@@ -3,7 +3,7 @@ using FinancialKrisis.Application.Enums;
 using FinancialKrisis.Application.Exceptions;
 using FinancialKrisis.Common.Exceptions;
 using FinancialKrisis.Common.Records;
-using FinancialKrisis.Domain.Abstractions;
+using FinancialKrisis.Domain.Interfaces;
 using FinancialKrisis.Domain.Enums;
 using FinancialKrisis.Domain.Exceptions;
 using System.Reflection;

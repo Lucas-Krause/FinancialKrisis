@@ -1,5 +1,5 @@
 ﻿using FinancialKrisis.Application.Services;
-using FinancialKrisis.Domain.Repositories;
+using FinancialKrisis.Domain.Interfaces;
 using FinancialKrisis.Infrastructure.Persistence;
 using FinancialKrisis.Infrastructure.Repositories;
 using Microsoft.Data.Sqlite;
@@ -18,7 +18,11 @@ public static class TestServiceProviderFactory
         connection.Open();
 
         services
-            .AddDbContext<FinancialKrisisDbContext>(pOptions => pOptions.UseSqlite(connection))
+            .AddDbContext<FinancialKrisisDbContext>(pOptions =>
+            {
+                pOptions.UseSqlite(connection);
+                pOptions.AddInterceptors(new AuditSaveChangesInterceptor());
+            })
             .AddScoped<IAccountRepository, AccountRepository>()
             .AddScoped<CreateAccountService>()
             .AddScoped<GetAllAccountsService>()

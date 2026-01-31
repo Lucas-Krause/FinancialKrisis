@@ -1,10 +1,11 @@
 ﻿using FinancialKrisis.Common.Records;
-using FinancialKrisis.Domain.Abstractions;
 
 namespace FinancialKrisis.Domain.Entities;
 
 public partial class Transaction
 {
+    public Transaction() : base() { }
+
     public static new class Fields
     {
         public static FieldKey Amount => FinancialMovement.Fields.Amount;

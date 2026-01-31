@@ -1,7 +1,0 @@
-﻿namespace FinancialKrisis.Domain.Abstractions;
-
-public interface IActivatable
-{
-    bool IsActive { get; }
-    public void Deactivate();
-}
