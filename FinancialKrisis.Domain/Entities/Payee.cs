@@ -29,7 +29,7 @@ public class Payee : IEntity, IActivatable
         IsActive = true;
     }
 
-    public void Rename(string pNewName)
+    public void ChangeName(string pNewName)
     {
         ValidateName(pNewName);
         Name = pNewName;

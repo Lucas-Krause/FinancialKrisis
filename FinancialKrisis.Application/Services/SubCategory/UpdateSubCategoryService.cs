@@ -5,26 +5,15 @@ using FinancialKrisis.Domain.Repositories;
 
 namespace FinancialKrisis.Application.Services;
 
-public class UpdateSubcategoryService(ISubcategoryRepository pSubcategoryRepository, ICategoryRepository pCategoryRepository)
+public class UpdateSubcategoryService(ISubcategoryRepository pSubcategoryRepository, ICategoryRepository pCategoryRepository) 
+    : UpdateEntityService<Subcategory, ISubcategoryRepository, UpdateSubcategoryDTO>(pSubcategoryRepository)
 {
-    public async Task<Subcategory> ExecuteAsync(UpdateSubcategoryDTO pUpdateSubcategoryDTO)
+    protected override async Task ApplyChangesToEntity(Subcategory pSubcategory, UpdateSubcategoryDTO pUpdateDTO)
     {
-        try
-        {
-            var subcategory = (Subcategory)ActiveEntityValidator.EnsureIsActive(await pSubcategoryRepository.GetByIdOrThrowAsync(pUpdateSubcategoryDTO.Id));
+        if (pUpdateDTO.Name.IsDefined)
+            pSubcategory.ChangeName(pUpdateDTO.Name.Value!);
 
-            if (pUpdateSubcategoryDTO.Name.IsDefined)
-                subcategory.ChangeName(pUpdateSubcategoryDTO.Name.Value!);
-
-            if (EntityRelationUpdateHelper.ShouldAssign(pUpdateSubcategoryDTO.CategoryId))
-                subcategory.ChangeCategory((Category)ActiveEntityValidator.EnsureIsActive(await pCategoryRepository.GetByIdOrThrowAsync(pUpdateSubcategoryDTO.CategoryId.Value)));
-
-            await pSubcategoryRepository.UpdateAsync(subcategory);
-            return subcategory;
-        }
-        catch (Exception pEx)
-        {
-            throw ErrorMessageResolver.Resolve(pEx);
-        }
+        if (EntityRelationUpdateHelper.ShouldAssign(pUpdateDTO.CategoryId))
+            pSubcategory.ChangeCategory((Category)ActiveEntityValidator.EnsureIsActive(await pCategoryRepository.GetByIdOrThrowAsync(pUpdateDTO.CategoryId.Value)));
     }
 }

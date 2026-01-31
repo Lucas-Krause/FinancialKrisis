@@ -1,27 +1,14 @@
 ﻿using FinancialKrisis.Application.DTOs;
-using FinancialKrisis.Application.Helpers;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Repositories;
 
 namespace FinancialKrisis.Application.Services;
 
-public class UpdateCategoryService(ICategoryRepository pRepository)
+public class UpdateCategoryService(ICategoryRepository pCategoryRepository) : UpdateEntityService<Category, ICategoryRepository, UpdateCategoryDTO>(pCategoryRepository)
 {
-    public async Task<Category> ExecuteAsync(UpdateCategoryDTO pUpdateCategoryDTO)
+    protected override async Task ApplyChangesToEntity(Category pCategory, UpdateCategoryDTO pUpdateDTO)
     {
-        try
-        {
-            var category = (Category)ActiveEntityValidator.EnsureIsActive(await pRepository.GetByIdOrThrowAsync(pUpdateCategoryDTO.Id));
-
-            if (pUpdateCategoryDTO.Name.IsDefined)
-                category.ChangeName(pUpdateCategoryDTO.Name.Value!);
-
-            await pRepository.UpdateAsync(category);
-            return category;
-        }
-        catch (Exception pEx)
-        {
-            throw ErrorMessageResolver.Resolve(pEx);
-        }
+        if (pUpdateDTO.Name.IsDefined)
+            pCategory.ChangeName(pUpdateDTO.Name.Value!);
     }
 }

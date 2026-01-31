@@ -38,7 +38,7 @@ public class UpdateTransactionServiceTests
                     UpdateInput.DateTime = DateTime.Now.AddDays(2);
                     UpdateInput.Identifier = "UT1";
                     UpdateInput.Memo = "Updated Memo";
-                    UpdateInput.Direction = TransactionDirection.Out;
+                    UpdateInput.Direction = FinancialMovementDirection.Out;
                 })
                 .Update()
                 .ShouldUpdateSuccessfully();
@@ -94,7 +94,7 @@ public class UpdateTransactionServiceTests
                 .CreatingWithCurrentAccount()
                 .Create()
                 .AsCurrentTransaction()
-                .UpdatingWith(CreateInput => CreateInput.Direction = (TransactionDirection)3)
+                .UpdatingWith(CreateInput => CreateInput.Direction = (FinancialMovementDirection)3)
                 .Update()
                 .ShouldFailWithDomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Transaction), Transaction.Fields.Direction);
     }

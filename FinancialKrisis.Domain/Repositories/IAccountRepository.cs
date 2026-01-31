@@ -2,11 +2,6 @@
 
 namespace FinancialKrisis.Domain.Repositories;
 
-public interface IAccountRepository
+public interface IAccountRepository : IGenericRepository<Account>
 {
-    Task AddAsync(Account pAccount);
-    Task UpdateAsync(Account pAccount);
-    Task<Account?> GetByIdAsync(Guid pId);
-    Task<Account> GetByIdOrThrowAsync(Guid pId);
-    Task<IReadOnlyList<Account>> GetAllAsync();
 }

@@ -39,7 +39,7 @@ public static class TestServiceProviderFactory
             .AddScoped<DeactivatePayeeService>()
             .AddScoped<ISubcategoryRepository, SubcategoryRepository>()
             .AddScoped<CreateSubcategoryService>()
-            .AddScoped<GetAllSubCategoriesService>()
+            .AddScoped<GetAllSubcategoriesService>()
             .AddScoped<GetSubcategoriesByCategoryIdService>()
             .AddScoped<GetSubcategoryByIdService>()
             .AddScoped<UpdateSubcategoryService>()

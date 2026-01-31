@@ -1,6 +1,6 @@
 ﻿using FinancialKrisis.Application.Enums;
 using FinancialKrisis.Application.Exceptions;
-using FinancialKrisis.Domain.Entities;
+using FinancialKrisis.Domain.Abstractions;
 
 namespace FinancialKrisis.Application.Helpers;
 

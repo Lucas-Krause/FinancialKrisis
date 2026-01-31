@@ -2,11 +2,6 @@
 
 namespace FinancialKrisis.Domain.Repositories;
 
-public interface ICategoryRepository
+public interface ICategoryRepository : IGenericRepository<Category>
 {
-    Task AddAsync(Category pCategory);
-    Task UpdateAsync(Category pCategory);
-    Task<Category?> GetByIdAsync(Guid pId);
-    Task<Category> GetByIdOrThrowAsync(Guid pId);
-    Task<IReadOnlyList<Category>> GetAllAsync();
 }

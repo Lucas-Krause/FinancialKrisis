@@ -6,9 +6,8 @@ namespace FinancialKrisis.Application.Metadata;
 
 public class PayeeFieldCatalog
 {
-    public static readonly Dictionary<FieldKey, FieldMetadata> Fields =
-        new()
-        {
-            { Payee.Fields.Name, new("Nome", GrammaticalGender.Masculine) },
-        };
+    public static readonly Dictionary<FieldKey, FieldMetadata> Fields = new()
+    {
+        { Payee.Fields.Name, new("Nome", GrammaticalGender.Masculine) },
+    };
 }

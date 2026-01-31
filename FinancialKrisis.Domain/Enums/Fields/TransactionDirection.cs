@@ -1,6 +1,6 @@
 ﻿namespace FinancialKrisis.Domain.Enums;
 
-public enum TransactionDirection
+public enum FinancialMovementDirection
 {
     In,
     Out

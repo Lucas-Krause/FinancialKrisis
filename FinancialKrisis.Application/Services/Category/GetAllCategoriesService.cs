@@ -1,20 +1,9 @@
-﻿using FinancialKrisis.Application.Helpers;
-using FinancialKrisis.Domain.Entities;
+﻿using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Repositories;
 
 namespace FinancialKrisis.Application.Services;
 
-public class GetAllCategoriesService(ICategoryRepository pRepository)
+public class GetAllCategoriesService(ICategoryRepository pCategoryRepository) : GetAllEntitiesService<Category, ICategoryRepository>(pCategoryRepository)
 {
-    public async Task<IReadOnlyList<Category>> ExecuteAsync()
-    {
-        try
-        {
-            return await pRepository.GetAllAsync();
-        }
-        catch (Exception pEx)
-        {
-            throw ErrorMessageResolver.Resolve(pEx);
-        }
-    }
 }
+

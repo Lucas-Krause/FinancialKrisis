@@ -1,23 +1,13 @@
 ﻿using FinancialKrisis.Application.DTOs;
-using FinancialKrisis.Application.Helpers;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Repositories;
 
 namespace FinancialKrisis.Application.Services;
 
-public class CreateAccountService(IAccountRepository pRepository)
+public class CreateAccountService(IAccountRepository pAccountRepository) : CreateEntityService<Account, IAccountRepository, CreateAccountDTO>(pAccountRepository)
 {
-    public async Task<Account> ExecuteAsync(CreateAccountDTO pCreateAccountDTO)
+    protected override async Task<Account> CreateEntity(CreateAccountDTO pCreateDTO)
     {
-        try
-        {
-            var account = new Account(pCreateAccountDTO.Name, pCreateAccountDTO.AccountNumber, pCreateAccountDTO.InitialBalance);
-            await pRepository.AddAsync(account);
-            return account;
-        }
-        catch (Exception pEx)
-        {
-            throw ErrorMessageResolver.Resolve(pEx);
-        }
+        return new Account(pCreateDTO.Name, pCreateDTO.AccountNumber, pCreateDTO.InitialBalance);
     }
 }

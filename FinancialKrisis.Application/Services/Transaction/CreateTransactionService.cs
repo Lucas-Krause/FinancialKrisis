@@ -1,7 +1,4 @@
 using FinancialKrisis.Application.DTOs;
-using FinancialKrisis.Application.Enums;
-using FinancialKrisis.Application.Exceptions;
-using FinancialKrisis.Application.Helpers;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Repositories;
 
@@ -13,49 +10,24 @@ public class CreateTransactionService(
     ICategoryRepository pCategoryRepository,
     ISubcategoryRepository pSubcategoryRepository,
     IPayeeRepository pPayeeRepository)
+    : CreateFinancialMovementService<Transaction, ITransactionRepository, CreateTransactionDTO>(
+        pTransactionRepository,
+        pAccountRepository,
+        pCategoryRepository,
+        pSubcategoryRepository,
+        pPayeeRepository)
 {
-    public async Task<Transaction> ExecuteAsync(CreateTransactionDTO pCreateTransactionDTO)
+    protected override Transaction CreateMovement(CreateTransactionDTO pDTO, Account pAccount, Payee? pPayee, Category? pCategory, Subcategory? pSubcategory)
     {
-        try
-        {
-            Payee? payee = null;
-            Category? category = null;
-            Subcategory? subcategory = null;
-
-            var account = (Account)ActiveEntityValidator.EnsureIsActive(await pAccountRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.AccountId));
-
-            if (pCreateTransactionDTO.PayeeId.HasValue)
-                payee = (Payee)ActiveEntityValidator.EnsureIsActive(await pPayeeRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.PayeeId.Value));
-
-            if (pCreateTransactionDTO.CategoryId.HasValue)
-                category = (Category)ActiveEntityValidator.EnsureIsActive(await pCategoryRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.CategoryId.Value));
-
-            if (pCreateTransactionDTO.SubcategoryId.HasValue)
-            {
-                subcategory = (Subcategory)ActiveEntityValidator.EnsureIsActive(await pSubcategoryRepository.GetByIdOrThrowAsync(pCreateTransactionDTO.SubcategoryId.Value));
-
-                if (category is not null && !subcategory.BelongsToCategory(category))
-                    throw new ApplicationRuleException(ApplicationRuleErrorCode.SubcategoryDoesNotBelongToCategory, typeof(Subcategory), Subcategory.Fields.Category);
-            }
-
-            Transaction transaction = new(
-                account,
-                pCreateTransactionDTO.Amount,
-                pCreateTransactionDTO.DateTime,
-                pCreateTransactionDTO.Direction,
-                pCreateTransactionDTO.Memo,
-                pCreateTransactionDTO.Identifier,
-                payee,
-                category,
-                subcategory);
-
-            await pTransactionRepository.AddAsync(transaction);
-
-            return transaction;
-        }
-        catch (Exception pEx)
-        {
-            throw ErrorMessageResolver.Resolve(pEx);
-        }
+        return new(
+                pAccount,
+                pDTO.Amount,
+                pDTO.DateTime,
+                pDTO.Direction,
+                pDTO.Memo,
+                pDTO.Identifier,
+                pPayee,
+                pCategory,
+                pSubcategory);
     }
 }

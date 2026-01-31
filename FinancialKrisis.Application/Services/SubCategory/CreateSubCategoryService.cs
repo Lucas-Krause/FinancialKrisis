@@ -6,19 +6,11 @@ using FinancialKrisis.Domain.Repositories;
 namespace FinancialKrisis.Application.Services;
 
 public class CreateSubcategoryService(ISubcategoryRepository pSubcategoryRepository, ICategoryRepository pCategoryRepository)
+    : CreateEntityService<Subcategory, ISubcategoryRepository, CreateSubcategoryDTO>(pSubcategoryRepository)
 {
-    public async Task<Subcategory> ExecuteAsync(CreateSubcategoryDTO pCreateSubcategoryDTO)
+    protected override async Task<Subcategory> CreateEntity(CreateSubcategoryDTO pCreateDTO)
     {
-        try
-        {
-            var category = (Category)ActiveEntityValidator.EnsureIsActive(await pCategoryRepository.GetByIdOrThrowAsync(pCreateSubcategoryDTO.CategoryId));
-            var subcategory = new Subcategory(pCreateSubcategoryDTO.Name, category);
-            await pSubcategoryRepository.AddAsync(subcategory);
-            return subcategory;
-        }
-        catch (Exception pEx)
-        {
-            throw ErrorMessageResolver.Resolve(pEx);
-        }
+        var category = (Category)ActiveEntityValidator.EnsureIsActive(await pCategoryRepository.GetByIdOrThrowAsync(pCreateDTO.CategoryId));
+        return new Subcategory(pCreateDTO.Name, category);
     }
 }

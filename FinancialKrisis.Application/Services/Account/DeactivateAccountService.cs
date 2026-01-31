@@ -4,19 +4,6 @@ using FinancialKrisis.Domain.Repositories;
 
 namespace FinancialKrisis.Application.Services;
 
-public class DeactivateAccountService(IAccountRepository pRepository)
+public class DeactivateAccountService(IAccountRepository pAccountRepository) : DeactivateEntityService<Account, IAccountRepository>(pAccountRepository)
 {
-    public async Task ExecuteAsync(Guid pAccountId)
-    {
-        try
-        {
-            Account account = await pRepository.GetByIdOrThrowAsync(pAccountId);
-            account.Deactivate();
-            await pRepository.UpdateAsync(account);
-        }
-        catch (Exception pEx)
-        {
-            throw ErrorMessageResolver.Resolve(pEx);
-        }
-    }
 }

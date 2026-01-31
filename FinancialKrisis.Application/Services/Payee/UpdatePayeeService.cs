@@ -1,27 +1,14 @@
 using FinancialKrisis.Application.DTOs;
-using FinancialKrisis.Application.Helpers;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Repositories;
 
 namespace FinancialKrisis.Application.Services;
 
-public class UpdatePayeeService(IPayeeRepository pRepository)
+public class UpdatePayeeService(IPayeeRepository pPayeeRepository) : UpdateEntityService<Payee, IPayeeRepository, UpdatePayeeDTO>(pPayeeRepository)
 {
-    public async Task<Payee> ExecuteAsync(UpdatePayeeDTO pUpdatePayeeDTO)
+    protected override async Task ApplyChangesToEntity(Payee pPayee, UpdatePayeeDTO pUpdateDTO)
     {
-        try
-        {
-            var payee = (Payee)ActiveEntityValidator.EnsureIsActive(await pRepository.GetByIdOrThrowAsync(pUpdatePayeeDTO.Id));
-
-            if (pUpdatePayeeDTO.Name.IsDefined)
-                payee.Rename(pUpdatePayeeDTO.Name.Value!);
-
-            await pRepository.UpdateAsync(payee);
-            return payee;
-        }
-        catch (Exception pEx)
-        {
-            throw ErrorMessageResolver.Resolve(pEx);
-        }
+        if (pUpdateDTO.Name.IsDefined)
+            pPayee.ChangeName(pUpdateDTO.Name.Value!);
     }
 }

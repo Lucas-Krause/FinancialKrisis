@@ -45,7 +45,7 @@ public class CreateTransactionServiceTests
             .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
             .Transaction()
                 .CreatingWithCurrentAccount()
-                .CreatingWith(CreateInput => CreateInput.Direction = (TransactionDirection)3)
+                .CreatingWith(CreateInput => CreateInput.Direction = (FinancialMovementDirection)3)
                 .Create()
                 .ShouldFailWithDomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Transaction), Transaction.Fields.Direction);
     }
