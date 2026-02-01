@@ -23,6 +23,6 @@ public partial class PlannedTransaction
         public static readonly FieldKey Status = new("Status");
     }
 
-    public PlannedSchedule Schedule { get; private set; } = null!;
+    public Schedule Schedule { get; private set; } = null!;
     public PlannedTransactionStatus Status { get; private set; }
 }

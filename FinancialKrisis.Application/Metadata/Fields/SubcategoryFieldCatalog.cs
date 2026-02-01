@@ -6,7 +6,7 @@ namespace FinancialKrisis.Application.Metadata;
 
 public class SubcategoryFieldCatalog
 {
-    public static readonly Dictionary<FieldKey, FieldMetadata> Fields = new()
+    public static readonly Dictionary<FieldKey, GrammarMetadata> Fields = new()
     {
         { Subcategory.Fields.Name, new("Nome", GrammaticalGender.Masculine) },
         { Subcategory.Fields.Category, new("Categoria", GrammaticalGender.Feminine) },

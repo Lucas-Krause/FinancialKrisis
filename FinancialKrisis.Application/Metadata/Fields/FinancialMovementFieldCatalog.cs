@@ -6,7 +6,7 @@ namespace FinancialKrisis.Application.Metadata.Fields;
 
 public class FinancialMovementFieldCatalog
 {
-    public static readonly Dictionary<FieldKey, FieldMetadata> Fields = new()
+    public static readonly Dictionary<FieldKey, GrammarMetadata> Fields = new()
     {
         { FinancialMovement.Fields.Memo, new("Memo", GrammaticalGender.Feminine) },
         { FinancialMovement.Fields.Identifier, new("Identificador", GrammaticalGender.Masculine) },

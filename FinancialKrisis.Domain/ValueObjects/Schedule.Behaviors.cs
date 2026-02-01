@@ -2,7 +2,7 @@
 
 namespace FinancialKrisis.Domain.ValueObjects;
 
-public partial class PlannedSchedule
+public partial class Schedule
 {
     public void ChangeRecurrenceType(RecurrenceType pRecurrenceType)
     {

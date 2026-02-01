@@ -2,7 +2,7 @@
 
 namespace FinancialKrisis.Application.DTOs;
 
-public abstract class CreateFinancialMovementDTO
+public abstract class CreateFinancialMovementDTO : ICreateDTO
 {
     public Guid AccountId { get; set; }
 

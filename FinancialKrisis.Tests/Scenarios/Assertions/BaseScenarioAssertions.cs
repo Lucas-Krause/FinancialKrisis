@@ -3,9 +3,10 @@ using FinancialKrisis.Application.Enums;
 using FinancialKrisis.Application.Exceptions;
 using FinancialKrisis.Common.Exceptions;
 using FinancialKrisis.Common.Records;
-using FinancialKrisis.Domain.Interfaces;
 using FinancialKrisis.Domain.Enums;
 using FinancialKrisis.Domain.Exceptions;
+using FinancialKrisis.Domain.Interfaces;
+using FinancialKrisis.Tests.Scenarios.Interfaces;
 using System.Reflection;
 using Xunit.Sdk;
 
@@ -13,9 +14,43 @@ namespace FinancialKrisis.Tests.Scenarios.Assertions;
 
 public static class BaseScenarioAssertions
 {
+    extension(IScenario pScenario)
+    {
+        public TestContext ShouldCreateSuccessfully()
+        {
+            if (pScenario.LastException is not null)
+                throw pScenario.LastException;
+
+            InputShouldMatchEntity(pScenario.CreateInput, pScenario.Entity);
+
+            return pScenario.Context;
+        }
+
+        public TestContext ShouldUpdateSuccessfully()
+        {
+            if (pScenario.LastException is not null)
+                throw pScenario.LastException;
+
+            InputShouldMatchEntity(pScenario.UpdateInput, pScenario.Entity);
+
+            return pScenario.Context;
+        }
+
+        public void ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode pErrorCode, Type pEntityType, FieldKey? pFieldKey = null)
+        {
+            ShouldFailWithRuleException<ApplicationRuleException, ApplicationRuleErrorCode>(pScenario.LastException, pErrorCode, pEntityType, pFieldKey);
+        }
+
+        public void ShouldFailWithDomainRuleException(DomainRuleErrorCode pErrorCode, Type pEntityType, FieldKey? pFieldKey = null)
+        {
+            ShouldFailWithRuleException<DomainRuleException, DomainRuleErrorCode>(pScenario.LastException, pErrorCode, pEntityType, pFieldKey);
+        }
+    }
+
     extension<TScenario, TCreateInput, TUpdateInput, TEntity>(Scenario<TScenario, TCreateInput, TUpdateInput, TEntity> pScenario)
         where TScenario : Scenario<TScenario, TCreateInput, TUpdateInput, TEntity>
         where TEntity : IEntity, IActivatable
+        where TCreateInput : ICreateDTO
         where TUpdateInput : IUpdateDTO
     {
         public TestContext ShouldDeactivateSuccessfully()
@@ -31,42 +66,6 @@ public static class BaseScenarioAssertions
                 throw new XunitException($"Esperava que a entidade '{typeof(TEntity).Name}' estivesse inativa, mas está ativa.");
 
             return pScenario.Context;
-        }
-    }
-
-    extension<TScenario, TCreateInput, TUpdateInput, TEntity>(Scenario<TScenario, TCreateInput, TUpdateInput, TEntity> pScenario)
-        where TScenario : Scenario<TScenario, TCreateInput, TUpdateInput, TEntity>
-        where TEntity : IEntity
-        where TUpdateInput : IUpdateDTO
-    {
-        public TestContext ShouldCreateSuccessfully()
-        {
-            if (pScenario.LastException is not null)
-                throw pScenario.LastException;
-
-            InputShouldMatchEntity(pScenario.CreateInput, pScenario.Context.GetCurrentOrThrow<TEntity>());
-
-            return pScenario.Context;
-        }
-
-        public TestContext ShouldUpdateSuccessfully()
-        {
-            if (pScenario.LastException is not null)
-                throw pScenario.LastException;
-
-            InputShouldMatchEntity(pScenario.UpdateInput, pScenario.Context.GetCurrentOrThrow<TEntity>());
-
-            return pScenario.Context;
-        }
-
-        public void ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode pErrorCode, Type pEntityType, FieldKey? pFieldKey = null)
-        {
-            ShouldFailWithRuleException<ApplicationRuleException, ApplicationRuleErrorCode>(pScenario.LastException, pErrorCode, pEntityType, pFieldKey);
-        }
-
-        public void ShouldFailWithDomainRuleException(DomainRuleErrorCode pErrorCode, Type pEntityType, FieldKey? pFieldKey = null)
-        {
-            ShouldFailWithRuleException<DomainRuleException, DomainRuleErrorCode>(pScenario.LastException, pErrorCode, pEntityType, pFieldKey);
         }
     }
 

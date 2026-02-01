@@ -3,7 +3,7 @@ using FinancialKrisis.Domain.Entities;
 
 namespace FinancialKrisis.Tests.Scenarios.Entities;
 
-public sealed class TransactionScenario : FinancialMovementScenario<TransactionScenario, CreateTransactionDTO, UpdateTransactionDTO, Transaction>
+public class TransactionScenario : FinancialMovementScenario<TransactionScenario, CreateTransactionDTO, UpdateTransactionDTO, Transaction>
 {
     public TransactionScenario(TestContext pContext) : base(pContext)
     {

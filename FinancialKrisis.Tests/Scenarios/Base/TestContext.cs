@@ -1,9 +1,8 @@
-﻿using FinancialKrisis.Application.DTOs;
-using FinancialKrisis.Application.Services;
+﻿using FinancialKrisis.Application.Services;
 using FinancialKrisis.Domain.Entities;
-using FinancialKrisis.Domain.Interfaces;
 using FinancialKrisis.Tests.Scenarios.Assertions;
 using FinancialKrisis.Tests.Scenarios.Entities;
+using FinancialKrisis.Tests.Scenarios.Interfaces;
 using FinancialKrisis.Tests.TestInfrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -124,6 +123,16 @@ public sealed class TestContext : IDisposable
     public PlannedTransactionScenario PlannedTransaction()
     {
         return new PlannedTransactionScenario(this);
+    }
+
+    public IFinancialMovementScenario FinancialMovement(Type pMovementType)
+    {
+        if (pMovementType == typeof(Transaction))
+            return Transaction();
+        else if (pMovementType == typeof(PlannedTransaction))
+            return PlannedTransaction();
+        else 
+            throw new ArgumentException($"Movimento financeiro não implementado: {pMovementType.Name}");
     }
 
     public void Dispose()

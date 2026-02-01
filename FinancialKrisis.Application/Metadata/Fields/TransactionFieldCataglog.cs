@@ -7,14 +7,14 @@ namespace FinancialKrisis.Application.Metadata;
 
 public class TransactionFieldCatalog
 {
-    public static readonly Dictionary<FieldKey, FieldMetadata> Fields = new()
+    public static readonly Dictionary<FieldKey, GrammarMetadata> Fields = new()
     {
         { Transaction.Fields.DateTime, new("Data", GrammaticalGender.Feminine) },
     };
 
     static TransactionFieldCatalog()
     {
-        foreach (KeyValuePair<FieldKey, FieldMetadata> financialMovementField in FinancialMovementFieldCatalog.Fields)
+        foreach (KeyValuePair<FieldKey, GrammarMetadata> financialMovementField in FinancialMovementFieldCatalog.Fields)
             if (!Fields.ContainsKey(financialMovementField.Key))
                 Fields.Add(financialMovementField.Key, financialMovementField.Value);
     }

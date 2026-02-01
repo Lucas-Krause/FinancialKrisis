@@ -2,4 +2,4 @@
 
 namespace FinancialKrisis.Application.Metadata;
 
-public record EntityMetadata(string NamePt, GrammaticalGender Gender);
+public record GrammarMetadata(string NamePt, GrammaticalGender Gender);

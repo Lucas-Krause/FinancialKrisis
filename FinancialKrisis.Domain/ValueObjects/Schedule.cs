@@ -1,10 +1,12 @@
 ﻿using FinancialKrisis.Domain.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace FinancialKrisis.Domain.ValueObjects;
 
-public partial class PlannedSchedule
+[Owned]
+public partial class Schedule
 {
-    public PlannedSchedule(
+    public Schedule(
         RecurrenceType pRecurrenceType,
         DateTime pStartDate,
         DateTime? pEndDate,

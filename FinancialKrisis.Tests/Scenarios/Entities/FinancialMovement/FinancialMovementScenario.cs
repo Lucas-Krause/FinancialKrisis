@@ -1,9 +1,10 @@
 ﻿using FinancialKrisis.Application.DTOs;
 using FinancialKrisis.Domain.Entities;
+using FinancialKrisis.Tests.Scenarios.Interfaces;
 
 namespace FinancialKrisis.Tests.Scenarios.Entities;
 
-public class FinancialMovementScenario<TScenario, TCreateDTO, TUpdateDTO, TMovement> : Scenario<TScenario, TCreateDTO, TUpdateDTO, TMovement>
+public partial class FinancialMovementScenario<TScenario, TCreateDTO, TUpdateDTO, TMovement> : Scenario<TScenario, TCreateDTO, TUpdateDTO, TMovement>, IFinancialMovementScenario, IScenario
     where TScenario : FinancialMovementScenario<TScenario, TCreateDTO, TUpdateDTO, TMovement>
     where TCreateDTO : CreateFinancialMovementDTO
     where TUpdateDTO : UpdateFinancialMovementDTO

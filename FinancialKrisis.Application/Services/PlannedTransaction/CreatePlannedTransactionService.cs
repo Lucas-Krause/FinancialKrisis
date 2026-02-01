@@ -20,7 +20,7 @@ public class CreatePlannedTransactionService(
 {
     protected override PlannedTransaction CreateMovement(CreatePlannedTransactionDTO pCreateDTO, Account pAccount, Payee? pPayee, Category? pCategory, Subcategory? pSubcategory)
     {
-        var schedule = new PlannedSchedule(
+        var schedule = new Schedule(
             pCreateDTO.RecurrenceType,
             pCreateDTO.StartDate,
             pCreateDTO.EndDate,

@@ -4,7 +4,7 @@ namespace FinancialKrisis.Domain.Entities;
 
 public partial class PlannedTransaction
 {
-    public void ChangeSchedule(PlannedSchedule pSchedule)
+    public void ChangeSchedule(Schedule pSchedule)
     {
         Schedule = pSchedule;
     }

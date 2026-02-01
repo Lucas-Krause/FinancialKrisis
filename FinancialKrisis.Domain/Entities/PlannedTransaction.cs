@@ -9,7 +9,7 @@ public partial class PlannedTransaction : FinancialMovement
         Account pAccount,
         decimal pAmount,
         FinancialMovementDirection pDirection,
-        PlannedSchedule pSchedule,
+        Schedule pSchedule,
         string? pMemo = null,
         string? pIdentifier = null,
         Payee? pPayee = null,

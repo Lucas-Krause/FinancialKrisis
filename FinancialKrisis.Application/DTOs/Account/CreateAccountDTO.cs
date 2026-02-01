@@ -1,6 +1,6 @@
 ﻿namespace FinancialKrisis.Application.DTOs;
 
-public class CreateAccountDTO
+public class CreateAccountDTO : ICreateDTO
 {
     public string Name { get; set; } = string.Empty;
     public string AccountNumber { get; set; } = string.Empty;

@@ -3,8 +3,10 @@ using FinancialKrisis.Domain.Enums;
 
 namespace FinancialKrisis.Domain.ValueObjects;
 
-public partial class PlannedSchedule
+public partial class Schedule
 {
+    public Schedule() { }
+
     public static class Fields
     {
         public static readonly FieldKey RecurrenceType = new("RecurrenceType");
@@ -13,6 +15,7 @@ public partial class PlannedSchedule
         public static readonly FieldKey Interval = new("Interval");
         public static readonly FieldKey DaysOfWeek = new("DaysOfWeek");
         public static readonly FieldKey DayOfMonth = new("DayOfMonth");
+        public static readonly FieldKey PlannedTransaction = new("PlannedTransaction");
     }
 
     public RecurrenceType RecurrenceType { get; private set; }

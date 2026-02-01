@@ -1,12 +1,14 @@
 ﻿using FinancialKrisis.Application.DTOs;
 using FinancialKrisis.Domain.Interfaces;
+using FinancialKrisis.Tests.Scenarios.Interfaces;
 using Xunit.Sdk;
 
 namespace FinancialKrisis.Tests.Scenarios;
 
-public abstract class Scenario<TScenario, TCreateInput, TUpdateInput, TEntity>(TestContext pContext)
+public abstract partial class Scenario<TScenario, TCreateInput, TUpdateInput, TEntity>(TestContext pContext) : IScenario
     where TScenario : Scenario<TScenario, TCreateInput, TUpdateInput, TEntity>
     where TEntity : IEntity
+    where TCreateInput : ICreateDTO
     where TUpdateInput : IUpdateDTO
 {
     public TestContext Context { get; } = pContext;

@@ -7,6 +7,8 @@ public sealed class PlannedTransactionScenario : FinancialMovementScenario<Plann
 {
     public PlannedTransactionScenario(TestContext pContext) : base(pContext)
     {
+        CreateInput.StartDate = DateTime.Now.AddMonths(1);
+
         CreateFunc = Context.CreatePlannedTransactionService.ExecuteAsync;
         UpdateFunc = Context.UpdatePlannedTransactionService.ExecuteAsync;
     }
