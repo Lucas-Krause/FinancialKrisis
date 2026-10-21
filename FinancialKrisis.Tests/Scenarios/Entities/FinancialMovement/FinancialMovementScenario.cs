@@ -47,6 +47,12 @@ public partial class FinancialMovementScenario<TScenario, TCreateDTO, TUpdateDTO
         return (TScenario)this;
     }
 
+    public TScenario UpdatingWithCurrentAccount()
+    {
+        UpdateInput.AccountId = Context.GetCurrentOrThrow<Account>().Id;
+        return (TScenario)this;
+    }
+
     public TScenario UpdatingWithCurrentCategory()
     {
         UpdateInput.CategoryId = Context.GetCurrentOrThrow<Category>().Id;

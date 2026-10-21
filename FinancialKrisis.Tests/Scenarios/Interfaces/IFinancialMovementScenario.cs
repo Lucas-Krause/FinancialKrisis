@@ -11,6 +11,7 @@ public interface IFinancialMovementScenario : IScenario
     IFinancialMovementScenario CreatingWithCurrentSubcategory();
 
     IFinancialMovementScenario UpdatingWith(Action<UpdateFinancialMovementDTO> pConfigure);
+    IFinancialMovementScenario UpdatingWithCurrentAccount();
     IFinancialMovementScenario UpdatingWithCurrentPayee();
     IFinancialMovementScenario UpdatingWithCurrentCategory();
     IFinancialMovementScenario UpdatingWithCurrentSubcategory();

@@ -4,6 +4,8 @@ using FinancialKrisis.Application.Exceptions;
 using FinancialKrisis.Application.Helpers;
 using FinancialKrisis.Domain.Interfaces;
 using FinancialKrisis.Domain.Entities;
+using FinancialKrisis.Domain.Enums;
+using FinancialKrisis.Domain.Exceptions;
 
 namespace FinancialKrisis.Application.Services;
 
@@ -21,7 +23,13 @@ public abstract class UpdateFinancialMovementService<TMovement, TRepository, TUp
 
     protected override async Task ApplyChangesToEntity(TMovement pMovement, TUpdateDTO pUpdateDTO)
     {
-        ActiveEntityValidator.EnsureIsActive(await pAccountRepository.GetByIdOrThrowAsync(pMovement.AccountId));
+        if (EntityRelationUpdateHelper.ShouldRemove(pUpdateDTO.AccountId))
+            throw new DomainRuleException(DomainRuleErrorCode.RequiredField, pMovement.GetType(), FinancialMovement.Fields.Account);
+
+        if (EntityRelationUpdateHelper.ShouldAssign(pUpdateDTO.AccountId))
+            pMovement.ChangeAccount((Account)ActiveEntityValidator.EnsureIsActive(await pAccountRepository.GetByIdOrThrowAsync(pUpdateDTO.AccountId.Value)));
+        else
+            ActiveEntityValidator.EnsureIsActive(await pAccountRepository.GetByIdOrThrowAsync(pMovement.AccountId));
 
         if (pUpdateDTO.Memo.IsDefined)
             pMovement.ChangeMemo(pUpdateDTO.Memo.Value);

@@ -12,6 +12,7 @@ public class UpdateFinancialMovementDTO : IUpdateDTO
     public Optional<string> Memo { get; set; } = Optional<string>.Undefined();
     public Optional<string> Identifier { get; set; } = Optional<string>.Undefined();
 
+    public Optional<Guid> AccountId { get; set; } = Optional<Guid>.Undefined();
     public Optional<Guid> PayeeId { get; set; } = Optional<Guid>.Undefined();
     public Optional<Guid> CategoryId { get; set; } = Optional<Guid>.Undefined();
     public Optional<Guid> SubcategoryId { get; set; } = Optional<Guid>.Undefined();

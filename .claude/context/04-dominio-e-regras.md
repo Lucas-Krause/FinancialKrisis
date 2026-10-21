@@ -53,7 +53,7 @@ Entity (Id, CreatedAt, UpdatedAt)
 ### FinancialMovement (base)
 | Campo | Regra | Status |
 |---|---|---|
-| Account | obrigatória, existente, ativa (create **e** update) | ✅ testado |
+| Account | obrigatória, existente, ativa (create **e** update). Pode ser **trocada** no update (`AccountId`); remover → `RequiredField` | ✅ testado (troca: D-D3) |
 | Amount | `> 0` (sinal vem de `Direction`) → `ValueMustBePositive` | ✅ D-D1, testado |
 | Direction | `In` / `Out`, precisa ser valor definido do enum | ✅ testado |
 | Memo | opcional, livre | 🟡 |
@@ -63,7 +63,9 @@ Entity (Id, CreatedAt, UpdatedAt)
 | Subcategory | opcional; existente, ativa e **sempre coerente** com a Category. Remover a Category remove a Subcategory (domínio); trocar a Category remove a Subcategory se ela for de outra categoria (serviço). Informar explicitamente uma Subcategory de outra categoria → erro `SubcategoryDoesNotBelongToCategory` | ✅ D-D5, testado |
 
 - Movimentos são **apagados fisicamente** (`Delete*Service`), não desativados. 🟡
-- A conta de um movimento **pode ser trocada** (confirmação fica na UI). Hoje o Update DTO não tem `AccountId`. 🔧 D-D3
+- A conta de um movimento **pode ser trocada** (confirmação fica na UI). ✅ D-D3
+  - Só a **nova** conta precisa estar ativa: dá para tirar um movimento de uma conta inativa movendo-o para uma ativa.
+    Sem troca de conta, a conta atual continua precisando estar ativa para editar o movimento. 🟡 (escolha do Claude, leniente — confirmar)
 - App pessoal/familiar: preferir regras **lenientes** a bloqueios rígidos quando houver dúvida (D-A3).
 
 ### Transaction (liquidação real)

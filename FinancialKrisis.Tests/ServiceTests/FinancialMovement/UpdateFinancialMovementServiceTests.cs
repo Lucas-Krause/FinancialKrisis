@@ -67,6 +67,72 @@ public class UpdateFinancialMovementServiceTests
 
     [Theory]
     [MemberData(nameof(FinancialMovementTypes))]
+    public void ChangingAccount_ShouldUpdateSuccessfully(Type pMovementType)
+    {
+        new TestContext()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .FinancialMovement(pMovementType)
+                .CreatingWithCurrentAccount()
+                .Create()
+                .AsCurrent()
+                .ShouldCreateSuccessfully()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .FinancialMovement(pMovementType)
+                .UpdatingWithCurrentAccount()
+                .Update()
+                .ShouldUpdateSuccessfully();
+    }
+
+    [Theory]
+    [MemberData(nameof(FinancialMovementTypes))]
+    public void RemovingAccount_ShouldFailWithDomainRuleException(Type pMovementType)
+    {
+        new TestContext()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .FinancialMovement(pMovementType)
+                .CreatingWithCurrentAccount()
+                .Create()
+                .AsCurrent()
+                .UpdatingWith(UpdateInput => UpdateInput.AccountId = Optional<Guid>.Remove())
+                .Update()
+                .ShouldFailWithDomainRuleException(DomainRuleErrorCode.RequiredField, pMovementType, Transaction.Fields.Account);
+    }
+
+    [Theory]
+    [MemberData(nameof(FinancialMovementTypes))]
+    public void NonExistentAccount_ShouldFailWithDomainRuleException(Type pMovementType)
+    {
+        new TestContext()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .FinancialMovement(pMovementType)
+                .CreatingWithCurrentAccount()
+                .Create()
+                .AsCurrent()
+                .UpdatingWith(UpdateInput => UpdateInput.AccountId = Guid.NewGuid())
+                .Update()
+                .ShouldFailWithDomainRuleException(DomainRuleErrorCode.EntityNotFound, typeof(Account));
+    }
+
+    [Theory]
+    [MemberData(nameof(FinancialMovementTypes))]
+    public void ChangingToInactiveAccount_ShouldFailWithApplicationRuleException(Type pMovementType)
+    {
+        new TestContext()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .FinancialMovement(pMovementType)
+                .CreatingWithCurrentAccount()
+                .Create()
+                .AsCurrent()
+                .ShouldCreateSuccessfully()
+            .Account().Create().AsCurrentAccount().Deactivate().ShouldDeactivateSuccessfully()
+            .FinancialMovement(pMovementType)
+                .UpdatingWithCurrentAccount()
+                .Update()
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.EntityInactive, typeof(Account));
+    }
+
+    [Theory]
+    [MemberData(nameof(FinancialMovementTypes))]
     public void ChangingCategory_ShouldRemoveSubcategoryFromOtherCategory(Type pMovementType)
     {
         new TestContext()

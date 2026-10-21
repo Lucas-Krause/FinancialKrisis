@@ -34,6 +34,11 @@ public partial class FinancialMovementScenario<TScenario, TCreateDTO, TUpdateDTO
         return UpdatingWith(pConfigure);
     }
 
+    IFinancialMovementScenario IFinancialMovementScenario.UpdatingWithCurrentAccount()
+    {
+        return UpdatingWithCurrentAccount();
+    }
+
     IFinancialMovementScenario IFinancialMovementScenario.UpdatingWithCurrentPayee()
     {
         return UpdatingWithCurrentPayee();

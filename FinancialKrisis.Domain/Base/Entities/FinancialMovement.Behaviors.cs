@@ -26,6 +26,12 @@ public abstract partial class FinancialMovement
         Direction = pDirection;
     }
 
+    public void ChangeAccount(Account pAccount)
+    {
+        AccountId = pAccount.Id;
+        Account = pAccount;
+    }
+
     public void ChangePayee(Payee pPayee)
     {
         PayeeId = pPayee.Id;
