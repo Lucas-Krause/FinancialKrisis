@@ -55,7 +55,7 @@ public abstract class UpdateFinancialMovementService<TMovement, TRepository, TUp
             var subcategory = (Subcategory)ActiveEntityValidator.EnsureIsActive(await pSubcategoryRepository.GetByIdOrThrowAsync(pUpdateDTO.SubcategoryId.Value));
 
             if (pMovement.CategoryId.HasValue && !subcategory.BelongsToCategory(pMovement.Category!))
-                throw new ApplicationRuleException(ApplicationRuleErrorCode.SubcategoryDoesNotBelongToCategory, typeof(Subcategory), Subcategory.Fields.Category);
+                throw new ApplicationRuleException(ApplicationRuleErrorCode.SubcategoryDoesNotBelongToCategory, typeof(Subcategory), Subcategory.Fields.Category, typeof(Transaction));
 
             pMovement.ChangeSubcategory(subcategory);
         }

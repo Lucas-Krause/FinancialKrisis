@@ -179,7 +179,7 @@ public class UpdateFinancialMovementServiceTests
             .FinancialMovement(pMovementType)
                 .UpdatingWithCurrentSubcategory()
                 .Update()
-                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.SubcategoryDoesNotBelongToCategory, typeof(Subcategory), Subcategory.Fields.Category);
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.SubcategoryDoesNotBelongToCategory, typeof(Subcategory), Subcategory.Fields.Category, typeof(Transaction));
     }
 
     [Theory]

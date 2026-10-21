@@ -118,7 +118,7 @@ public class CreateFinancialMovementServiceTests
                 .CreatingWithCurrentCategory()
                 .CreatingWithCurrentSubcategory()
                 .Create()
-                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.SubcategoryDoesNotBelongToCategory, typeof(Subcategory), Subcategory.Fields.Category);
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.SubcategoryDoesNotBelongToCategory, typeof(Subcategory), Subcategory.Fields.Category, typeof(Transaction));
     }
 
     [Theory]

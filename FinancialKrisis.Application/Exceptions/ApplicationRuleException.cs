@@ -6,13 +6,13 @@ namespace FinancialKrisis.Application.Exceptions;
 
 public class ApplicationRuleException : RuleException<ApplicationRuleErrorCode>
 {
-    public ApplicationRuleException(ApplicationRuleErrorCode pErrorCode, Type pEntityType, FieldKey? pField = null)
-        : base(pErrorCode, pEntityType, pField, string.Empty)
+    public ApplicationRuleException(ApplicationRuleErrorCode pErrorCode, Type pEntityType, FieldKey? pField = null, Type? pOwnerType = null)
+        : base(pErrorCode, pEntityType, pField, pOwnerType, string.Empty)
     {
     }
 
     public ApplicationRuleException(ApplicationRuleException pInnerApplicationRuleException, string pMessage)
-        : base(pInnerApplicationRuleException.ErrorCode, pInnerApplicationRuleException.EntityType, pInnerApplicationRuleException.Field, pMessage)
+        : base(pInnerApplicationRuleException.ErrorCode, pInnerApplicationRuleException.Type, pInnerApplicationRuleException.Field, pInnerApplicationRuleException.OwnerType, pMessage)
     {
     }
 }

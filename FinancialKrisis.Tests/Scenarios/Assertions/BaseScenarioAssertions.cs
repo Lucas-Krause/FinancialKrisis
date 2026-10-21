@@ -36,14 +36,14 @@ public static class BaseScenarioAssertions
             return pScenario.Context;
         }
 
-        public void ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode pErrorCode, Type pEntityType, FieldKey? pFieldKey = null)
+        public void ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode pErrorCode, Type pType, FieldKey? pFieldKey = null, Type? pOwnerType = null)
         {
-            ShouldFailWithRuleException<ApplicationRuleException, ApplicationRuleErrorCode>(pScenario.LastException, pErrorCode, pEntityType, pFieldKey);
+            ShouldFailWithRuleException<ApplicationRuleException, ApplicationRuleErrorCode>(pScenario.LastException, pErrorCode, pType, pFieldKey, pOwnerType);
         }
 
-        public void ShouldFailWithDomainRuleException(DomainRuleErrorCode pErrorCode, Type pEntityType, FieldKey? pFieldKey = null)
+        public void ShouldFailWithDomainRuleException(DomainRuleErrorCode pErrorCode, Type pType, FieldKey? pFieldKey = null, Type? pOwnerType = null)
         {
-            ShouldFailWithRuleException<DomainRuleException, DomainRuleErrorCode>(pScenario.LastException, pErrorCode, pEntityType, pFieldKey);
+            ShouldFailWithRuleException<DomainRuleException, DomainRuleErrorCode>(pScenario.LastException, pErrorCode, pType, pFieldKey, pOwnerType);
         }
     }
 
@@ -69,7 +69,7 @@ public static class BaseScenarioAssertions
         }
     }
 
-    private static void ShouldFailWithRuleException<TException, TErrorCode>(Exception? pLastException, TErrorCode pErrorCode, Type pEntityType, FieldKey? pFieldKey = null)
+    private static void ShouldFailWithRuleException<TException, TErrorCode>(Exception? pLastException, TErrorCode pErrorCode, Type pType, FieldKey? pFieldKey = null, Type? pOwnerType = null)
         where TException : RuleException<TErrorCode>
         where TErrorCode : Enum
     {
@@ -82,8 +82,9 @@ public static class BaseScenarioAssertions
         Assert.NotNull(ex.Message);
         Assert.NotEqual(string.Empty, ex.Message);
         Assert.Equal(pErrorCode, ex.ErrorCode);
-        Assert.Equal(pEntityType, ex.EntityType);
+        Assert.Equal(pType, ex.Type);
         Assert.Equal(pFieldKey, ex.Field);
+        Assert.Equal(pOwnerType, ex.OwnerType);
     }
 
     private static void InputShouldMatchEntity<TInput, TEntity>(TInput pInput, TEntity pEntity)

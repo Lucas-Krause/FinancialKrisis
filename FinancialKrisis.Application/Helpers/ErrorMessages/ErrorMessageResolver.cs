@@ -24,29 +24,43 @@ public static class ErrorMessageResolver
 
     private static string GetDomainExceptionMessage(DomainRuleException pDomainException)
     {
-        GrammarMetadata entityMetadata = TypeCatalog.Types[pDomainException.EntityType];
+        GrammarMetadata typeMetadata = TypeCatalog.Types[pDomainException.Type];
         GrammarMetadata fieldMetadata = new("campo", GrammaticalGender.Masculine);
+
+        string ownedText = string.Empty;
+
+        if (pDomainException.OwnerType is not null)
+        {
+            GrammarMetadata ownerTypeMetadata = TypeCatalog.Types[pDomainException.OwnerType];
+            ownedText = $" d{ownerTypeMetadata.Gender.ToPtArticle()} {ownerTypeMetadata.NamePt.ToLower()}";
+        }
 
         string fieldArticle = string.Empty;
 
         if (pDomainException.Field is not null)
         {
-            fieldMetadata = ResolveField(pDomainException.EntityType, pDomainException.Field);
+            fieldMetadata = ResolveField(pDomainException.Type, pDomainException.Field);
             fieldArticle = fieldMetadata.Gender.ToPtArticle();
         }
 
-        string typeArticle = entityMetadata.Gender.ToPtArticle();
+        string typeArticle = typeMetadata.Gender.ToPtArticle();
 
         return pDomainException.ErrorCode switch
         {
             DomainRuleErrorCode.RequiredField =>
-                $"{fieldArticle.ToUpper()} {fieldMetadata.NamePt.ToLower()} d{typeArticle} {entityMetadata.NamePt.ToLower()} é obrigatóri{fieldArticle}.",
+                $"{fieldArticle.ToUpper()} {fieldMetadata.NamePt.ToLower()} d{typeArticle} {typeMetadata.NamePt.ToLower()}{ownedText} é obrigatóri{fieldArticle}.",
 
             DomainRuleErrorCode.NegativeValue =>
-                $"{fieldArticle.ToUpper()} {fieldMetadata.NamePt.ToLower()} d{typeArticle} {entityMetadata.NamePt.ToLower()} não pode ser negativ{fieldArticle}.",
+                $"{fieldArticle.ToUpper()} {fieldMetadata.NamePt.ToLower()} d{typeArticle} {typeMetadata.NamePt.ToLower()}{ownedText} não pode ser negativ{fieldArticle}.",
 
             DomainRuleErrorCode.EntityNotFound =>
-                $"{typeArticle.ToUpper()} {entityMetadata.NamePt.ToLower()} não foi encontrad{typeArticle}.",
+                $"{typeArticle.ToUpper()} {typeMetadata.NamePt.ToLower()} não foi encontrad{typeArticle}.",
+
+            DomainRuleErrorCode.WeeklyScheduleRequiresDaysOfWeek =>
+                $"{fieldArticle.ToUpper()} {fieldMetadata.NamePt.ToLower()} por semana d{typeArticle} {typeMetadata.NamePt.ToLower()}{ownedText} requer pelo menos um dia da semana configurado.",
+
+            DomainRuleErrorCode.MonthlyScheduleRequiresValidDayOfMonth =>
+                $"{fieldArticle.ToUpper()} {fieldMetadata.NamePt.ToLower()} por mês d{typeArticle} {typeMetadata.NamePt.ToLower()}{ownedText} requer um dia do mês válido (1-28).",
 
             _ => "Erro de validação."
         };
@@ -54,23 +68,29 @@ public static class ErrorMessageResolver
 
     private static string GetApplicationRuleExceptionMessage(ApplicationRuleException pApplicationRuleException)
     {
-        GrammarMetadata entityMetadata = TypeCatalog.Types[pApplicationRuleException.EntityType];
+        GrammarMetadata typeMetadata = TypeCatalog.Types[pApplicationRuleException.Type];
         GrammarMetadata fieldMetadata = new("campo", GrammaticalGender.Masculine);
-        GrammarMetadata transactionMetadata = TypeCatalog.Types[typeof(Transaction)];
+
+        string ownedText = string.Empty;
+
+        if (pApplicationRuleException.OwnerType is not null)
+        {
+            GrammarMetadata ownerTypeMetadata = TypeCatalog.Types[pApplicationRuleException.OwnerType];
+            ownedText = $" d{ownerTypeMetadata.Gender.ToPtArticle()} {ownerTypeMetadata.NamePt.ToLower()}";
+        }
 
         if (pApplicationRuleException.Field is not null)
-            fieldMetadata = ResolveField(pApplicationRuleException.EntityType, pApplicationRuleException.Field);
+            fieldMetadata = ResolveField(pApplicationRuleException.Type, pApplicationRuleException.Field);
 
-        string typeArticle = entityMetadata.Gender.ToPtArticle();
+        string typeArticle = typeMetadata.Gender.ToPtArticle();
 
         return pApplicationRuleException.ErrorCode switch
         {
             ApplicationRuleErrorCode.SubcategoryDoesNotBelongToCategory =>
-                $"{typeArticle.ToUpper()} {entityMetadata.NamePt.ToLower()} " +
-                $"não pertence à {fieldMetadata.NamePt.ToLower()} d{transactionMetadata.Gender.ToPtArticle()} {transactionMetadata.NamePt.ToLower()}.",
+                $"{typeArticle.ToUpper()} {typeMetadata.NamePt.ToLower()} não pertence à {fieldMetadata.NamePt.ToLower()}{ownedText}.",
 
             ApplicationRuleErrorCode.EntityInactive =>
-                $"{typeArticle.ToUpper()} {entityMetadata.NamePt.ToLower()} não está ativ{typeArticle}.",
+                $"{typeArticle.ToUpper()} {typeMetadata.NamePt.ToLower()} não está ativ{typeArticle}.",
 
             _ => "Erro de validação."
         };
