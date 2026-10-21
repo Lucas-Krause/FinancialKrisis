@@ -60,7 +60,7 @@ public static class ErrorMessageResolver
                 $"{fieldArticle.ToUpper()} {fieldMetadata.NamePt.ToLower()} por semana d{typeArticle} {typeMetadata.NamePt.ToLower()}{ownedText} requer pelo menos um dia da semana configurado.",
 
             DomainRuleErrorCode.MonthlyScheduleRequiresValidDayOfMonth =>
-                $"{fieldArticle.ToUpper()} {fieldMetadata.NamePt.ToLower()} por mês d{typeArticle} {typeMetadata.NamePt.ToLower()}{ownedText} requer um dia do mês válido (1-28).",
+                $"{fieldArticle.ToUpper()} {fieldMetadata.NamePt.ToLower()} por mês d{typeArticle} {typeMetadata.NamePt.ToLower()}{ownedText} requer um dia do mês válido (1-31).",
 
             _ => "Erro de validação."
         };

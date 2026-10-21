@@ -87,7 +87,7 @@ Entity (Id, CreatedAt, UpdatedAt)
 | EndDate | opcional; **não** valida `EndDate >= StartDate` | ❓ |
 | Interval | `>= 1` (default 1) — "a cada N dias/semanas/meses" | 🟡 |
 | DaysOfWeek | obrigatório (≥1) quando `Weekly` | 🟡 |
-| DayOfMonth | obrigatório e entre 1–31 quando `Monthly`; em mês sem esse dia, usa o **último dia do mês** (mensagem "1–28" está errada) | ✅ D-B5 |
+| DayOfMonth | obrigatório e entre 1–31 quando `Monthly`; em mês sem esse dia, usa o **último dia do mês** (regra para a futura geração de ocorrências) | ✅ D-B5 |
 
 - Cada `ChangeX` do Schedule chama `Validate()` inteiro na hora.
 - Não há cálculo de ocorrências ainda (gerar as datas do agendamento). 📐

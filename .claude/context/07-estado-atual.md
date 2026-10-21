@@ -35,7 +35,7 @@ PlannedTransaction + Schedule = **área a redesenhar** (não investir em correç
 4. **Possível relacionamento duplicado Subcategory→Category**: `SubcategoryConfiguration` usa `HasOne<Category>().WithMany()`
    (sem navegações) enquanto as entidades têm `Subcategory.Category` e `Category.Subcategories`. EF pode criar uma
    segunda FK sombra (`CategoryId1`). *A verificar quando o build voltar.*
-5. Mensagem de dia do mês "(1-28)" vs. validação 1–31.
+5. ~~Mensagem de dia do mês "(1-28)" vs. validação 1–31.~~ Corrigido para "(1-31)".
 6. `OwnerType = typeof(Transaction)` fixo no erro de subcategoria, também para PlannedTransaction.
 7. `Schedule.ChangeEndDate(DateTime)` não aceita `null` → não dá para remover a data de término; e não valida `EndDate >= StartDate`.
 8. `DeactivatedAt` é `DateTime` não-nulo → entidades ativas ficam com `0001-01-01`.
@@ -44,8 +44,8 @@ PlannedTransaction + Schedule = **área a redesenhar** (não investir em correç
 
 ## Decisões já tomadas que o código ainda não reflete (🔧)
 Amount > 0 · trocar conta do movimento · Category automática pela Subcategory · revalidar Subcategory ao trocar Category ·
-reativar entidades (com cascata seletiva na Category) · nomes únicos · tamanho máximo no domínio ·
-corrigir mensagem 1–28. Detalhes em `09-decisoes.md`.
+reativar entidades (com cascata seletiva na Category) · nomes únicos · tamanho máximo no domínio.
+Para o redesenho do Schedule: dia 29–31 em mês curto → último dia do mês (D-B5; ainda não há geração de ocorrências). Detalhes em `09-decisoes.md`.
 
 ## Dívida técnica / limpeza
 - Typos: `GetEntityEntityByIdService`, arquivo `TransactionFieldCataglog.cs`, testes `NonExistant*` vs `NonExistent*`.

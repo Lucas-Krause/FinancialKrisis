@@ -39,7 +39,6 @@ O texto em português é montado **uma única vez**, no `catch` dos serviços, p
 Skill relacionada: [`nova-regra-de-validacao`](../skills/nova-regra-de-validacao/SKILL.md).
 
 ## Pontos de atenção
-- Mensagem de `MonthlyScheduleRequiresValidDayOfMonth` fala "(1-28)" mas a validação aceita 1–31.
 - `SubcategoryDoesNotBelongToCategory` usa `OwnerType = typeof(Transaction)` fixo, mesmo para PlannedTransaction.
 - `Resolve` descarta a exceção original (sem `InnerException`) — perde stack trace para debug.
 - Erros de Schedule às vezes passam `OwnerType = PlannedTransaction`, às vezes não (StartDate/Interval).
