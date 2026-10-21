@@ -37,7 +37,9 @@ public abstract class CreateFinancialMovementService<TMovement, TRepository, TCr
         {
             subcategory = (Subcategory)ActiveEntityValidator.EnsureIsActive(await pSubcategoryRepository.GetByIdOrThrowAsync(pCreateDTO.SubcategoryId.Value));
 
-            if (category is not null && !subcategory.BelongsToCategory(category))
+            if (category is null)
+                category = (Category)ActiveEntityValidator.EnsureIsActive(await pCategoryRepository.GetByIdOrThrowAsync(subcategory.CategoryId), typeof(Subcategory));
+            else if (!subcategory.BelongsToCategory(category))
                 throw new ApplicationRuleException(ApplicationRuleErrorCode.SubcategoryDoesNotBelongToCategory, typeof(Subcategory), Subcategory.Fields.Category, typeof(Transaction));
         }
 

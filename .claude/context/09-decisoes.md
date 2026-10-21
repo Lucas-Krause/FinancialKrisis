@@ -32,7 +32,7 @@ O id (`D-xx`) referencia a pergunta original de `08-duvidas-abertas.md`.
 | D-D1 | `Amount` deve ser **> 0** (zero não faz sentido). **Feito** (`ValueMustBePositive`). | Firme |
 | D-D2 | `Identifier` = identificador externo (ex.: FITID do OFX) para **evitar duplicidade na importação**. | Provisória |
 | D-D3 | Deve ser possível **trocar a conta** de um movimento; a confirmação é responsabilidade da UI. Hoje o update não permite → ajustar. | Firme |
-| D-D4 | Informar só a Subcategory → **preencher a Category automaticamente** a partir dela. | Firme |
+| D-D4 | Informar só a Subcategory → **preencher a Category automaticamente** a partir dela. **Feito** (create e update). | Firme |
 | D-D5 | Subcategory deve ser **sempre coerente** com a Category. Trocar/remover a Category sem revalidar é bug. | Provisória (Lucas "quase certo") |
 
 ### Cadastros
@@ -52,3 +52,5 @@ O id (`D-xx`) referencia a pergunta original de `08-duvidas-abertas.md`.
 | D-F4 | Hooks: sim, sem bloqueios excessivos. Implementados: aviso de prefixo `p` ao editar `.cs`; `dotnet build` + `dotnet test` ao final do turno quando houve edição em `.cs`. | Firme |
 | D-F5 | Claude pode commitar, mas **sempre confirma a mensagem** antes. Padrão de mensagem ainda a definir (skill `commit`). | Firme |
 | D-F6 | Datas em **hora local** (`DateTime.Now`). | Firme |
+| D-T1 | **Não testar o texto exato** das mensagens de erro; testar `ErrorCode`/`Type`/`Field`/`OwnerType`. | Firme |
+| D-M1 | Quando a entidade com erro não foi informada diretamente (ex.: categoria derivada da subcategoria), a mensagem usa o `OwnerType` para dizer de onde ela veio. | Firme |

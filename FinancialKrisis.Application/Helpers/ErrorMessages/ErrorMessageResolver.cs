@@ -93,7 +93,7 @@ public static class ErrorMessageResolver
                 $"{typeArticle.ToUpper()} {typeMetadata.NamePt.ToLower()} não pertence à {fieldMetadata.NamePt.ToLower()}{ownedText}.",
 
             ApplicationRuleErrorCode.EntityInactive =>
-                $"{typeArticle.ToUpper()} {typeMetadata.NamePt.ToLower()} não está ativ{typeArticle}.",
+                $"{typeArticle.ToUpper()} {typeMetadata.NamePt.ToLower()}{ownedText} não está ativ{typeArticle}.",
 
             _ => "Erro de validação."
         };

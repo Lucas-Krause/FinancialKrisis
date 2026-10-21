@@ -48,6 +48,25 @@ public class UpdateFinancialMovementServiceTests
 
     [Theory]
     [MemberData(nameof(FinancialMovementTypes))]
+    public void OnlySubcategory_ShouldFillCategoryAutomatically(Type pMovementType)
+    {
+        new TestContext()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .FinancialMovement(pMovementType)
+                .CreatingWithCurrentAccount()
+                .Create()
+                .AsCurrent()
+                .ShouldCreateSuccessfully()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Subcategory().CreatingWithCurrentCategory().Create().AsCurrentSubcategory().ShouldCreateSuccessfully()
+            .FinancialMovement(pMovementType)
+                .UpdatingWithCurrentSubcategory()
+                .Update()
+                .ShouldHaveCurrentCategory();
+    }
+
+    [Theory]
+    [MemberData(nameof(FinancialMovementTypes))]
     public void RemovingAllOptionalValues_ShouldUpdateSuccessfully(Type pMovementType)
     {
         new TestContext()

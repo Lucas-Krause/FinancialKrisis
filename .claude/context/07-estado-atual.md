@@ -29,9 +29,9 @@ PlannedTransaction + Schedule = **área a redesenhar** (não investir em correç
    e definir `DaysOfWeek` no mesmo update falha, porque `ChangeRecurrenceType` valida antes de `DaysOfWeek` ser setado.
 2. **Categoria trocada sem revalidar subcategoria**: no update, mudar só `CategoryId` (ou removê-la) mantém a
    subcategoria antiga, que pode não pertencer mais à nova categoria.
-3. **Navegação não carregada fora dos testes**: `UpdateFinancialMovementService` usa `pMovement.Category!`;
-   os repositórios de movimento usam `FindAsync` sem `Include`. Nos testes funciona porque tudo roda no mesmo
-   `DbContext` (fix-up de navegação). Num contexto novo (app real), provável `NullReferenceException`.
+3. **Navegação não carregada fora dos testes**: os repositórios de movimento usam `FindAsync` sem `Include`. Nos testes
+   funciona porque tudo roda no mesmo `DbContext` (fix-up de navegação). O uso de `pMovement.Category!` no update foi
+   trocado por comparação de Ids (D-D4), mas o risco geral continua para qualquer código que leia navegações de movimentos.
 4. **Possível relacionamento duplicado Subcategory→Category**: `SubcategoryConfiguration` usa `HasOne<Category>().WithMany()`
    (sem navegações) enquanto as entidades têm `Subcategory.Category` e `Category.Subcategories`. EF pode criar uma
    segunda FK sombra (`CategoryId1`). *A verificar quando o build voltar.*
@@ -43,7 +43,7 @@ PlannedTransaction + Schedule = **área a redesenhar** (não investir em correç
 10. Domain referencia EF Core só por causa de `[Owned]` no Schedule (o `OwnsOne` no DbContext já basta).
 
 ## Decisões já tomadas que o código ainda não reflete (🔧)
-Trocar conta do movimento · Category automática pela Subcategory · revalidar Subcategory ao trocar Category ·
+Trocar conta do movimento · revalidar Subcategory ao trocar Category ·
 reativar entidades (com cascata seletiva na Category) · nomes únicos · tamanho máximo no domínio.
 Para o redesenho do Schedule: dia 29–31 em mês curto → último dia do mês (D-B5; ainda não há geração de ocorrências). Detalhes em `09-decisoes.md`.
 

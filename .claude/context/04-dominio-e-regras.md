@@ -59,7 +59,7 @@ Entity (Id, CreatedAt, UpdatedAt)
 | Memo | opcional, livre | 🟡 |
 | Identifier | opcional; id externo (ex.: FITID do OFX) para evitar duplicidade na importação | ✅ D-D2 (provisória) |
 | Payee | opcional; existente e ativo | ✅ testado |
-| Category | opcional; existente e ativa; **preenchida automaticamente** se só a Subcategory for informada | 🔧 D-D4 |
+| Category | opcional; existente e ativa; **preenchida automaticamente** (pelo serviço) se só a Subcategory for informada, no create e no update | ✅ D-D4, testado |
 | Subcategory | opcional; existente, ativa e **sempre coerente** com a Category (inclusive ao trocar/remover a Category) | ✅ create / 🔧 update D-D5 |
 
 - Movimentos são **apagados fisicamente** (`Delete*Service`), não desativados. 🟡

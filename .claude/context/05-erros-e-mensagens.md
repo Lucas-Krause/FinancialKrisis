@@ -25,6 +25,8 @@ O texto em português é montado **uma única vez**, no `catch` dos serviços, p
 - `ValueMustBePositive`, Transaction, Amount → "O montante da transação deve ser maior que zero."
 - `EntityNotFound`, Payee → "O beneficiário não foi encontrado."
 - `EntityInactive`, Category → "A categoria não está ativa."
+- `EntityInactive`, Category, dono Subcategory → "A categoria da subcategoria não está ativa."
+  (usado quando a categoria é preenchida automaticamente pela subcategoria — `ActiveEntityValidator.EnsureIsActive(entidade, typeof(Dono))`)
 - `SubcategoryDoesNotBelongToCategory` (Subcategory, campo Category, dono Transaction) →
   "A subcategoria não pertence à categoria da transação."
 
@@ -38,6 +40,12 @@ O texto em português é montado **uma única vez**, no `catch` dos serviços, p
 5. Teste com `ShouldFailWith{Domain|Application}RuleException(código, tipo, campo, dono)`.
 
 Skill relacionada: [`nova-regra-de-validacao`](../skills/nova-regra-de-validacao/SKILL.md).
+
+## Princípio de contexto (✅ conversa de 2026-10-21)
+Quando o usuário não informou diretamente a entidade que causou o erro (ex.: categoria derivada da subcategoria),
+a mensagem deve dizer **de onde ela veio** usando o `OwnerType`, em vez de uma mensagem genérica.
+
+O texto final das mensagens **não** é testado por igualdade de string (ver `06-testes.md`).
 
 ## Pontos de atenção
 - `SubcategoryDoesNotBelongToCategory` usa `OwnerType = typeof(Transaction)` fixo, mesmo para PlannedTransaction.

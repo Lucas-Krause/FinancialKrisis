@@ -31,6 +31,21 @@ public class CreateFinancialMovementServiceTests
 
     [Theory]
     [MemberData(nameof(FinancialMovementTypes))]
+    public void OnlySubcategory_ShouldFillCategoryAutomatically(Type pMovementType)
+    {
+        new TestContext()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Subcategory().CreatingWithCurrentCategory().Create().AsCurrentSubcategory().ShouldCreateSuccessfully()
+            .FinancialMovement(pMovementType)
+                .CreatingWithCurrentAccount()
+                .CreatingWithCurrentSubcategory()
+                .Create()
+                .ShouldHaveCurrentCategory();
+    }
+
+    [Theory]
+    [MemberData(nameof(FinancialMovementTypes))]
     public void InvalidDirection_ShouldFailWithDomainRuleException(Type pMovementType)
     {
         new TestContext()

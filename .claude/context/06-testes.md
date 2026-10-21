@@ -36,6 +36,17 @@ new TestContext()
     tipo da entidade, campo, dono e que a mensagem não é vazia;
   - `ShouldDeactivateSuccessfully()` / `ShouldBeInactive()`.
   - As assertions retornam o `TestContext` para encadear o próximo cenário.
+- **`FinancialMovementScenarioAssertions`** — assertions específicas de movimento quando a comparação DTO × entidade não serve
+  (ex.: `ShouldHaveCurrentCategory()`, para quando a categoria é preenchida automaticamente).
+
+## Mensagens de falha dos asserts
+São para o **desenvolvedor**, não para o usuário — por isso **não** passam pelo `ErrorMessageResolver`.
+Padrão: português, `"Esperava que ..., mas ..."`, com nomes técnicos (tipo, propriedade, Id) entre aspas simples,
+em uma única linha de `throw new XunitException(...)`.
+As mensagens para o **usuário** são testadas indiretamente: `ShouldFailWith*RuleException` garante que a mensagem não é vazia
+e confere os dados estruturados (`ErrorCode`, `Type`, `Field`, `OwnerType`).
+**Não criar testes que comparem o texto exato das mensagens** (✅ decisão do Lucas, 2026-10-21): o `ErrorMessageResolver` existe
+justamente para não ter texto fixo espalhado; asserts de frase quebrariam a cada ajuste de redação. Teste os dados estruturados.
 
 ## Organização
 `FinancialKrisis.Tests/ServiceTests/{EntidadePlural}/{Verbo}{Entidade}ServiceTests.cs`.
