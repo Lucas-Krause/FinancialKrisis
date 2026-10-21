@@ -21,5 +21,18 @@ public static class FinancialMovementScenarioAssertions
 
             return pScenario.Context;
         }
+
+        public TestContext ShouldHaveNoSubcategory()
+        {
+            if (pScenario.LastException is not null)
+                throw pScenario.LastException;
+
+            var movement = (FinancialMovement)pScenario.Entity!;
+
+            if (movement.SubcategoryId is not null)
+                throw new XunitException($"Esperava que o movimento '{movement.GetType().Name}' estivesse sem subcategoria, mas está com '{movement.SubcategoryId}'.");
+
+            return pScenario.Context;
+        }
     }
 }

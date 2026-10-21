@@ -48,6 +48,7 @@ public abstract partial class FinancialMovement
     {
         CategoryId = null;
         Category = null;
+        RemoveSubcategory();
     }
 
     public void ChangeSubcategory(Subcategory pSubcategory)

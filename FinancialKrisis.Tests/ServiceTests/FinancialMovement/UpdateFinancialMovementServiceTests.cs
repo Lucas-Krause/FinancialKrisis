@@ -67,6 +67,47 @@ public class UpdateFinancialMovementServiceTests
 
     [Theory]
     [MemberData(nameof(FinancialMovementTypes))]
+    public void ChangingCategory_ShouldRemoveSubcategoryFromOtherCategory(Type pMovementType)
+    {
+        new TestContext()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Subcategory().CreatingWithCurrentCategory().Create().AsCurrentSubcategory().ShouldCreateSuccessfully()
+            .FinancialMovement(pMovementType)
+                .CreatingWithCurrentAccount()
+                .CreatingWithCurrentCategory()
+                .CreatingWithCurrentSubcategory()
+                .Create()
+                .AsCurrent()
+                .ShouldCreateSuccessfully()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .FinancialMovement(pMovementType)
+                .UpdatingWithCurrentCategory()
+                .Update()
+                .ShouldHaveNoSubcategory();
+    }
+
+    [Theory]
+    [MemberData(nameof(FinancialMovementTypes))]
+    public void RemovingCategory_ShouldRemoveSubcategory(Type pMovementType)
+    {
+        new TestContext()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Subcategory().CreatingWithCurrentCategory().Create().AsCurrentSubcategory().ShouldCreateSuccessfully()
+            .FinancialMovement(pMovementType)
+                .CreatingWithCurrentAccount()
+                .CreatingWithCurrentCategory()
+                .CreatingWithCurrentSubcategory()
+                .Create()
+                .AsCurrent()
+                .UpdatingWith(UpdateInput => UpdateInput.CategoryId = Optional<Guid>.Remove())
+                .Update()
+                .ShouldHaveNoSubcategory();
+    }
+
+    [Theory]
+    [MemberData(nameof(FinancialMovementTypes))]
     public void RemovingAllOptionalValues_ShouldUpdateSuccessfully(Type pMovementType)
     {
         new TestContext()

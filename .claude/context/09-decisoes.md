@@ -33,7 +33,7 @@ O id (`D-xx`) referencia a pergunta original de `08-duvidas-abertas.md`.
 | D-D2 | `Identifier` = identificador externo (ex.: FITID do OFX) para **evitar duplicidade na importação**. | Provisória |
 | D-D3 | Deve ser possível **trocar a conta** de um movimento; a confirmação é responsabilidade da UI. Hoje o update não permite → ajustar. | Firme |
 | D-D4 | Informar só a Subcategory → **preencher a Category automaticamente** a partir dela. **Feito** (create e update). | Firme |
-| D-D5 | Subcategory deve ser **sempre coerente** com a Category. Trocar/remover a Category sem revalidar é bug. | Provisória (Lucas "quase certo") |
+| D-D5 | Subcategory deve ser **sempre coerente** com a Category. Ao trocar/remover a Category, a Subcategory incoerente é **removida automaticamente** (sem erro). **Feito.** | Firme |
 
 ### Cadastros
 | Id | Decisão | Força |

@@ -48,7 +48,18 @@ public abstract class UpdateFinancialMovementService<TMovement, TRepository, TUp
             pMovement.ChangePayee((Payee)ActiveEntityValidator.EnsureIsActive(await pPayeeRepository.GetByIdOrThrowAsync(pUpdateDTO.PayeeId.Value)));
 
         if (EntityRelationUpdateHelper.ShouldAssign(pUpdateDTO.CategoryId))
-            pMovement.ChangeCategory((Category)ActiveEntityValidator.EnsureIsActive(await pCategoryRepository.GetByIdOrThrowAsync(pUpdateDTO.CategoryId.Value)));
+        {
+            var category = (Category)ActiveEntityValidator.EnsureIsActive(await pCategoryRepository.GetByIdOrThrowAsync(pUpdateDTO.CategoryId.Value));
+            pMovement.ChangeCategory(category);
+
+            if (pMovement.SubcategoryId.HasValue && !EntityRelationUpdateHelper.ShouldAssign(pUpdateDTO.SubcategoryId))
+            {
+                Subcategory currentSubcategory = await pSubcategoryRepository.GetByIdOrThrowAsync(pMovement.SubcategoryId.Value);
+
+                if (!currentSubcategory.BelongsToCategory(category))
+                    pMovement.RemoveSubcategory();
+            }
+        }
 
         if (EntityRelationUpdateHelper.ShouldAssign(pUpdateDTO.SubcategoryId))
         {

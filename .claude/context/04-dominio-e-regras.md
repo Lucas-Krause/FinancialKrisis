@@ -60,7 +60,7 @@ Entity (Id, CreatedAt, UpdatedAt)
 | Identifier | opcional; id externo (ex.: FITID do OFX) para evitar duplicidade na importação | ✅ D-D2 (provisória) |
 | Payee | opcional; existente e ativo | ✅ testado |
 | Category | opcional; existente e ativa; **preenchida automaticamente** (pelo serviço) se só a Subcategory for informada, no create e no update | ✅ D-D4, testado |
-| Subcategory | opcional; existente, ativa e **sempre coerente** com a Category (inclusive ao trocar/remover a Category) | ✅ create / 🔧 update D-D5 |
+| Subcategory | opcional; existente, ativa e **sempre coerente** com a Category. Remover a Category remove a Subcategory (domínio); trocar a Category remove a Subcategory se ela for de outra categoria (serviço). Informar explicitamente uma Subcategory de outra categoria → erro `SubcategoryDoesNotBelongToCategory` | ✅ D-D5, testado |
 
 - Movimentos são **apagados fisicamente** (`Delete*Service`), não desativados. 🟡
 - A conta de um movimento **pode ser trocada** (confirmação fica na UI). Hoje o Update DTO não tem `AccountId`. 🔧 D-D3
