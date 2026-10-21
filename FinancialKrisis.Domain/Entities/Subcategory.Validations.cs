@@ -11,8 +11,8 @@ public partial class Subcategory
             throw new DomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Subcategory), Fields.Name);
     }
 
-    public bool BelongsToCategory(Category category)
+    public bool BelongsToCategory(Category pCategory)
     {
-        return CategoryId == category.Id;
+        return CategoryId == pCategory.Id;
     }
 }

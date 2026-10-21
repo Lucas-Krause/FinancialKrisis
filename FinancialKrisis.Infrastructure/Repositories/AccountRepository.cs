@@ -4,6 +4,6 @@ using FinancialKrisis.Infrastructure.Persistence;
 
 namespace FinancialKrisis.Infrastructure.Repositories;
 
-public class AccountRepository(FinancialKrisisDbContext context) : BaseRepository<Account>(context), IAccountRepository
+public class AccountRepository(FinancialKrisisDbContext pContext) : BaseRepository<Account>(pContext), IAccountRepository
 {
 }

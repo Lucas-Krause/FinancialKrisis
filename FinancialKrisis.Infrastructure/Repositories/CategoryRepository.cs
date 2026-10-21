@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FinancialKrisis.Infrastructure.Repositories;
 
-public class CategoryRepository(FinancialKrisisDbContext context) : BaseRepository<Category>(context), ICategoryRepository
+public class CategoryRepository(FinancialKrisisDbContext pContext) : BaseRepository<Category>(pContext), ICategoryRepository
 {
     public override async Task<Category?> GetByIdAsync(Guid pId)
     {

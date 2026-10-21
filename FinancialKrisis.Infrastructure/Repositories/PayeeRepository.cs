@@ -4,6 +4,6 @@ using FinancialKrisis.Infrastructure.Persistence;
 
 namespace FinancialKrisis.Infrastructure.Repositories;
 
-public class PayeeRepository(FinancialKrisisDbContext context) : BaseRepository<Payee>(context), IPayeeRepository
+public class PayeeRepository(FinancialKrisisDbContext pContext) : BaseRepository<Payee>(pContext), IPayeeRepository
 {
 }

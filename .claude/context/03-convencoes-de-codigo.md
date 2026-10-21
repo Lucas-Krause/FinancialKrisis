@@ -14,7 +14,6 @@ Lucas decida mudar.
   Inclui primary constructors e blocos `extension(...)`. Também usado em lambdas de configuração (`pBuilder`, `pOptions`).
   - Verificado automaticamente pelo hook `.claude/hooks/check-param-prefix.ps1` ao editar `.cs`.
   - Exceções conhecidas: parâmetros posicionais de `record` (viram propriedades, PascalCase) e lambdas curtas (`p => p.Id`, `CreateInput => ...`).
-  - Violações existentes hoje: `context` em `AccountRepository`/`CategoryRepository`/`PayeeRepository`, `category` em `Subcategory.BelongsToCategory`.
 - Campos privados: `_camelCase` (`_dbSet`, `_entities`).
 - Variáveis locais: `camelCase`, sem prefixo.
 - Sufixo `DTO` em maiúsculas (`CreateAccountDTO`), não `Dto`.
