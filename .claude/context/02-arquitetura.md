@@ -16,8 +16,6 @@ FinancialKrisis.Tests ────────► Application, Domain, Infrastru
 
 Pastas da solução (`FinancialKrisis.slnx`): `/BackEnd/`, `/FrontEnd/`, `/Tests/`, `/Solution Items/`.
 
-⚠️ Existe uma pasta `Common/` (projeto `Common.csproj` com `internal class RuleException {}` vazio)
-**fora da solução** — aparenta ser sobra antes da criação de `FinancialKrisis.Common`. ❓
 
 ## Responsabilidade de cada camada
 

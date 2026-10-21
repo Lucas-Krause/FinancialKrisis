@@ -45,10 +45,9 @@ PlannedTransaction + Schedule = **área a redesenhar** (não investir em correç
 ## Decisões já tomadas que o código ainda não reflete (🔧)
 Amount > 0 · trocar conta do movimento · Category automática pela Subcategory · revalidar Subcategory ao trocar Category ·
 reativar entidades (com cascata seletiva na Category) · nomes únicos · tamanho máximo no domínio ·
-corrigir mensagem 1–28 · apagar `Common/` · corrigir violações do prefixo `p`. Detalhes em `09-decisoes.md`.
+corrigir mensagem 1–28 · corrigir violações do prefixo `p`. Detalhes em `09-decisoes.md`.
 
 ## Dívida técnica / limpeza
-- Pasta `Common/` órfã fora da solução (apagar — D-F2).
 - Typos: `GetEntityEntityByIdService`, arquivo `TransactionFieldCataglog.cs`, testes `NonExistant*` vs `NonExistent*`.
 - `ActiveEntityValidator.EnsureIsActive` retorna `IActivatable` e força casts — poderia ser genérico (`T EnsureIsActive<T>(T)`).
 - `CreateEntity` marcados `async` sem `await` (warning CS1998).

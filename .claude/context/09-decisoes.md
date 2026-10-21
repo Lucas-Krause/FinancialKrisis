@@ -47,7 +47,7 @@ O id (`D-xx`) referencia a pergunta original de `08-duvidas-abertas.md`.
 | Id | Decisão | Força |
 |---|---|---|
 | D-F1 / D-G1 | **Não reverter nada no git.** Corrigido o `)` sobrando em `Schedule.Validations.cs`, mantido o trabalho não commitado (`Type`/`OwnerType` nas exceções). PlannedTransaction + Schedule passam a ser **área a redesenhar**. Build verde, 93 testes passando (2026-10-21). | Firme |
-| D-F2 | A pasta órfã `Common/` pode ser apagada. | Firme |
+| D-F2 | A pasta órfã `Common/` pode ser apagada. **Feito.** | Firme |
 | D-F3 | Prefixo `p` em parâmetros é **obrigatório**. Garantido por hook (`.claude/hooks/check-param-prefix.ps1`). | Firme |
 | D-F4 | Hooks: sim, sem bloqueios excessivos. Implementados: aviso de prefixo `p` ao editar `.cs`; `dotnet build` + `dotnet test` ao final do turno quando houve edição em `.cs`. | Firme |
 | D-F5 | Claude pode commitar, mas **sempre confirma a mensagem** antes. Padrão de mensagem ainda a definir (skill `commit`). | Firme |
