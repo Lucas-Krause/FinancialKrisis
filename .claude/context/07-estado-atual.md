@@ -43,7 +43,7 @@ PlannedTransaction + Schedule = **área a redesenhar** (não investir em correç
 10. Domain referencia EF Core só por causa de `[Owned]` no Schedule (o `OwnsOne` no DbContext já basta).
 
 ## Decisões já tomadas que o código ainda não reflete (🔧)
-Amount > 0 · trocar conta do movimento · Category automática pela Subcategory · revalidar Subcategory ao trocar Category ·
+Trocar conta do movimento · Category automática pela Subcategory · revalidar Subcategory ao trocar Category ·
 reativar entidades (com cascata seletiva na Category) · nomes únicos · tamanho máximo no domínio.
 Para o redesenho do Schedule: dia 29–31 em mês curto → último dia do mês (D-B5; ainda não há geração de ocorrências). Detalhes em `09-decisoes.md`.
 

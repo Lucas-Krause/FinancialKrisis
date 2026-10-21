@@ -52,7 +52,20 @@ public class CreateFinancialMovementServiceTests
                 .CreatingWithCurrentAccount()
                 .CreatingWith(CreateInput => CreateInput.Amount = -1)
                 .Create()
-                .ShouldFailWithDomainRuleException(DomainRuleErrorCode.NegativeValue, pMovementType, Transaction.Fields.Amount);
+                .ShouldFailWithDomainRuleException(DomainRuleErrorCode.ValueMustBePositive, pMovementType, Transaction.Fields.Amount);
+    }
+
+    [Theory]
+    [MemberData(nameof(FinancialMovementTypes))]
+    public void ZeroAmount_ShouldFailWithDomainRuleException(Type pMovementType)
+    {
+        new TestContext()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .FinancialMovement(pMovementType)
+                .CreatingWithCurrentAccount()
+                .CreatingWith(CreateInput => CreateInput.Amount = 0)
+                .Create()
+                .ShouldFailWithDomainRuleException(DomainRuleErrorCode.ValueMustBePositive, pMovementType, Transaction.Fields.Amount);
     }
 
     [Theory]

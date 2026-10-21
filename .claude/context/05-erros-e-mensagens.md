@@ -10,7 +10,7 @@ O texto em português é montado **uma única vez**, no `catch` dos serviços, p
 | Peça | Onde | Papel |
 |---|---|---|
 | `RuleException<TErrorCode>` | Common | Base: `ErrorCode`, `Type` (entidade), `Field` (`FieldKey?`), `OwnerType` (`Type?`) |
-| `DomainRuleException` + `DomainRuleErrorCode` | Domain | `RequiredField`, `NegativeValue`, `EntityNotFound`, `WeeklyScheduleRequiresDaysOfWeek`, `MonthlyScheduleRequiresValidDayOfMonth` |
+| `DomainRuleException` + `DomainRuleErrorCode` | Domain | `RequiredField`, `NegativeValue` (< 0), `ValueMustBePositive` (<= 0), `EntityNotFound`, `WeeklyScheduleRequiresDaysOfWeek`, `MonthlyScheduleRequiresValidDayOfMonth` |
 | `ApplicationRuleException` + `ApplicationRuleErrorCode` | Application | `SubcategoryDoesNotBelongToCategory`, `EntityInactive` |
 | `FieldKey` | Common | `record FieldKey(string Value)` — identifica um campo; declarado em `Entidade.Fields` |
 | `GrammarMetadata(NamePt, Gender)` | Application | Nome em PT + `GrammaticalGender` (Masculine/Feminine) |
@@ -21,7 +21,8 @@ O texto em português é montado **uma única vez**, no `catch` dos serviços, p
 
 ## Exemplos de mensagens geradas
 - `RequiredField`, Account, Name → "O nome da conta é obrigatório."
-- `NegativeValue`, Transaction, Amount → "O montante da transação não pode ser negativo."
+- `NegativeValue`, Account, InitialBalance → "O saldo inicial da conta não pode ser negativo."
+- `ValueMustBePositive`, Transaction, Amount → "O montante da transação deve ser maior que zero."
 - `EntityNotFound`, Payee → "O beneficiário não foi encontrado."
 - `EntityInactive`, Category → "A categoria não está ativa."
 - `SubcategoryDoesNotBelongToCategory` (Subcategory, campo Category, dono Transaction) →

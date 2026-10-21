@@ -7,8 +7,8 @@ public abstract partial class FinancialMovement
 {
     protected void ValidateAmount(decimal pAmount)
     {
-        if (pAmount < 0)
-            throw new DomainRuleException(DomainRuleErrorCode.NegativeValue, GetType(), Fields.Amount);
+        if (pAmount <= 0)
+            throw new DomainRuleException(DomainRuleErrorCode.ValueMustBePositive, GetType(), Fields.Amount);
     }
 
     protected void ValidateDirection(FinancialMovementDirection pDirection)

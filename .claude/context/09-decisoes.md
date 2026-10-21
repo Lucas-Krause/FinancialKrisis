@@ -29,7 +29,7 @@ O id (`D-xx`) referencia a pergunta original de `08-duvidas-abertas.md`.
 ### Movimentos
 | Id | Decisão | Força |
 |---|---|---|
-| D-D1 | `Amount` deve ser **> 0** (zero não faz sentido). Hoje o código aceita 0 → ajustar. | Firme |
+| D-D1 | `Amount` deve ser **> 0** (zero não faz sentido). **Feito** (`ValueMustBePositive`). | Firme |
 | D-D2 | `Identifier` = identificador externo (ex.: FITID do OFX) para **evitar duplicidade na importação**. | Provisória |
 | D-D3 | Deve ser possível **trocar a conta** de um movimento; a confirmação é responsabilidade da UI. Hoje o update não permite → ajustar. | Firme |
 | D-D4 | Informar só a Subcategory → **preencher a Category automaticamente** a partir dela. | Firme |

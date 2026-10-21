@@ -54,7 +54,7 @@ Entity (Id, CreatedAt, UpdatedAt)
 | Campo | Regra | Status |
 |---|---|---|
 | Account | obrigatória, existente, ativa (create **e** update) | ✅ testado |
-| Amount | `> 0` (sinal vem de `Direction`). Hoje o código aceita 0 | 🔧 D-D1 |
+| Amount | `> 0` (sinal vem de `Direction`) → `ValueMustBePositive` | ✅ D-D1, testado |
 | Direction | `In` / `Out`, precisa ser valor definido do enum | ✅ testado |
 | Memo | opcional, livre | 🟡 |
 | Identifier | opcional; id externo (ex.: FITID do OFX) para evitar duplicidade na importação | ✅ D-D2 (provisória) |

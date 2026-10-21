@@ -53,6 +53,9 @@ public static class ErrorMessageResolver
             DomainRuleErrorCode.NegativeValue =>
                 $"{fieldArticle.ToUpper()} {fieldMetadata.NamePt.ToLower()} d{typeArticle} {typeMetadata.NamePt.ToLower()}{ownedText} não pode ser negativ{fieldArticle}.",
 
+            DomainRuleErrorCode.ValueMustBePositive =>
+                $"{fieldArticle.ToUpper()} {fieldMetadata.NamePt.ToLower()} d{typeArticle} {typeMetadata.NamePt.ToLower()}{ownedText} deve ser maior que zero.",
+
             DomainRuleErrorCode.EntityNotFound =>
                 $"{typeArticle.ToUpper()} {typeMetadata.NamePt.ToLower()} não foi encontrad{typeArticle}.",
 
