@@ -5,7 +5,7 @@ public partial class Subcategory
     public void ChangeName(string pNewName)
     {
         ValidateName(pNewName);
-        Name = pNewName;
+        Name = pNewName.Trim();
     }
 
     public void ChangeCategory(Category pNewCategory)

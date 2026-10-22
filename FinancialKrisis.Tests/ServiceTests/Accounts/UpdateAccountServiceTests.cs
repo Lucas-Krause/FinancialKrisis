@@ -27,6 +27,31 @@ public class UpdateAccountServiceTests
     }
 
     [Fact]
+    public void SameNameWithDifferentCase_ShouldUpdateSuccessfully()
+    {
+        new TestContext()
+            .Account()
+            .CreatingWith(CreateInput => CreateInput.Name = "Conta Corrente")
+            .Create()
+            .AsCurrentAccount()
+            .UpdatingWith(UpdateInput => UpdateInput.Name = "CONTA CORRENTE")
+            .Update()
+            .ShouldUpdateSuccessfully();
+    }
+
+    [Fact]
+    public void DuplicateName_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Account().CreatingWith(CreateInput => CreateInput.Name = "Conta Corrente").Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .Account()
+                .UpdatingWith(UpdateInput => UpdateInput.Name = "conta corrente")
+                .Update()
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.ValueAlreadyInUse, typeof(Account), Account.Fields.Name);
+    }
+
+    [Fact]
     public void InactiveAccount_ShouldFailWithApplicationRuleException()
     {
         new TestContext()

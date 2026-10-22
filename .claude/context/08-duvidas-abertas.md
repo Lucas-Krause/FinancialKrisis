@@ -16,11 +16,6 @@ design a tomar juntos** (com opções), já que dependem do redesenho da Planned
 - **C4. Desativar conta com compromissos futuros.** Bloquear? Ignorar os futuros? Depende de B1.
 - **D6. Transferência entre contas próprias.** 2 Transactions ligadas? Entidade própria? (Sugestão: entra junto com a discussão de liquidação.)
 
-## E. Detalhes de unicidade (de D-E1)
-- **E1a.** Unicidade de nome ignora maiúsculas/minúsculas e espaços nas pontas? ("Mercado" = "mercado ")
-- **E1b.** Vale só entre **ativos** (um nome desativado pode ser reutilizado) ou entre todos?
-- **E4a.** Quais limites? Hoje o banco tem: Account 100, Category 200, Payee 150, Subcategory 100. Manter?
-
 ## F. Técnico
 - **F7.** Testes: manter só os de integração atuais ou adicionar também testes unitários do Domain? (Explicação na conversa
   de 2026-10-21: integração = serviço + banco SQLite em memória; unitário = só a entidade, sem banco nem DI.)

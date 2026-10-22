@@ -22,6 +22,31 @@ public class UpdatePayeeServiceTests
     }
 
     [Fact]
+    public void SameNameWithDifferentCase_ShouldUpdateSuccessfully()
+    {
+        new TestContext()
+            .Payee()
+            .CreatingWith(CreateInput => CreateInput.Name = "Padaria")
+            .Create()
+            .AsCurrentPayee()
+            .UpdatingWith(UpdateInput => UpdateInput.Name = "PADARIA")
+            .Update()
+            .ShouldUpdateSuccessfully();
+    }
+
+    [Fact]
+    public void DuplicateName_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Payee().CreatingWith(CreateInput => CreateInput.Name = "Padaria").Create().AsCurrentPayee().ShouldCreateSuccessfully()
+            .Payee().Create().AsCurrentPayee().ShouldCreateSuccessfully()
+            .Payee()
+                .UpdatingWith(UpdateInput => UpdateInput.Name = "padaria")
+                .Update()
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.ValueAlreadyInUse, typeof(Payee), Payee.Fields.Name);
+    }
+
+    [Fact]
     public void InvalidName_ShouldFailWithDomainRuleException()
     {
         new TestContext()

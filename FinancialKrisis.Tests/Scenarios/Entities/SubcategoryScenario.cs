@@ -7,7 +7,7 @@ public class SubcategoryScenario : Scenario<SubcategoryScenario, CreateSubcatego
 {
     public SubcategoryScenario(TestContext pContext) : base(pContext)
     {
-        CreateInput.Name = "Test Subcategory";
+        CreateInput.Name = $"Test Subcategory {Guid.NewGuid():N}";
 
         CreateFunc = Context.CreateSubcategoryService.ExecuteAsync;
         UpdateFunc = Context.UpdateSubcategoryService.ExecuteAsync;

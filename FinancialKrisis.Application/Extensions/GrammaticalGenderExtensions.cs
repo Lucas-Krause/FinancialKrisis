@@ -15,5 +15,15 @@ public static class GrammaticalGenderExtensions
                 _ => throw new ArgumentOutOfRangeException(nameof(pGender), pGender, null)
             };
         }
+
+        public string ToPtIndefiniteArticle()
+        {
+            return pGender switch
+            {
+                GrammaticalGender.Masculine => "um",
+                GrammaticalGender.Feminine => "uma",
+                _ => throw new ArgumentOutOfRangeException(nameof(pGender), pGender, null)
+            };
+        }
     }
 }

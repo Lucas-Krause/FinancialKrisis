@@ -7,6 +7,6 @@ public partial class Category : ActivatableEntity
         ValidateName(pName);
 
         Id = Guid.NewGuid();
-        Name = pName;
+        Name = pName.Trim();
     }
 }

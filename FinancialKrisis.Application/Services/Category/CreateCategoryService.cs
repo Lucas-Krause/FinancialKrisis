@@ -1,4 +1,6 @@
 ﻿using FinancialKrisis.Application.DTOs;
+using FinancialKrisis.Application.Enums;
+using FinancialKrisis.Application.Exceptions;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Interfaces;
 
@@ -8,6 +10,11 @@ public class CreateCategoryService(ICategoryRepository pCategoryRepository) : Cr
 {
     protected override async Task<Category> CreateEntity(CreateCategoryDTO pCreateDTO)
     {
-        return new Category(pCreateDTO.Name);
+        var category = new Category(pCreateDTO.Name);
+
+        if (await EntityRepository.ExistsByNameAsync(category.Name))
+            throw new ApplicationRuleException(ApplicationRuleErrorCode.ValueAlreadyInUse, typeof(Category), Category.Fields.Name);
+
+        return category;
     }
 }

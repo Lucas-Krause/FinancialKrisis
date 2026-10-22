@@ -1,3 +1,4 @@
+using FinancialKrisis.Application.Enums;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Enums;
 using FinancialKrisis.Tests.Scenarios;
@@ -15,6 +16,28 @@ public class CreatePayeeServiceTests
             .Create()
             .AsCurrentPayee()
             .ShouldCreateSuccessfully();
+    }
+
+    [Fact]
+    public void DuplicateNameIgnoringCaseAndSpaces_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Payee().CreatingWith(CreateInput => CreateInput.Name = "Padaria").Create().AsCurrentPayee().ShouldCreateSuccessfully()
+            .Payee()
+                .CreatingWith(CreateInput => CreateInput.Name = "padaria ")
+                .Create()
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.ValueAlreadyInUse, typeof(Payee), Payee.Fields.Name);
+    }
+
+    [Fact]
+    public void DuplicateNameOfInactivePayee_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Payee().CreatingWith(CreateInput => CreateInput.Name = "Padaria").Create().AsCurrentPayee().Deactivate().ShouldDeactivateSuccessfully()
+            .Payee()
+                .CreatingWith(CreateInput => CreateInput.Name = "Padaria")
+                .Create()
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.ValueAlreadyInUse, typeof(Payee), Payee.Fields.Name);
     }
 
     [Fact]

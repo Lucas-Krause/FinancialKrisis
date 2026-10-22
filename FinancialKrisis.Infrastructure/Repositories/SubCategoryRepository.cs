@@ -13,4 +13,10 @@ public class SubcategoryRepository(FinancialKrisisDbContext pContext) : BaseRepo
                            .AsNoTracking()
                            .ToListAsync();
     }
+
+    public async Task<bool> ExistsByNameAsync(Guid pCategoryId, string pName, Guid? pIgnoredId = null)
+    {
+        string normalizedName = pName.Trim().ToLower();
+        return await _dbSet.AnyAsync(sc => sc.CategoryId == pCategoryId && sc.Name.ToLower() == normalizedName && (pIgnoredId == null || sc.Id != pIgnoredId.Value));
+    }
 }

@@ -22,6 +22,31 @@ public class UpdateCategoryServiceTests
     }
 
     [Fact]
+    public void SameNameWithDifferentCase_ShouldUpdateSuccessfully()
+    {
+        new TestContext()
+            .Category()
+            .CreatingWith(CreateInput => CreateInput.Name = "Mercado")
+            .Create()
+            .AsCurrentCategory()
+            .UpdatingWith(UpdateInput => UpdateInput.Name = "MERCADO")
+            .Update()
+            .ShouldUpdateSuccessfully();
+    }
+
+    [Fact]
+    public void DuplicateName_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Category().CreatingWith(CreateInput => CreateInput.Name = "Mercado").Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Category()
+                .UpdatingWith(UpdateInput => UpdateInput.Name = "mercado")
+                .Update()
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.ValueAlreadyInUse, typeof(Category), Category.Fields.Name);
+    }
+
+    [Fact]
     public void NonExistentCategory_ShouldFailWithDomainRuleException()
     {
         new TestContext()

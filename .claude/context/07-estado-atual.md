@@ -42,7 +42,7 @@ PlannedTransaction + Schedule = **área a redesenhar** (não investir em correç
 10. Domain referencia EF Core só por causa de `[Owned]` no Schedule (o `OwnsOne` no DbContext já basta).
 
 ## Decisões já tomadas que o código ainda não reflete (🔧)
-Nomes únicos · tamanho máximo no domínio.
+Tamanho máximo dos nomes no domínio (150).
 Para o redesenho do Schedule: dia 29–31 em mês curto → último dia do mês (D-B5; ainda não há geração de ocorrências). Detalhes em `09-decisoes.md`.
 
 ## Dívida técnica / limpeza
@@ -51,5 +51,9 @@ Para o redesenho do Schedule: dia 29–31 em mês curto → último dia do mês 
 - `CreateEntity` marcados `async` sem `await` (warning CS1998).
 - Sem configuração Fluent para Transaction/PlannedTransaction (precisão de decimal, tamanhos, índices).
 - `BaseRepository` salva a cada operação (sem Unit of Work / transação entre agregados).
+- O git guarda vários caminhos como `SubCategory` (C maiúsculo) — `Domain/Entities/SubCategory.cs`,
+  `Application/Services/SubCategory/`, `Infrastructure/Repositories/SubCategoryRepository.cs` — enquanto o disco usa `Subcategory`
+  (Windows não diferencia). Corrigir com `git mv` em dois passos quando for conveniente.
+- Unicidade de nomes compara com `lower()` do SQLite, que não trata acentos ("É" ≠ "é").
 - Aviso NU1903: `SQLitePCLRaw.lib.e_sqlite3 2.1.11` com vulnerabilidade alta conhecida (transitivo do EF Sqlite 10.0.2).
 - `git` não está no PATH do PowerShell desta máquina (usa o Git do Visual Studio).

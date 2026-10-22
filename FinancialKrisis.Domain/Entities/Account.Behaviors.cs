@@ -5,7 +5,7 @@ public partial class Account
     public void ChangeName(string pNewName)
     {
         ValidateName(pNewName);
-        Name = pNewName;
+        Name = pNewName.Trim();
     }
 
     public void ChangeAccountNumber(string pNewAccountNumber)

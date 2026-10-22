@@ -24,6 +24,33 @@ public class UpdateSubcategoryServiceTests
     }
 
     [Fact]
+    public void DuplicateNameInSameCategory_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Subcategory().CreatingWithCurrentCategory().CreatingWith(CreateInput => CreateInput.Name = "Feira").Create().AsCurrentSubcategory().ShouldCreateSuccessfully()
+            .Subcategory().CreatingWithCurrentCategory().Create().AsCurrentSubcategory().ShouldCreateSuccessfully()
+            .Subcategory()
+                .UpdatingWith(UpdateInput => UpdateInput.Name = "feira")
+                .Update()
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.ValueAlreadyInUse, typeof(Subcategory), Subcategory.Fields.Name);
+    }
+
+    [Fact]
+    public void MovingToCategoryWithSameName_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Subcategory().CreatingWithCurrentCategory().CreatingWith(CreateInput => CreateInput.Name = "Feira").Create().AsCurrentSubcategory().ShouldCreateSuccessfully()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Subcategory().CreatingWithCurrentCategory().CreatingWith(CreateInput => CreateInput.Name = "Feira").Create().ShouldCreateSuccessfully()
+            .Subcategory()
+                .UpdatingWithCurrentCategory()
+                .Update()
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.ValueAlreadyInUse, typeof(Subcategory), Subcategory.Fields.Name);
+    }
+
+    [Fact]
     public void InvalidName_ShouldFailWithDomainRuleException()
     {
         new TestContext()

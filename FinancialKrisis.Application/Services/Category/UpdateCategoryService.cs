@@ -1,4 +1,6 @@
 ﻿using FinancialKrisis.Application.DTOs;
+using FinancialKrisis.Application.Enums;
+using FinancialKrisis.Application.Exceptions;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Interfaces;
 
@@ -9,6 +11,11 @@ public class UpdateCategoryService(ICategoryRepository pCategoryRepository) : Up
     protected override async Task ApplyChangesToEntity(Category pCategory, UpdateCategoryDTO pUpdateDTO)
     {
         if (pUpdateDTO.Name.IsDefined)
+        {
             pCategory.ChangeName(pUpdateDTO.Name.Value!);
+
+            if (await EntityRepository.ExistsByNameAsync(pCategory.Name, pCategory.Id))
+                throw new ApplicationRuleException(ApplicationRuleErrorCode.ValueAlreadyInUse, typeof(Category), Category.Fields.Name);
+        }
     }
 }

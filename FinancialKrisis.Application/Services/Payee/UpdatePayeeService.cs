@@ -1,4 +1,6 @@
 using FinancialKrisis.Application.DTOs;
+using FinancialKrisis.Application.Enums;
+using FinancialKrisis.Application.Exceptions;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Interfaces;
 
@@ -9,6 +11,11 @@ public class UpdatePayeeService(IPayeeRepository pPayeeRepository) : UpdateEntit
     protected override async Task ApplyChangesToEntity(Payee pPayee, UpdatePayeeDTO pUpdateDTO)
     {
         if (pUpdateDTO.Name.IsDefined)
+        {
             pPayee.ChangeName(pUpdateDTO.Name.Value!);
+
+            if (await EntityRepository.ExistsByNameAsync(pPayee.Name, pPayee.Id))
+                throw new ApplicationRuleException(ApplicationRuleErrorCode.ValueAlreadyInUse, typeof(Payee), Payee.Fields.Name);
+        }
     }
 }

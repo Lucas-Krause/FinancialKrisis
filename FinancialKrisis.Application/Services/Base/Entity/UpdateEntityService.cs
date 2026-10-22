@@ -9,19 +9,21 @@ public abstract class UpdateEntityService<TEntity, TEntityRepository, TUpdateEnt
     where TUpdateEntityDTO : IUpdateDTO
     where TEntityRepository : IGenericRepository<TEntity>
 {
+    protected TEntityRepository EntityRepository { get; } = pEntityRepository;
+
     protected abstract Task ApplyChangesToEntity(TEntity pEntity, TUpdateEntityDTO pUpdateDTO);
 
     public async Task<TEntity> ExecuteAsync(TUpdateEntityDTO pUpdateDTO)
     {
         try
         {
-            TEntity entity = await pEntityRepository.GetByIdOrThrowAsync(pUpdateDTO.Id);
+            TEntity entity = await EntityRepository.GetByIdOrThrowAsync(pUpdateDTO.Id);
 
             if (entity is IActivatable activatable)
                 ActiveEntityValidator.EnsureIsActive(activatable);
 
             await ApplyChangesToEntity(entity, pUpdateDTO);
-            await pEntityRepository.UpdateAsync(entity);
+            await EntityRepository.UpdateAsync(entity);
             return entity;
         }
         catch (Exception pEx)

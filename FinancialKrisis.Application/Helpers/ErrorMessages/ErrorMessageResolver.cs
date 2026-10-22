@@ -92,6 +92,7 @@ public static class ErrorMessageResolver
             fieldMetadata = ResolveField(pApplicationRuleException.Type, pApplicationRuleException.Field);
 
         string typeArticle = typeMetadata.Gender.ToPtArticle();
+        string fieldArticle = fieldMetadata.Gender.ToPtArticle();
 
         return pApplicationRuleException.ErrorCode switch
         {
@@ -100,6 +101,9 @@ public static class ErrorMessageResolver
 
             ApplicationRuleErrorCode.EntityInactive =>
                 $"{typeArticle.ToUpper()} {typeMetadata.NamePt.ToLower()}{ownedText} não está ativ{typeArticle}.",
+
+            ApplicationRuleErrorCode.ValueAlreadyInUse =>
+                $"Já existe {typeMetadata.Gender.ToPtIndefiniteArticle()} {typeMetadata.NamePt.ToLower()}{ownedText} com {fieldArticle} mesm{fieldArticle} {fieldMetadata.NamePt.ToLower()}.",
 
             _ => "Erro de validação."
         };

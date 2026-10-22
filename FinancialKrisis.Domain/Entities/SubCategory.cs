@@ -7,7 +7,7 @@ public partial class Subcategory : ActivatableEntity
         ValidateName(pName);
 
         Id = Guid.NewGuid();
-        Name = pName;
+        Name = pName.Trim();
         Category = pCategory;
         CategoryId = pCategory.Id;
     }

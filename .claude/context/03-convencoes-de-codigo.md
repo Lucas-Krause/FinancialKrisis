@@ -51,5 +51,8 @@ Cada entidade/value object do Domain é dividida em 4 arquivos parciais:
   - `From(v)` / conversão implícita → altera;
   - `Remove()` → define como `default` (null/0/Guid.Empty).
   - Para relações (`Optional<Guid>`): `EntityRelationUpdateHelper.ShouldAssign` (≠ Guid.Empty) / `ShouldRemove` (= Guid.Empty).
+- **Helpers `*Validator` precisam validar de verdade** (receber o objeto e decidir, como `ActiveEntityValidator`).
+  Quando a condição já foi calculada no chamador, o padrão é `if (condição) throw new ...RuleException(...)` direto no serviço —
+  não criar helper que só embrulha o `throw`. (✅ conversa de 2026-10-21)
 - Entidades relacionadas são sempre buscadas com `GetByIdOrThrowAsync` + `ActiveEntityValidator.EnsureIsActive` antes de associar.
 - Associação de relação passa pela **entidade** (`ChangeCategory(Category)`), não só pelo Id — atualiza Id e navegação juntos.

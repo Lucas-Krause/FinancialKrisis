@@ -5,7 +5,7 @@ public partial class Category
     public void ChangeName(string pNewName)
     {
         ValidateName(pNewName);
-        Name = pNewName;
+        Name = pNewName.Trim();
     }
 
     public override void Deactivate()

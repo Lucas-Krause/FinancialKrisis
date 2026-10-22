@@ -50,7 +50,10 @@ Entity (Id, CreatedAt, UpdatedAt)
   "A categoria da subcategoria não está ativa." ✅ D-E3a, testado
 - **Não é possível atualizar** uma entidade inativa (`UpdateEntityService` → `EntityInactive`). ✅ testado
 - Não é possível **associar** entidade inativa a outra (movimento, subcategoria). ✅ testado
-- Nomes devem ser **únicos** (Subcategory: única dentro da Category). 🔧 D-E1 — detalhes em 08 (E1a/E1b)
+- Nomes são salvos **sem espaços nas pontas** (`Trim()` no construtor e no `ChangeName`). ✅
+- Nomes são **únicos** ignorando maiúsculas/minúsculas e espaços nas pontas, contando **ativos e inativos**
+  (Subcategory: única dentro da sua Category). Violação → `ValueAlreadyInUse` ("Já existe uma categoria com o mesmo nome."). ✅ D-E1, testado
+  - Limitação: a comparação usa `lower()` do SQLite, que só converte letras ASCII ("É" ≠ "é").
 - Tamanho máximo dos nomes validado **no domínio**. 🔧 D-E4 — limites em 08 (E4a)
 
 ## Movimentos financeiros

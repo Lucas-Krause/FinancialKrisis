@@ -7,7 +7,7 @@ public class AccountScenario : Scenario<AccountScenario, CreateAccountDTO, Updat
 {
     public AccountScenario(TestContext pContext) : base(pContext)
     {
-        CreateInput.Name = "Test Account";
+        CreateInput.Name = $"Test Account {Guid.NewGuid():N}";
         CreateInput.AccountNumber = "1234567";
 
         CreateFunc = Context.CreateAccountService.ExecuteAsync;

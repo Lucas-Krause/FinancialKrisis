@@ -9,7 +9,7 @@ public partial class Account : ActivatableEntity
         ValidateInitialBalance(pInitialBalance);
 
         Id = Guid.NewGuid();
-        Name = pName;
+        Name = pName.Trim();
         AccountNumber = pAccountNumber;
         InitialBalance = pInitialBalance;
     }

@@ -7,7 +7,7 @@ public class PayeeScenario : Scenario<PayeeScenario, CreatePayeeDTO, UpdatePayee
 {
     public PayeeScenario(TestContext pContext) : base(pContext)
     {
-        CreateInput.Name = "Test Payee";
+        CreateInput.Name = $"Test Payee {Guid.NewGuid():N}";
 
         CreateFunc = Context.CreatePayeeService.ExecuteAsync;
         UpdateFunc = Context.UpdatePayeeService.ExecuteAsync;

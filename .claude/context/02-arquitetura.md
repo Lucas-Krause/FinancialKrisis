@@ -31,6 +31,8 @@ Pastas da solução (`FinancialKrisis.slnx`): `/BackEnd/`, `/FrontEnd/`, `/Tests
 - Bases genéricas: `CreateEntityService`, `UpdateEntityService`, `DeactivateEntityService`, `ReactivateEntityService` (com hook `ValidateReactivation`),
   `DeleteEntityService`, `GetAllEntitiesService`, `GetEntityEntityByIdService`, e as especializadas
   `CreateFinancialMovementService` / `UpdateFinancialMovementService`.
+- `CreateEntityService`/`UpdateEntityService` expõem o repositório como `protected EntityRepository`. Os serviços derivados
+  devem usar essa propriedade em vez do parâmetro do primary constructor (evita o aviso CS9107 de captura dupla).
 - Regras que **envolvem mais de uma entidade** ou estado do repositório (entidade inativa,
   subcategoria pertence à categoria) → `ApplicationRuleException`.
 - DTOs: `Create*DTO` (propriedades simples) e `Update*DTO` (`Optional<T>` = PATCH semântico).

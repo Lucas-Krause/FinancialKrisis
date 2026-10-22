@@ -11,12 +11,12 @@ O texto em português é montado **uma única vez**, no `catch` dos serviços, p
 |---|---|---|
 | `RuleException<TErrorCode>` | Common | Base: `ErrorCode`, `Type` (entidade), `Field` (`FieldKey?`), `OwnerType` (`Type?`) |
 | `DomainRuleException` + `DomainRuleErrorCode` | Domain | `RequiredField`, `NegativeValue` (< 0), `ValueMustBePositive` (<= 0), `EntityNotFound`, `EntityAlreadyActive`, `EntityAlreadyInactive`, `WeeklyScheduleRequiresDaysOfWeek`, `MonthlyScheduleRequiresValidDayOfMonth` |
-| `ApplicationRuleException` + `ApplicationRuleErrorCode` | Application | `SubcategoryDoesNotBelongToCategory`, `EntityInactive` |
+| `ApplicationRuleException` + `ApplicationRuleErrorCode` | Application | `SubcategoryDoesNotBelongToCategory`, `EntityInactive`, `ValueAlreadyInUse` |
 | `FieldKey` | Common | `record FieldKey(string Value)` — identifica um campo; declarado em `Entidade.Fields` |
 | `GrammarMetadata(NamePt, Gender)` | Application | Nome em PT + `GrammaticalGender` (Masculine/Feminine) |
 | `TypeCatalog` | Application | `Type` → GrammarMetadata (ex.: `Account` → "Conta", feminino) |
 | `{Entidade}FieldCatalog` | Application | `FieldKey` → GrammarMetadata. Transaction/PlannedTransaction herdam de `FinancialMovementFieldCatalog` via construtor estático |
-| `GrammaticalGenderExtensions.ToPtArticle()` | Application | "o"/"a" (usado também para "do/da", "obrigatório/obrigatória") |
+| `GrammaticalGenderExtensions.ToPtArticle()` / `ToPtIndefiniteArticle()` | Application | "o"/"a" (também "do/da", "obrigatório/obrigatória", "mesmo/mesma") e "um"/"uma" |
 | `ErrorMessageResolver.Resolve(Exception)` | Application | Recria a exceção com mensagem; exceções desconhecidas viram `Exception("Ocorreu um erro inesperado: ...")` |
 
 ## Exemplos de mensagens geradas
@@ -26,6 +26,7 @@ O texto em português é montado **uma única vez**, no `catch` dos serviços, p
 - `EntityNotFound`, Payee → "O beneficiário não foi encontrado."
 - `EntityAlreadyActive`, Category → "A categoria já está ativa."
 - `EntityAlreadyInactive`, Payee → "O beneficiário já está inativo."
+- `ValueAlreadyInUse`, Category, Name → "Já existe uma categoria com o mesmo nome." (`if (await EntityRepository.ExistsByNameAsync(...)) throw ...` direto no serviço)
 - `EntityInactive`, Category → "A categoria não está ativa."
 - `EntityInactive`, Category, dono Subcategory → "A categoria da subcategoria não está ativa."
   (usado quando a categoria é preenchida automaticamente pela subcategoria — `ActiveEntityValidator.EnsureIsActive(entidade, typeof(Dono))`)

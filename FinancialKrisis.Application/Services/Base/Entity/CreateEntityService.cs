@@ -7,6 +7,8 @@ public abstract class CreateEntityService<TEntity, TEntityRepository, TCreateEnt
     where TEntity : IEntity
     where TEntityRepository : IGenericRepository<TEntity>
 {
+    protected TEntityRepository EntityRepository { get; } = pEntityRepository;
+
     protected abstract Task<TEntity> CreateEntity(TCreateEntityDTO pCreateDTO);
 
     public async Task<TEntity> ExecuteAsync(TCreateEntityDTO pCreateDTO)
@@ -14,7 +16,7 @@ public abstract class CreateEntityService<TEntity, TEntityRepository, TCreateEnt
         try
         {
             TEntity entity = await CreateEntity(pCreateDTO);
-            await pEntityRepository.AddAsync(entity);
+            await EntityRepository.AddAsync(entity);
             return entity;
         }
         catch (Exception pEx)

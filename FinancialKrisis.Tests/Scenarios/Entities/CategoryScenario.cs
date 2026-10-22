@@ -7,7 +7,7 @@ public class CategoryScenario : Scenario<CategoryScenario, CreateCategoryDTO, Up
 {
     public CategoryScenario(TestContext pContext) : base(pContext)
     {
-        CreateInput.Name = "Test Category";
+        CreateInput.Name = $"Test Category {Guid.NewGuid():N}";
 
         CreateFunc = Context.CreateCategoryService.ExecuteAsync;
         UpdateFunc = Context.UpdateCategoryService.ExecuteAsync;

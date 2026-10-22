@@ -1,4 +1,6 @@
 using FinancialKrisis.Application.DTOs;
+using FinancialKrisis.Application.Enums;
+using FinancialKrisis.Application.Exceptions;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Interfaces;
 
@@ -8,6 +10,11 @@ public class CreatePayeeService(IPayeeRepository pPayeeRepository) : CreateEntit
 {
     protected override async Task<Payee> CreateEntity(CreatePayeeDTO pCreateDTO)
     {
-        return new Payee(pCreateDTO.Name);
+        var payee = new Payee(pCreateDTO.Name);
+
+        if (await EntityRepository.ExistsByNameAsync(payee.Name))
+            throw new ApplicationRuleException(ApplicationRuleErrorCode.ValueAlreadyInUse, typeof(Payee), Payee.Fields.Name);
+
+        return payee;
     }
 }

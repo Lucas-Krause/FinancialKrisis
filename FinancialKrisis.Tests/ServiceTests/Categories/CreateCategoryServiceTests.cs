@@ -1,3 +1,4 @@
+using FinancialKrisis.Application.Enums;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Enums;
 using FinancialKrisis.Tests.Scenarios;
@@ -15,6 +16,28 @@ public class CreateCategoryServiceTests
             .Create()
             .AsCurrentCategory()
             .ShouldCreateSuccessfully();
+    }
+
+    [Fact]
+    public void DuplicateNameIgnoringCaseAndSpaces_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Category().CreatingWith(CreateInput => CreateInput.Name = "Mercado").Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Category()
+                .CreatingWith(CreateInput => CreateInput.Name = " MERCADO  ")
+                .Create()
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.ValueAlreadyInUse, typeof(Category), Category.Fields.Name);
+    }
+
+    [Fact]
+    public void DuplicateNameOfInactiveCategory_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Category().CreatingWith(CreateInput => CreateInput.Name = "Mercado").Create().AsCurrentCategory().Deactivate().ShouldDeactivateSuccessfully()
+            .Category()
+                .CreatingWith(CreateInput => CreateInput.Name = "Mercado")
+                .Create()
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.ValueAlreadyInUse, typeof(Category), Category.Fields.Name);
     }
 
     [Fact]

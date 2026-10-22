@@ -1,4 +1,5 @@
-﻿using FinancialKrisis.Domain.Entities;
+﻿using FinancialKrisis.Application.Enums;
+using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Enums;
 using FinancialKrisis.Tests.Scenarios;
 using FinancialKrisis.Tests.Scenarios.Assertions;
@@ -15,6 +16,28 @@ public class CreateAccountServiceTests
             .Create()
             .AsCurrentAccount()
             .ShouldCreateSuccessfully();
+    }
+
+    [Fact]
+    public void DuplicateNameIgnoringCaseAndSpaces_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Account().CreatingWith(CreateInput => CreateInput.Name = "Conta Corrente").Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .Account()
+                .CreatingWith(CreateInput => CreateInput.Name = "  conta CORRENTE ")
+                .Create()
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.ValueAlreadyInUse, typeof(Account), Account.Fields.Name);
+    }
+
+    [Fact]
+    public void DuplicateNameOfInactiveAccount_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Account().CreatingWith(CreateInput => CreateInput.Name = "Conta Corrente").Create().AsCurrentAccount().Deactivate().ShouldDeactivateSuccessfully()
+            .Account()
+                .CreatingWith(CreateInput => CreateInput.Name = "Conta Corrente")
+                .Create()
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.ValueAlreadyInUse, typeof(Account), Account.Fields.Name);
     }
 
     [Fact]

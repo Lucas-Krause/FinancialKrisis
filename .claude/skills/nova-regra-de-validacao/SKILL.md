@@ -12,8 +12,9 @@ Referência completa: `.claude/context/05-erros-e-mensagens.md`.
   sozinha com os próprios dados (obrigatório, não-negativo, formato, coerência entre campos dela).
   Fica em `X.Validations.cs` e é chamada no construtor e no `ChangeY` correspondente.
 - **Application** (`ApplicationRuleException` / `ApplicationRuleErrorCode`): depende de outra entidade,
-  do estado do banco ou do caso de uso (inativa, pertence a outra, unicidade). Fica no serviço ou em
-  `Helpers/Validators/`.
+  do estado do banco ou do caso de uso (inativa, pertence a outra, unicidade). Fica no serviço como
+  `if (condição) throw new ApplicationRuleException(...)`. Só crie helper em `Helpers/Validators/` se ele
+  realmente verificar algo a partir do objeto recebido (ex.: `ActiveEntityValidator`), nunca um que só embrulhe o `throw`.
 
 Antes de criar um código novo, verifique se um existente serve (`RequiredField`, `NegativeValue`,
 `EntityNotFound`, `EntityInactive`, ...). Códigos são **genéricos por tipo de violação**, não por campo.
