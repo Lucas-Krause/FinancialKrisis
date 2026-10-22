@@ -12,6 +12,7 @@ public class CategoryScenario : Scenario<CategoryScenario, CreateCategoryDTO, Up
         CreateFunc = Context.CreateCategoryService.ExecuteAsync;
         UpdateFunc = Context.UpdateCategoryService.ExecuteAsync;
         DeactivateFunc = Context.DeactivateCategoryService.ExecuteAsync;
+        ReactivateFunc = Context.ReactivateCategoryService.ExecuteAsync;
     }
 
     public CategoryScenario AsCurrentCategory()

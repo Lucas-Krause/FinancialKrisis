@@ -38,6 +38,7 @@ public abstract partial class Scenario<TScenario, TCreateInput, TUpdateInput, TE
     protected Func<TCreateInput, Task<TEntity>>? CreateFunc { get; init; }
     protected Func<TUpdateInput, Task<TEntity>>? UpdateFunc { get; init; }
     protected Func<Guid, Task>? DeactivateFunc { get; init; }
+    protected Func<Guid, Task>? ReactivateFunc { get; init; }
 
     public TScenario CreatingWith(Action<TCreateInput> pConfigure)
     {
@@ -73,6 +74,12 @@ public abstract partial class Scenario<TScenario, TCreateInput, TUpdateInput, TE
     public TScenario Deactivate()
     {
         ExecuteScenarioResultSync(async () => await DeactivateFunc!(Entity?.Id ?? Guid.NewGuid()));
+        return (TScenario)this;
+    }
+
+    public TScenario Reactivate()
+    {
+        ExecuteScenarioResultSync(async () => await ReactivateFunc!(Entity?.Id ?? Guid.NewGuid()));
         return (TScenario)this;
     }
 

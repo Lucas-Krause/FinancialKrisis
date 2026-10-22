@@ -25,7 +25,7 @@ Use uma entidade existente parecida como modelo e **copie o estilo dela**:
 
 ## 2. Application (`FinancialKrisis.Application`)
 - [ ] `DTOs/X/CreateXDTO.cs` (`: ICreateDTO`, props simples) e `UpdateXDTO.cs` (`: IUpdateDTO`, `Guid Id` + `Optional<T>` com `= Optional<T>.Undefined()`). Namespace `FinancialKrisis.Application.DTOs`.
-- [ ] `Services/X/` — um arquivo por caso de uso herdando as bases genéricas (`CreateEntityService`, `UpdateEntityService`, `DeactivateEntityService` ou `DeleteEntityService`, `GetAllEntitiesService`, `GetEntityEntityByIdService`). Namespace `FinancialKrisis.Application.Services`.
+- [ ] `Services/X/` — um arquivo por caso de uso herdando as bases genéricas (`CreateEntityService`, `UpdateEntityService`, `DeactivateEntityService` + `ReactivateEntityService` (ativáveis) ou `DeleteEntityService` (movimentos), `GetAllEntitiesService`, `GetEntityEntityByIdService`). Namespace `FinancialKrisis.Application.Services`.
   - Relações: `GetByIdOrThrowAsync` + `ActiveEntityValidator.EnsureIsActive` antes de associar.
   - Update de relação: `EntityRelationUpdateHelper.ShouldAssign/ShouldRemove`.
 - [ ] `Metadata/Types/TypeCatalog.cs` — registrar `typeof(X)` com nome PT e gênero.
@@ -40,8 +40,8 @@ Use uma entidade existente parecida como modelo e **copie o estilo dela**:
 ## 4. Testes (`FinancialKrisis.Tests`)
 - [ ] `TestInfrastructure/TestServiceProviderFactory.cs` — `AddScoped` do repositório e de todos os serviços.
 - [ ] `Scenarios/Base/TestContext.cs` — propriedades dos serviços, resolução no construtor, fábrica `.X()`.
-- [ ] `Scenarios/Entities/XScenario.cs` — defaults válidos no construtor, `CreateFunc`/`UpdateFunc`/`DeactivateFunc`, `AsCurrentX()`, `CreatingWithCurrentY()`/`UpdatingWithCurrentY()`.
-- [ ] `ServiceTests/XPlural/{Create,Update,Deactivate}XServiceTests.cs` — cobrir: válido; cada campo inválido; inexistente; inativo; relações inexistentes/inativas. Nomes `Condicao_ShouldResultado`.
+- [ ] `Scenarios/Entities/XScenario.cs` — defaults válidos no construtor, `CreateFunc`/`UpdateFunc`/`DeactivateFunc`/`ReactivateFunc`, `AsCurrentX()`, `CreatingWithCurrentY()`/`UpdatingWithCurrentY()`.
+- [ ] `ServiceTests/XPlural/{Create,Update,Deactivate,Reactivate}XServiceTests.cs` — cobrir: válido; cada campo inválido; inexistente; inativo; relações inexistentes/inativas. Nomes `Condicao_ShouldResultado`.
 - [ ] Movimento novo? Adicionar o tipo em `TestContext.FinancialMovement(Type)` e em `FinancialMovementTypes` dos testes comuns.
 
 ## 5. Fechamento

@@ -28,7 +28,7 @@ Pastas da solução (`FinancialKrisis.slnx`): `/BackEnd/`, `/FrontEnd/`, `/Tests
 
 ### Application
 - **Um serviço por caso de uso** (`CreateAccountService`, `UpdateAccountService`, ...), método único `ExecuteAsync`.
-- Bases genéricas: `CreateEntityService`, `UpdateEntityService`, `DeactivateEntityService`,
+- Bases genéricas: `CreateEntityService`, `UpdateEntityService`, `DeactivateEntityService`, `ReactivateEntityService` (com hook `ValidateReactivation`),
   `DeleteEntityService`, `GetAllEntitiesService`, `GetEntityEntityByIdService`, e as especializadas
   `CreateFinancialMovementService` / `UpdateFinancialMovementService`.
 - Regras que **envolvem mais de uma entidade** ou estado do repositório (entidade inativa,

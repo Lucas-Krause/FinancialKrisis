@@ -19,6 +19,18 @@ public class DeactivateCategoryServiceTests
     }
 
     [Fact]
+    public void InactiveCategory_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Category()
+            .Create()
+            .AsCurrentCategory()
+            .Deactivate()
+            .Deactivate()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.EntityAlreadyInactive, typeof(Category));
+    }
+
+    [Fact]
     public void NonExistantCategory_ShouldFailWithDomainRuleException()
     {
         new TestContext()

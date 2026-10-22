@@ -19,8 +19,6 @@ design a tomar juntos** (com opções), já que dependem do redesenho da Planned
 ## E. Detalhes de unicidade (de D-E1)
 - **E1a.** Unicidade de nome ignora maiúsculas/minúsculas e espaços nas pontas? ("Mercado" = "mercado ")
 - **E1b.** Vale só entre **ativos** (um nome desativado pode ser reutilizado) ou entre todos?
-- **E3a.** Reativar uma subcategoria cuja categoria está inativa: bloquear, ou reativar a categoria junto? (Hoje a mensagem
-  "A categoria da subcategoria não está ativa." só é alcançável depois que existir reativação.)
 - **E4a.** Quais limites? Hoje o banco tem: Account 100, Category 200, Payee 150, Subcategory 100. Manter?
 
 ## F. Técnico

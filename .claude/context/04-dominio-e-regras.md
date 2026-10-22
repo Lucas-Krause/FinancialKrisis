@@ -28,7 +28,8 @@ Entity (Id, CreatedAt, UpdatedAt)
 | Campo | Regra | Status |
 |---|---|---|
 | Name | obrigatório; DB max 200 | 🟡 |
-| Deactivate | **desativa em cascata todas as Subcategories** | ✅ (testado) |
+| Deactivate | **desativa em cascata as Subcategories ativas** (marcando `DeactivatedByCategory`) | ✅ (testado) |
+| Reactivate | reativa as Subcategories que foram desativadas pela cascata | ✅ (testado) |
 
 ### Subcategory
 | Campo | Regra | Status |
@@ -42,7 +43,11 @@ Entity (Id, CreatedAt, UpdatedAt)
 | Name | obrigatório; DB max 150 | 🟡 |
 
 ### Regras comuns às ativáveis
-- **Reativar** deve existir; reativar Category reativa só as Subcategories desativadas em cascata por ela. 🔧 D-E2, D-E3
+- **Reativar** (`Reactivate*Service`): volta `IsActive = true` e zera `DeactivatedAt`. Reativar algo já ativo → `EntityAlreadyActive`; desativar algo já inativo → `EntityAlreadyInactive` (ambos no domínio, `ActivatableEntity`). ✅ D-E2, testado
+- Desativar Category desativa só as Subcategories **ativas**, marcando-as com `DeactivatedByCategory = true`.
+  Reativar Category reativa **só essas**; as desativadas manualmente antes continuam inativas. ✅ D-E3, testado
+- Reativar Subcategory com Category inativa → erro `EntityInactive` (tipo Category, dono Subcategory):
+  "A categoria da subcategoria não está ativa." ✅ D-E3a, testado
 - **Não é possível atualizar** uma entidade inativa (`UpdateEntityService` → `EntityInactive`). ✅ testado
 - Não é possível **associar** entidade inativa a outra (movimento, subcategoria). ✅ testado
 - Nomes devem ser **únicos** (Subcategory: única dentro da Category). 🔧 D-E1 — detalhes em 08 (E1a/E1b)

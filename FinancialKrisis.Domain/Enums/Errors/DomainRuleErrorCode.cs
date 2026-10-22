@@ -6,6 +6,8 @@ public enum DomainRuleErrorCode
     NegativeValue,
     ValueMustBePositive,
     EntityNotFound,
+    EntityAlreadyActive,
+    EntityAlreadyInactive,
     WeeklyScheduleRequiresDaysOfWeek,
     MonthlyScheduleRequiresValidDayOfMonth,
 }

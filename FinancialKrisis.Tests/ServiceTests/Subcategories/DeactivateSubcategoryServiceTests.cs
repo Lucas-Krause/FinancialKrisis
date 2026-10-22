@@ -21,6 +21,20 @@ public class DeactivateSubcategoryServiceTests
     }
 
     [Fact]
+    public void InactiveSubcategory_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Subcategory()
+                .CreatingWithCurrentCategory()
+                .Create()
+                .AsCurrentSubcategory()
+                .Deactivate()
+                .Deactivate()
+                .ShouldFailWithDomainRuleException(DomainRuleErrorCode.EntityAlreadyInactive, typeof(Subcategory));
+    }
+
+    [Fact]
     public void NonExistantSubcategory_ShouldFailWithDomainRuleException()
     {
         new TestContext()

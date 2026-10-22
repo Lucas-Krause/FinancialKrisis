@@ -19,6 +19,18 @@ public class DeactivateAccountServiceTests
     }
 
     [Fact]
+    public void InactiveAccount_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Account()
+            .Create()
+            .AsCurrentAccount()
+            .Deactivate()
+            .Deactivate()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.EntityAlreadyInactive, typeof(Account));
+    }
+
+    [Fact]
     public void NonExistantAccount_ShouldFailWithDomainRuleException()
     {
         new TestContext()

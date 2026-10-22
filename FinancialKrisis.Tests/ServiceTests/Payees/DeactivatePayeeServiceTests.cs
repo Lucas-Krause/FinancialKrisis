@@ -19,6 +19,18 @@ public class DeactivatePayeeServiceTests
     }
 
     [Fact]
+    public void InactivePayee_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Payee()
+            .Create()
+            .AsCurrentPayee()
+            .Deactivate()
+            .Deactivate()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.EntityAlreadyInactive, typeof(Payee));
+    }
+
+    [Fact]
     public void NonExistantPayee_ShouldFailWithDomainRuleException()
     {
         new TestContext()

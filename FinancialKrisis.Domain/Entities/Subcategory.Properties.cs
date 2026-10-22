@@ -13,6 +13,7 @@ public partial class Subcategory
     }
 
     public string Name { get; private set; } = null!;
+    public bool DeactivatedByCategory { get; private set; }
 
     public Guid CategoryId { get; private set; }
     public Category Category { get; private set; } = null!;

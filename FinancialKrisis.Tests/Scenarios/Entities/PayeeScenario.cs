@@ -12,6 +12,7 @@ public class PayeeScenario : Scenario<PayeeScenario, CreatePayeeDTO, UpdatePayee
         CreateFunc = Context.CreatePayeeService.ExecuteAsync;
         UpdateFunc = Context.UpdatePayeeService.ExecuteAsync;
         DeactivateFunc = Context.DeactivatePayeeService.ExecuteAsync;
+        ReactivateFunc = Context.ReactivatePayeeService.ExecuteAsync;
     }
 
     public PayeeScenario AsCurrentPayee()

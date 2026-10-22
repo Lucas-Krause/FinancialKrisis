@@ -36,6 +36,8 @@ new TestContext()
     tipo da entidade, campo, dono e que a mensagem não é vazia;
   - `ShouldDeactivateSuccessfully()` / `ShouldBeInactive()`.
   - As assertions retornam o `TestContext` para encadear o próximo cenário.
+  - Toda assertion de sucesso/estado (`ShouldCreateSuccessfully`, `ShouldBeActive`, `ShouldBeInactive`, ...) começa relançando
+    `LastException`, para a falha mostrar o erro real em vez de um "esperava X, mas está Y" enganoso.
 - **`FinancialMovementScenarioAssertions`** — assertions específicas de movimento quando a comparação DTO × entidade não serve
   (ex.: `ShouldHaveCurrentCategory()`, para quando a categoria é preenchida automaticamente).
 

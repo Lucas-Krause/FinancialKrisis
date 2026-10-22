@@ -59,6 +59,12 @@ public static class ErrorMessageResolver
             DomainRuleErrorCode.EntityNotFound =>
                 $"{typeArticle.ToUpper()} {typeMetadata.NamePt.ToLower()} não foi encontrad{typeArticle}.",
 
+            DomainRuleErrorCode.EntityAlreadyActive =>
+                $"{typeArticle.ToUpper()} {typeMetadata.NamePt.ToLower()} já está ativ{typeArticle}.",
+
+            DomainRuleErrorCode.EntityAlreadyInactive =>
+                $"{typeArticle.ToUpper()} {typeMetadata.NamePt.ToLower()} já está inativ{typeArticle}.",
+
             DomainRuleErrorCode.WeeklyScheduleRequiresDaysOfWeek =>
                 $"{fieldArticle.ToUpper()} {fieldMetadata.NamePt.ToLower()} por semana d{typeArticle} {typeMetadata.NamePt.ToLower()}{ownedText} requer pelo menos um dia da semana configurado.",
 

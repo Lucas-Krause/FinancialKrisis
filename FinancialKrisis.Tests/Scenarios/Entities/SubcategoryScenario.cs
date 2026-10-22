@@ -12,6 +12,7 @@ public class SubcategoryScenario : Scenario<SubcategoryScenario, CreateSubcatego
         CreateFunc = Context.CreateSubcategoryService.ExecuteAsync;
         UpdateFunc = Context.UpdateSubcategoryService.ExecuteAsync;
         DeactivateFunc = Context.DeactivateSubcategoryService.ExecuteAsync;
+        ReactivateFunc = Context.ReactivateSubcategoryService.ExecuteAsync;
     }
 
     public SubcategoryScenario AsCurrentSubcategory()

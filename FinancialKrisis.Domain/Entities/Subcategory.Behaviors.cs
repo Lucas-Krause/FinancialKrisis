@@ -13,4 +13,22 @@ public partial class Subcategory
         Category = pNewCategory;
         CategoryId = pNewCategory.Id;
     }
+
+    public override void Deactivate()
+    {
+        base.Deactivate();
+        DeactivatedByCategory = false;
+    }
+
+    public void DeactivateByCategory()
+    {
+        Deactivate();
+        DeactivatedByCategory = true;
+    }
+
+    public override void Reactivate()
+    {
+        base.Reactivate();
+        DeactivatedByCategory = false;
+    }
 }

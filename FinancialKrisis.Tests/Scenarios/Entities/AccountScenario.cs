@@ -13,6 +13,7 @@ public class AccountScenario : Scenario<AccountScenario, CreateAccountDTO, Updat
         CreateFunc = Context.CreateAccountService.ExecuteAsync;
         UpdateFunc = Context.UpdateAccountService.ExecuteAsync;
         DeactivateFunc = Context.DeactivateAccountService.ExecuteAsync;
+        ReactivateFunc = Context.ReactivateAccountService.ExecuteAsync;
     }
 
     public AccountScenario AsCurrentAccount()

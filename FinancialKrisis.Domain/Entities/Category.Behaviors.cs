@@ -12,9 +12,19 @@ public partial class Category
     {
         base.Deactivate();
 
-        foreach (Subcategory subcategory in Subcategories)
+        foreach (Subcategory subcategory in Subcategories.Where(s => s.IsActive))
         {
-            subcategory.Deactivate();
+            subcategory.DeactivateByCategory();
+        }
+    }
+
+    public override void Reactivate()
+    {
+        base.Reactivate();
+
+        foreach (Subcategory subcategory in Subcategories.Where(s => s.DeactivatedByCategory))
+        {
+            subcategory.Reactivate();
         }
     }
 }

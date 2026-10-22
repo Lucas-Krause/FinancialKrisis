@@ -10,7 +10,7 @@ O texto em português é montado **uma única vez**, no `catch` dos serviços, p
 | Peça | Onde | Papel |
 |---|---|---|
 | `RuleException<TErrorCode>` | Common | Base: `ErrorCode`, `Type` (entidade), `Field` (`FieldKey?`), `OwnerType` (`Type?`) |
-| `DomainRuleException` + `DomainRuleErrorCode` | Domain | `RequiredField`, `NegativeValue` (< 0), `ValueMustBePositive` (<= 0), `EntityNotFound`, `WeeklyScheduleRequiresDaysOfWeek`, `MonthlyScheduleRequiresValidDayOfMonth` |
+| `DomainRuleException` + `DomainRuleErrorCode` | Domain | `RequiredField`, `NegativeValue` (< 0), `ValueMustBePositive` (<= 0), `EntityNotFound`, `EntityAlreadyActive`, `EntityAlreadyInactive`, `WeeklyScheduleRequiresDaysOfWeek`, `MonthlyScheduleRequiresValidDayOfMonth` |
 | `ApplicationRuleException` + `ApplicationRuleErrorCode` | Application | `SubcategoryDoesNotBelongToCategory`, `EntityInactive` |
 | `FieldKey` | Common | `record FieldKey(string Value)` — identifica um campo; declarado em `Entidade.Fields` |
 | `GrammarMetadata(NamePt, Gender)` | Application | Nome em PT + `GrammaticalGender` (Masculine/Feminine) |
@@ -24,6 +24,8 @@ O texto em português é montado **uma única vez**, no `catch` dos serviços, p
 - `NegativeValue`, Account, InitialBalance → "O saldo inicial da conta não pode ser negativo."
 - `ValueMustBePositive`, Transaction, Amount → "O montante da transação deve ser maior que zero."
 - `EntityNotFound`, Payee → "O beneficiário não foi encontrado."
+- `EntityAlreadyActive`, Category → "A categoria já está ativa."
+- `EntityAlreadyInactive`, Payee → "O beneficiário já está inativo."
 - `EntityInactive`, Category → "A categoria não está ativa."
 - `EntityInactive`, Category, dono Subcategory → "A categoria da subcategoria não está ativa."
   (usado quando a categoria é preenchida automaticamente pela subcategoria — `ActiveEntityValidator.EnsureIsActive(entidade, typeof(Dono))`)

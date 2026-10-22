@@ -39,8 +39,9 @@ O id (`D-xx`) referencia a pergunta original de `08-duvidas-abertas.md`.
 | Id | Decisão | Força |
 |---|---|---|
 | D-E1 | Nomes **únicos** (Account, Category, Payee; Subcategory dentro da Category). Ainda definir: case-insensitive? só entre ativos? | Firme no princípio |
-| D-E2 | Deve existir **reativar**. | Firme |
-| D-E3 | Reativar Category reativa Subcategories — idealmente **só as que foram desativadas junto com a Category** (não as desativadas manualmente antes). | Firme no princípio; "só as cascateadas" se não for complexo |
+| D-E2 | Deve existir **reativar**. **Feito** (Account, Category, Subcategory, Payee). Só pode reativar o que está **inativo** (senão `EntityAlreadyActive`) e só pode desativar o que está **ativo** (senão `EntityAlreadyInactive`). | Firme |
+| D-E3 | Reativar Category reativa **só as Subcategories que foram desativadas junto com a Category** (não as desativadas manualmente antes). **Feito** (`Subcategory.DeactivatedByCategory`). | Firme |
+| D-E3a | Reativar Subcategory com a Category inativa → **erro** ("A categoria da subcategoria não está ativa."), sem reativar a Category junto. **Feito.** | Firme |
 | D-E4 | Validar **tamanho máximo dos nomes no domínio**. | Firme |
 
 ### Técnico / processo

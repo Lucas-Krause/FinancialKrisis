@@ -60,10 +60,31 @@ public static class BaseScenarioAssertions
 
         public TestContext ShouldBeInactive()
         {
+            if (pScenario.LastException is not null)
+                throw pScenario.LastException;
+
             TEntity entity = pScenario.Context.GetCurrentOrThrow<TEntity>();
 
             if (entity.IsActive)
                 throw new XunitException($"Esperava que a entidade '{typeof(TEntity).Name}' estivesse inativa, mas está ativa.");
+
+            return pScenario.Context;
+        }
+
+        public TestContext ShouldReactivateSuccessfully()
+        {
+            return ShouldBeActive(pScenario);
+        }
+
+        public TestContext ShouldBeActive()
+        {
+            if (pScenario.LastException is not null)
+                throw pScenario.LastException;
+
+            TEntity entity = pScenario.Context.GetCurrentOrThrow<TEntity>();
+
+            if (!entity.IsActive)
+                throw new XunitException($"Esperava que a entidade '{typeof(TEntity).Name}' estivesse ativa, mas está inativa.");
 
             return pScenario.Context;
         }
