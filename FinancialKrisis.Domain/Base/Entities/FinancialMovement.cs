@@ -15,25 +15,20 @@ public abstract partial class FinancialMovement : Entity, IDeletable
         Category? pCategory,
         Subcategory? pSubcategory)
     {
-        ValidateAmount(pAmount);
-        ValidateDirection(pDirection);
-
         Id = Guid.NewGuid();
-        AccountId = pAccount.Id;
-        Account = pAccount;
+        ChangeAmount(pAmount);
+        ChangeDirection(pDirection);
+        ChangeAccount(pAccount);
+        ChangeMemo(pMemo);
+        ChangeIdentifier(pIdentifier);
 
-        Amount = pAmount;
-        Direction = pDirection;
-        Memo = pMemo;
-        Identifier = pIdentifier;
+        if (pPayee is not null)
+            ChangePayee(pPayee);
 
-        PayeeId = pPayee?.Id;
-        Payee = pPayee;
+        if (pCategory is not null)
+            ChangeCategory(pCategory);
 
-        CategoryId = pCategory?.Id;
-        Category = pCategory;
-
-        SubcategoryId = pSubcategory?.Id;
-        Subcategory = pSubcategory;
+        if (pSubcategory is not null)
+            ChangeSubcategory(pSubcategory);
     }
 }

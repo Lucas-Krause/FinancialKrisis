@@ -24,8 +24,6 @@ public partial class Transaction : FinancialMovement
             pCategory,
             pSubcategory)
     {
-        ValidateDateTime(pDateTime);
-
-        DateTime = pDateTime;
+        ChangeDateTime(pDateTime);
     }
 }
