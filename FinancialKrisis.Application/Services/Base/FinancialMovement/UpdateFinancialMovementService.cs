@@ -26,10 +26,10 @@ public abstract class UpdateFinancialMovementService<TMovement, TRepository, TUp
         if (EntityRelationUpdateHelper.ShouldRemove(pUpdateDTO.AccountId))
             throw new DomainRuleException(DomainRuleErrorCode.RequiredField, pMovement.GetType(), FinancialMovement.Fields.Account);
 
+        ActiveEntityValidator.EnsureIsActive(await pAccountRepository.GetByIdOrThrowAsync(pMovement.AccountId));
+
         if (EntityRelationUpdateHelper.ShouldAssign(pUpdateDTO.AccountId))
             pMovement.ChangeAccount((Account)ActiveEntityValidator.EnsureIsActive(await pAccountRepository.GetByIdOrThrowAsync(pUpdateDTO.AccountId.Value)));
-        else
-            ActiveEntityValidator.EnsureIsActive(await pAccountRepository.GetByIdOrThrowAsync(pMovement.AccountId));
 
         if (pUpdateDTO.Memo.IsDefined)
             pMovement.ChangeMemo(pUpdateDTO.Memo.Value);

@@ -133,6 +133,25 @@ public class UpdateFinancialMovementServiceTests
 
     [Theory]
     [MemberData(nameof(FinancialMovementTypes))]
+    public void ChangingAccountFromInactiveAccount_ShouldFailWithApplicationRuleException(Type pMovementType)
+    {
+        new TestContext()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .FinancialMovement(pMovementType)
+                .CreatingWithCurrentAccount()
+                .Create()
+                .AsCurrent()
+                .ShouldCreateSuccessfully()
+            .Account().Deactivate().ShouldDeactivateSuccessfully()
+            .Account().Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .FinancialMovement(pMovementType)
+                .UpdatingWithCurrentAccount()
+                .Update()
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.EntityInactive, typeof(Account));
+    }
+
+    [Theory]
+    [MemberData(nameof(FinancialMovementTypes))]
     public void ChangingCategory_ShouldRemoveSubcategoryFromOtherCategory(Type pMovementType)
     {
         new TestContext()
