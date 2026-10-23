@@ -12,16 +12,13 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 
         pBuilder.HasKey(p => p.Id);
 
-        pBuilder
-            .Property(p => p.Name)
-            .IsRequired()
-            .HasMaxLength(200);
+        pBuilder.HasEntityName(200);
 
         pBuilder
             .Property(p => p.IsActive)
             .IsRequired();
 
-        pBuilder.HasIndex(p => p.Name);
+        pBuilder.HasIndex(p => p.Name.NormalizedValue).IsUnique();
         pBuilder.HasIndex(p => p.IsActive);
     }
 }

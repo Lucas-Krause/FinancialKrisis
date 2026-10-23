@@ -6,6 +6,7 @@ using FinancialKrisis.Common.Records;
 using FinancialKrisis.Domain.Enums;
 using FinancialKrisis.Domain.Exceptions;
 using FinancialKrisis.Domain.Interfaces;
+using FinancialKrisis.Domain.ValueObjects;
 using FinancialKrisis.Tests.Scenarios.Interfaces;
 using System.Reflection;
 using Xunit.Sdk;
@@ -125,6 +126,9 @@ public static class BaseScenarioAssertions
 
             expectedValue = inputProperty.GetValue(pInput);
             object? entityValue = entityProperty.GetValue(pEntity);
+
+            if (entityValue is EntityName entityName)
+                entityValue = entityName.Value;
 
             if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Optional<>))
             {

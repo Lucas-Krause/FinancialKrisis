@@ -34,6 +34,19 @@ public class CreateSubcategoryServiceTests
     }
 
     [Fact]
+    public void DuplicateNameWithAccentIgnoringCaseInSameCategory_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Category().Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Subcategory().CreatingWithCurrentCategory().CreatingWith(CreateInput => CreateInput.Name = "Farmácia").Create().AsCurrentSubcategory().ShouldCreateSuccessfully()
+            .Subcategory()
+                .CreatingWithCurrentCategory()
+                .CreatingWith(CreateInput => CreateInput.Name = "FARMÁCIA")
+                .Create()
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.ValueAlreadyInUse, typeof(Subcategory), Subcategory.Fields.Name);
+    }
+
+    [Fact]
     public void SameNameInOtherCategory_ShouldCreateSuccessfully()
     {
         new TestContext()

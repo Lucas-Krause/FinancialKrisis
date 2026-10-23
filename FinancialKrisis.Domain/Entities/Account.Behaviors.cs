@@ -1,11 +1,12 @@
-﻿namespace FinancialKrisis.Domain.Entities;
+﻿using FinancialKrisis.Domain.ValueObjects;
+
+namespace FinancialKrisis.Domain.Entities;
 
 public partial class Account
 {
     public void ChangeName(string pNewName)
     {
-        ValidateName(pNewName);
-        Name = pNewName.Trim();
+        Name = new EntityName(pNewName, typeof(Account));
     }
 
     public void ChangeAccountNumber(string pNewAccountNumber)

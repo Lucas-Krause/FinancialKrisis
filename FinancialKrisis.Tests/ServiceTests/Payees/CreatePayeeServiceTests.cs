@@ -30,6 +30,17 @@ public class CreatePayeeServiceTests
     }
 
     [Fact]
+    public void DuplicateNameWithAccentIgnoringCase_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Payee().CreatingWith(CreateInput => CreateInput.Name = "Açougue").Create().AsCurrentPayee().ShouldCreateSuccessfully()
+            .Payee()
+                .CreatingWith(CreateInput => CreateInput.Name = "AÇOUGUE")
+                .Create()
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.ValueAlreadyInUse, typeof(Payee), Payee.Fields.Name);
+    }
+
+    [Fact]
     public void DuplicateNameOfInactivePayee_ShouldFailWithApplicationRuleException()
     {
         new TestContext()

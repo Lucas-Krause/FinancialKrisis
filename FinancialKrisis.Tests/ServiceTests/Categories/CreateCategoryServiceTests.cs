@@ -30,6 +30,28 @@ public class CreateCategoryServiceTests
     }
 
     [Fact]
+    public void DuplicateNameWithAccentIgnoringCase_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Category().CreatingWith(CreateInput => CreateInput.Name = "Saúde").Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Category()
+                .CreatingWith(CreateInput => CreateInput.Name = "SAÚDE")
+                .Create()
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.ValueAlreadyInUse, typeof(Category), Category.Fields.Name);
+    }
+
+    [Fact]
+    public void SameNameWithoutAccent_ShouldCreateSuccessfully()
+    {
+        new TestContext()
+            .Category().CreatingWith(CreateInput => CreateInput.Name = "Café").Create().AsCurrentCategory().ShouldCreateSuccessfully()
+            .Category()
+                .CreatingWith(CreateInput => CreateInput.Name = "Cafe")
+                .Create()
+                .ShouldCreateSuccessfully();
+    }
+
+    [Fact]
     public void DuplicateNameOfInactiveCategory_ShouldFailWithApplicationRuleException()
     {
         new TestContext()

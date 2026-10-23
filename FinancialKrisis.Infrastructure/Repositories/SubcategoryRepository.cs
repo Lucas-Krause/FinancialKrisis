@@ -1,5 +1,6 @@
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Interfaces;
+using FinancialKrisis.Domain.ValueObjects;
 using FinancialKrisis.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,9 +15,8 @@ public class SubcategoryRepository(FinancialKrisisDbContext pContext) : BaseRepo
                            .ToListAsync();
     }
 
-    public async Task<bool> ExistsByNameAsync(Guid pCategoryId, string pName, Guid? pIgnoredId = null)
+    public async Task<bool> ExistsByNameAsync(Guid pCategoryId, EntityName pName, Guid? pIgnoredId = null)
     {
-        string normalizedName = pName.Trim().ToLower();
-        return await _dbSet.AnyAsync(sc => sc.CategoryId == pCategoryId && sc.Name.ToLower() == normalizedName && (pIgnoredId == null || sc.Id != pIgnoredId.Value));
+        return await _dbSet.AnyAsync(sc => sc.CategoryId == pCategoryId && sc.Name.NormalizedValue == pName.NormalizedValue && (pIgnoredId == null || sc.Id != pIgnoredId.Value));
     }
 }

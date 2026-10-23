@@ -5,12 +5,6 @@ namespace FinancialKrisis.Domain.Entities;
 
 public partial class Account
 {
-    private static void ValidateName(string pName)
-    {
-        if (string.IsNullOrWhiteSpace(pName))
-            throw new DomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Account), Fields.Name);
-    }
-
     private static void ValidateAccountNumber(string pAccountNumber)
     {
         if (string.IsNullOrWhiteSpace(pAccountNumber))

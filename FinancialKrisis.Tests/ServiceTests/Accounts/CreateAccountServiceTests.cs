@@ -30,6 +30,17 @@ public class CreateAccountServiceTests
     }
 
     [Fact]
+    public void DuplicateNameWithAccentIgnoringCase_ShouldFailWithApplicationRuleException()
+    {
+        new TestContext()
+            .Account().CreatingWith(CreateInput => CreateInput.Name = "Poupança").Create().AsCurrentAccount().ShouldCreateSuccessfully()
+            .Account()
+                .CreatingWith(CreateInput => CreateInput.Name = "POUPANÇA")
+                .Create()
+                .ShouldFailWithApplicationRuleException(ApplicationRuleErrorCode.ValueAlreadyInUse, typeof(Account), Account.Fields.Name);
+    }
+
+    [Fact]
     public void DuplicateNameOfInactiveAccount_ShouldFailWithApplicationRuleException()
     {
         new TestContext()

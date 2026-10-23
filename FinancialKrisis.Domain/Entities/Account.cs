@@ -1,6 +1,8 @@
-﻿namespace FinancialKrisis.Domain.Entities;
+﻿using FinancialKrisis.Domain.Interfaces;
 
-public partial class Account : ActivatableEntity
+namespace FinancialKrisis.Domain.Entities;
+
+public partial class Account : ActivatableEntity, INamedEntity
 {
     public Account(string pName, string pAccountNumber, decimal pInitialBalance)
     {

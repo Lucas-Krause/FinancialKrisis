@@ -12,10 +12,7 @@ public class SubcategoryConfiguration : IEntityTypeConfiguration<Subcategory>
 
         pBuilder.HasKey(p => p.Id);
 
-        pBuilder
-            .Property(p => p.Name)
-            .IsRequired()
-            .HasMaxLength(100);
+        pBuilder.HasEntityName(100);
 
         pBuilder
             .Property(p => p.IsActive)
@@ -32,6 +29,6 @@ public class SubcategoryConfiguration : IEntityTypeConfiguration<Subcategory>
             .OnDelete(DeleteBehavior.Restrict);
 
         pBuilder.HasIndex(p => p.CategoryId);
-        pBuilder.HasIndex(p => new { p.CategoryId, p.Name });
+        pBuilder.HasIndex(p => new { p.CategoryId, p.Name.NormalizedValue }).IsUnique();
     }
 }

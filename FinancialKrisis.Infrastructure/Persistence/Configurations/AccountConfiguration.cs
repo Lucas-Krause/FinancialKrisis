@@ -12,10 +12,7 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
 
         pBuilder.HasKey(p => p.Id);
 
-        pBuilder
-            .Property(p => p.Name)
-            .IsRequired()
-            .HasMaxLength(100);
+        pBuilder.HasEntityName(100);
 
         pBuilder
             .Property(p => p.InitialBalance)
@@ -26,7 +23,7 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
             .Property(p => p.IsActive)
             .IsRequired();
 
-        pBuilder.HasIndex(p => p.Name);
+        pBuilder.HasIndex(p => p.Name.NormalizedValue).IsUnique();
         pBuilder.HasIndex(p => p.IsActive);
     }
 }

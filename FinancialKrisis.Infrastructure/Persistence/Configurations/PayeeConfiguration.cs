@@ -12,16 +12,13 @@ public class PayeeConfiguration : IEntityTypeConfiguration<Payee>
 
         pBuilder.HasKey(p => p.Id);
 
-        pBuilder
-            .Property(p => p.Name)
-            .IsRequired()
-            .HasMaxLength(150);
+        pBuilder.HasEntityName(150);
 
         pBuilder
             .Property(p => p.IsActive)
             .IsRequired();
 
-        pBuilder.HasIndex(p => p.Name);
+        pBuilder.HasIndex(p => p.Name.NormalizedValue).IsUnique();
         pBuilder.HasIndex(p => p.IsActive);
     }
 }

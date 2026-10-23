@@ -1,6 +1,8 @@
+using FinancialKrisis.Domain.Interfaces;
+
 namespace FinancialKrisis.Domain.Entities;
 
-public partial class Payee : ActivatableEntity
+public partial class Payee : ActivatableEntity, INamedEntity
 {
     public Payee(string pName)
     {

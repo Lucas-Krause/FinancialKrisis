@@ -1,11 +1,12 @@
-﻿namespace FinancialKrisis.Domain.Entities;
+﻿using FinancialKrisis.Domain.ValueObjects;
+
+namespace FinancialKrisis.Domain.Entities;
 
 public partial class Category
 {
     public void ChangeName(string pNewName)
     {
-        ValidateName(pNewName);
-        Name = pNewName.Trim();
+        Name = new EntityName(pNewName, typeof(Category));
     }
 
     public override void Deactivate()

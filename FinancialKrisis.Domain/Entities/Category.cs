@@ -1,6 +1,8 @@
-﻿namespace FinancialKrisis.Domain.Entities;
+﻿using FinancialKrisis.Domain.Interfaces;
 
-public partial class Category : ActivatableEntity
+namespace FinancialKrisis.Domain.Entities;
+
+public partial class Category : ActivatableEntity, INamedEntity
 {
     public Category(string pName)
     {
