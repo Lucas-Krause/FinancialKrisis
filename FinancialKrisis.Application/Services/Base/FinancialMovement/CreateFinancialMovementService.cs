@@ -12,7 +12,8 @@ public abstract class CreateFinancialMovementService<TMovement, TRepository, TCr
     IAccountRepository pAccountRepository,
     ICategoryRepository pCategoryRepository,
     ISubcategoryRepository pSubcategoryRepository,
-    IPayeeRepository pPayeeRepository) : CreateEntityService<TMovement, TRepository, TCreateDTO>(pMovementRepository)
+    IPayeeRepository pPayeeRepository,
+    IUnitOfWork pUnitOfWork) : CreateEntityService<TMovement, TRepository, TCreateDTO>(pMovementRepository, pUnitOfWork)
     where TMovement : FinancialMovement, IEntity
     where TCreateDTO : CreateFinancialMovementDTO
     where TRepository : IFinancialMovementRepository<TMovement>

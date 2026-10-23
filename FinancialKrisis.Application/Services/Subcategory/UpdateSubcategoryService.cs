@@ -7,8 +7,8 @@ using FinancialKrisis.Domain.Interfaces;
 
 namespace FinancialKrisis.Application.Services;
 
-public class UpdateSubcategoryService(ISubcategoryRepository pSubcategoryRepository, ICategoryRepository pCategoryRepository) 
-    : UpdateEntityService<Subcategory, ISubcategoryRepository, UpdateSubcategoryDTO>(pSubcategoryRepository)
+public class UpdateSubcategoryService(ISubcategoryRepository pSubcategoryRepository, ICategoryRepository pCategoryRepository, IUnitOfWork pUnitOfWork) 
+    : UpdateEntityService<Subcategory, ISubcategoryRepository, UpdateSubcategoryDTO>(pSubcategoryRepository, pUnitOfWork)
 {
     protected override async Task ApplyChangesToEntity(Subcategory pSubcategory, UpdateSubcategoryDTO pUpdateDTO)
     {

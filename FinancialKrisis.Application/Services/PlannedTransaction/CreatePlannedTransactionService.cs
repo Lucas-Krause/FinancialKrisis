@@ -10,13 +10,15 @@ public class CreatePlannedTransactionService(
     IAccountRepository pAccountRepository,
     ICategoryRepository pCategoryRepository,
     ISubcategoryRepository pSubcategoryRepository,
-    IPayeeRepository pPayeeRepository)
+    IPayeeRepository pPayeeRepository,
+    IUnitOfWork pUnitOfWork)
     : CreateFinancialMovementService<PlannedTransaction, IPlannedTransactionRepository, CreatePlannedTransactionDTO>(
         pPlannedTransactionRepository,
         pAccountRepository,
         pCategoryRepository,
         pSubcategoryRepository,
-        pPayeeRepository)
+        pPayeeRepository,
+        pUnitOfWork)
 {
     protected override PlannedTransaction CreateMovement(CreatePlannedTransactionDTO pCreateDTO, Account pAccount, Payee? pPayee, Category? pCategory, Subcategory? pSubcategory)
     {

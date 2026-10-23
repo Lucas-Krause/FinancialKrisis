@@ -6,7 +6,7 @@ using FinancialKrisis.Domain.Interfaces;
 
 namespace FinancialKrisis.Application.Services;
 
-public class UpdateCategoryService(ICategoryRepository pCategoryRepository) : UpdateEntityService<Category, ICategoryRepository, UpdateCategoryDTO>(pCategoryRepository)
+public class UpdateCategoryService(ICategoryRepository pCategoryRepository, IUnitOfWork pUnitOfWork) : UpdateEntityService<Category, ICategoryRepository, UpdateCategoryDTO>(pCategoryRepository, pUnitOfWork)
 {
     protected override async Task ApplyChangesToEntity(Category pCategory, UpdateCategoryDTO pUpdateDTO)
     {

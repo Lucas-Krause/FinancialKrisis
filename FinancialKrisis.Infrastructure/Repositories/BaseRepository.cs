@@ -9,16 +9,9 @@ public class BaseRepository<TEntity>(FinancialKrisisDbContext pContext) where TE
 {
     protected readonly DbSet<TEntity> _dbSet = pContext.Set<TEntity>();
 
-    public virtual async Task AddAsync(TEntity pEntity)
+    public virtual void Add(TEntity pEntity)
     {
         _dbSet.Add(pEntity);
-        await pContext.SaveChangesAsync();
-    }
-
-    public virtual async Task UpdateAsync(TEntity pEntity)
-    {
-        _dbSet.Update(pEntity);
-        await pContext.SaveChangesAsync();
     }
 
     public virtual async Task<TEntity?> GetByIdAsync(Guid pId)
@@ -36,13 +29,8 @@ public class BaseRepository<TEntity>(FinancialKrisisDbContext pContext) where TE
         return await _dbSet.AsNoTracking().ToListAsync();
     }
 
-    public virtual async Task DeleteAsync(Guid pId)
+    public virtual void Remove(TEntity pEntity)
     {
-        TEntity? entity = await GetByIdAsync(pId);
-        if (entity != null)
-        {
-            _dbSet.Remove(entity);
-            await pContext.SaveChangesAsync();
-        }
+        _dbSet.Remove(pEntity);
     }
 }

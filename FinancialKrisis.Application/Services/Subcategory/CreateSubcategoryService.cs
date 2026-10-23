@@ -7,8 +7,8 @@ using FinancialKrisis.Domain.Interfaces;
 
 namespace FinancialKrisis.Application.Services;
 
-public class CreateSubcategoryService(ISubcategoryRepository pSubcategoryRepository, ICategoryRepository pCategoryRepository)
-    : CreateEntityService<Subcategory, ISubcategoryRepository, CreateSubcategoryDTO>(pSubcategoryRepository)
+public class CreateSubcategoryService(ISubcategoryRepository pSubcategoryRepository, ICategoryRepository pCategoryRepository, IUnitOfWork pUnitOfWork)
+    : CreateEntityService<Subcategory, ISubcategoryRepository, CreateSubcategoryDTO>(pSubcategoryRepository, pUnitOfWork)
 {
     protected override async Task<Subcategory> CreateEntity(CreateSubcategoryDTO pCreateDTO)
     {

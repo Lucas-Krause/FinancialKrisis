@@ -3,6 +3,6 @@ using FinancialKrisis.Domain.Interfaces;
 
 namespace FinancialKrisis.Application.Services;
 
-public class DeactivatePayeeService(IPayeeRepository pPayeeRepository) : DeactivateEntityService<Payee, IPayeeRepository>(pPayeeRepository)
+public class DeactivatePayeeService(IPayeeRepository pPayeeRepository, IUnitOfWork pUnitOfWork) : DeactivateEntityService<Payee, IPayeeRepository>(pPayeeRepository, pUnitOfWork)
 {
 }

@@ -14,7 +14,8 @@ public abstract class UpdateFinancialMovementService<TMovement, TRepository, TUp
     IAccountRepository pAccountRepository,
     ICategoryRepository pCategoryRepository,
     ISubcategoryRepository pSubcategoryRepository,
-    IPayeeRepository pPayeeRepository) : UpdateEntityService<TMovement, TRepository, TUpdateDTO>(pMovementRepository)
+    IPayeeRepository pPayeeRepository,
+    IUnitOfWork pUnitOfWork) : UpdateEntityService<TMovement, TRepository, TUpdateDTO>(pMovementRepository, pUnitOfWork)
     where TMovement : FinancialMovement, IEntity
     where TUpdateDTO : UpdateFinancialMovementDTO
     where TRepository : IFinancialMovementRepository<TMovement>

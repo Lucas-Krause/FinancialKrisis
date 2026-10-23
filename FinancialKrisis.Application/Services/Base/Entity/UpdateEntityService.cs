@@ -4,7 +4,7 @@ using FinancialKrisis.Domain.Interfaces;
 
 namespace FinancialKrisis.Application.Services;
 
-public abstract class UpdateEntityService<TEntity, TEntityRepository, TUpdateEntityDTO>(TEntityRepository pEntityRepository)
+public abstract class UpdateEntityService<TEntity, TEntityRepository, TUpdateEntityDTO>(TEntityRepository pEntityRepository, IUnitOfWork pUnitOfWork)
     where TEntity : IEntity
     where TUpdateEntityDTO : IUpdateDTO
     where TEntityRepository : IGenericRepository<TEntity>
@@ -23,11 +23,12 @@ public abstract class UpdateEntityService<TEntity, TEntityRepository, TUpdateEnt
                 ActiveEntityValidator.EnsureIsActive(activatable);
 
             await ApplyChangesToEntity(entity, pUpdateDTO);
-            await EntityRepository.UpdateAsync(entity);
+            await pUnitOfWork.SaveChangesAsync();
             return entity;
         }
         catch (Exception pEx)
         {
+            pUnitOfWork.DiscardChanges();
             throw ErrorMessageResolver.Resolve(pEx);
         }
     }

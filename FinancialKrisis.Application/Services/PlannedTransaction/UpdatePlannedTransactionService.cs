@@ -9,13 +9,15 @@ public class UpdatePlannedTransactionService(
     IAccountRepository pAccountRepository,
     IPayeeRepository pPayeeRepository,
     ICategoryRepository pCategoryRepository,
-    ISubcategoryRepository pSubcategoryRepository)
+    ISubcategoryRepository pSubcategoryRepository,
+    IUnitOfWork pUnitOfWork)
     : UpdateFinancialMovementService<PlannedTransaction, IPlannedTransactionRepository, UpdatePlannedTransactionDTO>(
         pPlannedTransactionRepository,
         pAccountRepository,
         pCategoryRepository,
         pSubcategoryRepository,
-        pPayeeRepository)
+        pPayeeRepository,
+        pUnitOfWork)
 {
     protected override void ApplyChangesToMovement(PlannedTransaction pPlannedTransaction, UpdatePlannedTransactionDTO pUpdateDTO)
     {

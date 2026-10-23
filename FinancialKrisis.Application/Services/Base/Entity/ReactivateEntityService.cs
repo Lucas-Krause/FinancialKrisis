@@ -3,7 +3,7 @@ using FinancialKrisis.Domain.Interfaces;
 
 namespace FinancialKrisis.Application.Services;
 
-public abstract class ReactivateEntityService<TEntity, TEntityRepository>(TEntityRepository pEntityRepository)
+public abstract class ReactivateEntityService<TEntity, TEntityRepository>(TEntityRepository pEntityRepository, IUnitOfWork pUnitOfWork)
     where TEntity : IEntity, IActivatable
     where TEntityRepository : IGenericRepository<TEntity>
 {
@@ -19,10 +19,11 @@ public abstract class ReactivateEntityService<TEntity, TEntityRepository>(TEntit
             TEntity entity = await pEntityRepository.GetByIdOrThrowAsync(pEntityId);
             await ValidateReactivation(entity);
             entity.Reactivate();
-            await pEntityRepository.UpdateAsync(entity);
+            await pUnitOfWork.SaveChangesAsync();
         }
         catch (Exception pEx)
         {
+            pUnitOfWork.DiscardChanges();
             throw ErrorMessageResolver.Resolve(pEx);
         }
     }

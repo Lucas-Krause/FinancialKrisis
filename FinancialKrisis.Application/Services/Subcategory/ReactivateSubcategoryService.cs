@@ -4,7 +4,7 @@ using FinancialKrisis.Domain.Interfaces;
 
 namespace FinancialKrisis.Application.Services;
 
-public class ReactivateSubcategoryService(ISubcategoryRepository pSubcategoryRepository, ICategoryRepository pCategoryRepository) : ReactivateEntityService<Subcategory, ISubcategoryRepository>(pSubcategoryRepository)
+public class ReactivateSubcategoryService(ISubcategoryRepository pSubcategoryRepository, ICategoryRepository pCategoryRepository, IUnitOfWork pUnitOfWork) : ReactivateEntityService<Subcategory, ISubcategoryRepository>(pSubcategoryRepository, pUnitOfWork)
 {
     protected override async Task ValidateReactivation(Subcategory pSubcategory)
     {

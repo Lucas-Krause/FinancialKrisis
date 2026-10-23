@@ -23,6 +23,7 @@ public static class TestServiceProviderFactory
                 pOptions.UseSqlite(connection);
                 pOptions.AddInterceptors(new AuditSaveChangesInterceptor());
             })
+            .AddScoped<IUnitOfWork, UnitOfWork>()
             .AddScoped<IAccountRepository, AccountRepository>()
             .AddScoped<CreateAccountService>()
             .AddScoped<GetAllAccountsService>()

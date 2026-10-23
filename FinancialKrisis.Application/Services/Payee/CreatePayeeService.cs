@@ -6,7 +6,7 @@ using FinancialKrisis.Domain.Interfaces;
 
 namespace FinancialKrisis.Application.Services;
 
-public class CreatePayeeService(IPayeeRepository pPayeeRepository) : CreateEntityService<Payee, IPayeeRepository, CreatePayeeDTO>(pPayeeRepository)
+public class CreatePayeeService(IPayeeRepository pPayeeRepository, IUnitOfWork pUnitOfWork) : CreateEntityService<Payee, IPayeeRepository, CreatePayeeDTO>(pPayeeRepository, pUnitOfWork)
 {
     protected override async Task<Payee> CreateEntity(CreatePayeeDTO pCreateDTO)
     {

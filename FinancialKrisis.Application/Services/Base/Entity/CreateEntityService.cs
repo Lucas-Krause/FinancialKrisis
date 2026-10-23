@@ -3,7 +3,7 @@ using FinancialKrisis.Domain.Interfaces;
 
 namespace FinancialKrisis.Application.Services;
 
-public abstract class CreateEntityService<TEntity, TEntityRepository, TCreateEntityDTO>(TEntityRepository pEntityRepository)
+public abstract class CreateEntityService<TEntity, TEntityRepository, TCreateEntityDTO>(TEntityRepository pEntityRepository, IUnitOfWork pUnitOfWork)
     where TEntity : IEntity
     where TEntityRepository : IGenericRepository<TEntity>
 {
@@ -16,11 +16,13 @@ public abstract class CreateEntityService<TEntity, TEntityRepository, TCreateEnt
         try
         {
             TEntity entity = await CreateEntity(pCreateDTO);
-            await EntityRepository.AddAsync(entity);
+            EntityRepository.Add(entity);
+            await pUnitOfWork.SaveChangesAsync();
             return entity;
         }
         catch (Exception pEx)
         {
+            pUnitOfWork.DiscardChanges();
             throw ErrorMessageResolver.Resolve(pEx);
         }
     }

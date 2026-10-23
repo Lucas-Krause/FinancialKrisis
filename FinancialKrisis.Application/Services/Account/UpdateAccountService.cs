@@ -6,7 +6,7 @@ using FinancialKrisis.Domain.Interfaces;
 
 namespace FinancialKrisis.Application.Services;
 
-public class UpdateAccountService(IAccountRepository pAccountRepository) : UpdateEntityService<Account, IAccountRepository, UpdateAccountDTO>(pAccountRepository)
+public class UpdateAccountService(IAccountRepository pAccountRepository, IUnitOfWork pUnitOfWork) : UpdateEntityService<Account, IAccountRepository, UpdateAccountDTO>(pAccountRepository, pUnitOfWork)
 {
     protected override async Task ApplyChangesToEntity(Account pAccount, UpdateAccountDTO pUpdateDTO)
     {

@@ -3,18 +3,21 @@ using FinancialKrisis.Domain.Interfaces;
 
 namespace FinancialKrisis.Application.Services;
 
-public abstract class DeleteEntityService<TEntity, TEntityRepository>(TEntityRepository pEntityRepository)
+public abstract class DeleteEntityService<TEntity, TEntityRepository>(TEntityRepository pEntityRepository, IUnitOfWork pUnitOfWork)
     where TEntity : IEntity, IDeletable
-    where TEntityRepository : IDeletableRepository<TEntity>
+    where TEntityRepository : IGenericRepository<TEntity>, IDeletableRepository<TEntity>
 {
     public async Task ExecuteAsync(Guid pEntityId)
     {
         try
         {
-            await pEntityRepository.DeleteAsync(pEntityId);
+            TEntity entity = await pEntityRepository.GetByIdOrThrowAsync(pEntityId);
+            pEntityRepository.Remove(entity);
+            await pUnitOfWork.SaveChangesAsync();
         }
         catch (Exception pEx)
         {
+            pUnitOfWork.DiscardChanges();
             throw ErrorMessageResolver.Resolve(pEx);
         }
     }
