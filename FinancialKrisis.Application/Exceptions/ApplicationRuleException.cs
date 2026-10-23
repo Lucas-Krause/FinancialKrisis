@@ -12,7 +12,7 @@ public class ApplicationRuleException : RuleException<ApplicationRuleErrorCode>
     }
 
     public ApplicationRuleException(ApplicationRuleException pInnerApplicationRuleException, string pMessage)
-        : base(pInnerApplicationRuleException.ErrorCode, pInnerApplicationRuleException.Type, pInnerApplicationRuleException.Field, pInnerApplicationRuleException.OwnerType, pMessage)
+        : base(pInnerApplicationRuleException.ErrorCode, pInnerApplicationRuleException.Type, pInnerApplicationRuleException.Field, pInnerApplicationRuleException.OwnerType, pMessage, pInnerApplicationRuleException)
     {
     }
 }

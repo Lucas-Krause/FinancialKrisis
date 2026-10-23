@@ -12,7 +12,7 @@ public class DomainRuleException : RuleException<DomainRuleErrorCode>
     }
 
     public DomainRuleException(DomainRuleException pInnerDomainRuleException, string pMessage)
-        : base(pInnerDomainRuleException.ErrorCode, pInnerDomainRuleException.Type, pInnerDomainRuleException.Field, pInnerDomainRuleException.OwnerType, pMessage)
+        : base(pInnerDomainRuleException.ErrorCode, pInnerDomainRuleException.Type, pInnerDomainRuleException.Field, pInnerDomainRuleException.OwnerType, pMessage, pInnerDomainRuleException)
     {
     }
 }

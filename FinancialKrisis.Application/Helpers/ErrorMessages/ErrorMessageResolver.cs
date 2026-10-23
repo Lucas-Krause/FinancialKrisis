@@ -18,7 +18,7 @@ public static class ErrorMessageResolver
         {
             DomainRuleException domainException => new DomainRuleException(domainException, GetDomainExceptionMessage(domainException)),
             ApplicationRuleException applicationRuleException => new ApplicationRuleException(applicationRuleException, GetApplicationRuleExceptionMessage(applicationRuleException)),
-            _ => new Exception("Ocorreu um erro inesperado: " + pException.Message)
+            _ => new Exception("Ocorreu um erro inesperado: " + pException.Message, pException)
         };
     }
 

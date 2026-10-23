@@ -2,7 +2,7 @@
 
 namespace FinancialKrisis.Common.Exceptions;
 
-public abstract class RuleException<TErrorCode>(TErrorCode pErrorCode, Type pType, FieldKey? pField, Type? pOwnerType, string pMessage) : Exception(pMessage)
+public abstract class RuleException<TErrorCode>(TErrorCode pErrorCode, Type pType, FieldKey? pField, Type? pOwnerType, string pMessage, Exception? pInnerException = null) : Exception(pMessage, pInnerException)
     where TErrorCode : Enum
 {
     public TErrorCode ErrorCode { get; } = pErrorCode;
