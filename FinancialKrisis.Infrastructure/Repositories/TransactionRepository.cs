@@ -4,6 +4,4 @@ using FinancialKrisis.Infrastructure.Persistence;
 
 namespace FinancialKrisis.Infrastructure.Repositories;
 
-public class TransactionRepository(FinancialKrisisDbContext pContext) : BaseRepository<Transaction>(pContext), ITransactionRepository
-{
-}
+public class TransactionRepository(FinancialKrisisDbContext pContext) : FinancialMovementRepository<Transaction>(pContext), ITransactionRepository;
