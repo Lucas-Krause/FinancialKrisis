@@ -23,8 +23,8 @@ public class SubcategoryConfiguration : IEntityTypeConfiguration<Subcategory>
             .IsRequired();
 
         pBuilder
-            .HasOne<Category>()
-            .WithMany()
+            .HasOne(p => p.Category)
+            .WithMany(p => p.Subcategories)
             .HasForeignKey(p => p.CategoryId)
             .OnDelete(DeleteBehavior.Restrict);
 
