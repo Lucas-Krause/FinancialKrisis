@@ -5,6 +5,7 @@ public enum DomainRuleErrorCode
     RequiredField,
     NegativeValue,
     ValueMustBePositive,
+    MaxLengthExceeded,
     EntityNotFound,
     EntityAlreadyActive,
     EntityAlreadyInactive,

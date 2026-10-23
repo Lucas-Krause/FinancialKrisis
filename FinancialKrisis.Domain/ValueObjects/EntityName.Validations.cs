@@ -9,5 +9,8 @@ public sealed partial record EntityName
     {
         if (string.IsNullOrWhiteSpace(pValue))
             throw new DomainRuleException(DomainRuleErrorCode.RequiredField, pOwnerType, Fields.Name);
+
+        if (pValue.Trim().Length > MaxLength)
+            throw new DomainRuleException(DomainRuleErrorCode.MaxLengthExceeded, pOwnerType, Fields.Name);
     }
 }

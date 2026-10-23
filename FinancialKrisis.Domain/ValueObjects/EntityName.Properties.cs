@@ -4,6 +4,8 @@ namespace FinancialKrisis.Domain.ValueObjects;
 
 public sealed partial record EntityName
 {
+    public const int MaxLength = 150;
+
     public EntityName() { }
 
     public static class Fields

@@ -1,4 +1,5 @@
 using FinancialKrisis.Domain.Interfaces;
+using FinancialKrisis.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,7 +9,7 @@ public static class EntityNameConfigurationExtensions
 {
     extension<TEntity>(EntityTypeBuilder<TEntity> pBuilder) where TEntity : class, INamedEntity
     {
-        public void HasEntityName(int pMaxLength)
+        public void HasEntityName()
         {
             pBuilder.ComplexProperty(p => p.Name, pName =>
             {
@@ -16,13 +17,13 @@ public static class EntityNameConfigurationExtensions
                     .Property(p => p.Value)
                     .HasColumnName("Name")
                     .IsRequired()
-                    .HasMaxLength(pMaxLength);
+                    .HasMaxLength(EntityName.MaxLength);
 
                 pName
                     .Property(p => p.NormalizedValue)
                     .HasColumnName("NormalizedName")
                     .IsRequired()
-                    .HasMaxLength(pMaxLength);
+                    .HasMaxLength(EntityName.MaxLength);
             });
         }
     }

@@ -56,6 +56,9 @@ public static class ErrorMessageResolver
             DomainRuleErrorCode.ValueMustBePositive =>
                 $"{fieldArticle.ToUpper()} {fieldMetadata.NamePt.ToLower()} d{typeArticle} {typeMetadata.NamePt.ToLower()}{ownedText} deve ser maior que zero.",
 
+            DomainRuleErrorCode.MaxLengthExceeded =>
+                $"{fieldArticle.ToUpper()} {fieldMetadata.NamePt.ToLower()} d{typeArticle} {typeMetadata.NamePt.ToLower()}{ownedText} não pode ter mais de {EntityName.MaxLength} caracteres.",
+
             DomainRuleErrorCode.EntityNotFound =>
                 $"{typeArticle.ToUpper()} {typeMetadata.NamePt.ToLower()} não foi encontrad{typeArticle}.",
 

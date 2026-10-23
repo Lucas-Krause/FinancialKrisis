@@ -1,6 +1,7 @@
 ﻿using FinancialKrisis.Application.Enums;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Enums;
+using FinancialKrisis.Domain.ValueObjects;
 using FinancialKrisis.Tests.Scenarios;
 using FinancialKrisis.Tests.Scenarios.Assertions;
 
@@ -79,5 +80,25 @@ public class CreateAccountServiceTests
             .CreatingWith(CreateInput => CreateInput.InitialBalance = -100)
             .Create()
             .ShouldFailWithDomainRuleException(DomainRuleErrorCode.NegativeValue, typeof(Account), Account.Fields.InitialBalance);
+    }
+
+    [Fact]
+    public void NameExceedingMaxLength_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Account()
+            .CreatingWith(CreateInput => CreateInput.Name = new string('a', EntityName.MaxLength + 1))
+            .Create()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.MaxLengthExceeded, typeof(Account), Account.Fields.Name);
+    }
+
+    [Fact]
+    public void NameWithMaxLength_ShouldCreateSuccessfully()
+    {
+        new TestContext()
+            .Account()
+            .CreatingWith(CreateInput => CreateInput.Name = new string('a', EntityName.MaxLength))
+            .Create()
+            .ShouldCreateSuccessfully();
     }
 }

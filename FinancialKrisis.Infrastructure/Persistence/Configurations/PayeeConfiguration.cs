@@ -12,7 +12,7 @@ public class PayeeConfiguration : IEntityTypeConfiguration<Payee>
 
         pBuilder.HasKey(p => p.Id);
 
-        pBuilder.HasEntityName(150);
+        pBuilder.HasEntityName();
 
         pBuilder
             .Property(p => p.IsActive)

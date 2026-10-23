@@ -1,6 +1,7 @@
 using FinancialKrisis.Application.Enums;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Enums;
+using FinancialKrisis.Domain.ValueObjects;
 using FinancialKrisis.Tests.Scenarios;
 using FinancialKrisis.Tests.Scenarios.Assertions;
 
@@ -59,5 +60,25 @@ public class CreatePayeeServiceTests
             .CreatingWith(CreateInput => CreateInput.Name = string.Empty)
             .Create()
             .ShouldFailWithDomainRuleException(DomainRuleErrorCode.RequiredField, typeof(Payee), Payee.Fields.Name);
+    }
+
+    [Fact]
+    public void NameExceedingMaxLength_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Payee()
+            .CreatingWith(CreateInput => CreateInput.Name = new string('a', EntityName.MaxLength + 1))
+            .Create()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.MaxLengthExceeded, typeof(Payee), Payee.Fields.Name);
+    }
+
+    [Fact]
+    public void NameWithMaxLength_ShouldCreateSuccessfully()
+    {
+        new TestContext()
+            .Payee()
+            .CreatingWith(CreateInput => CreateInput.Name = new string('a', EntityName.MaxLength))
+            .Create()
+            .ShouldCreateSuccessfully();
     }
 }

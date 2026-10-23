@@ -2,6 +2,7 @@ using FinancialKrisis.Application.DTOs;
 using FinancialKrisis.Application.Enums;
 using FinancialKrisis.Domain.Entities;
 using FinancialKrisis.Domain.Enums;
+using FinancialKrisis.Domain.ValueObjects;
 using FinancialKrisis.Tests.Scenarios;
 using FinancialKrisis.Tests.Scenarios.Assertions;
 
@@ -77,5 +78,17 @@ public class UpdatePayeeServiceTests
             .Payee()
             .Update()
             .ShouldFailWithDomainRuleException(DomainRuleErrorCode.EntityNotFound, typeof(Payee));
+    }
+
+    [Fact]
+    public void NameExceedingMaxLength_ShouldFailWithDomainRuleException()
+    {
+        new TestContext()
+            .Payee()
+            .Create()
+            .AsCurrentPayee()
+            .UpdatingWith(UpdateInput => UpdateInput.Name = new string('a', EntityName.MaxLength + 1))
+            .Update()
+            .ShouldFailWithDomainRuleException(DomainRuleErrorCode.MaxLengthExceeded, typeof(Payee), Payee.Fields.Name);
     }
 }

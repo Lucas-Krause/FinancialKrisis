@@ -12,7 +12,7 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
 
         pBuilder.HasKey(p => p.Id);
 
-        pBuilder.HasEntityName(100);
+        pBuilder.HasEntityName();
 
         pBuilder
             .Property(p => p.InitialBalance)

@@ -12,7 +12,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 
         pBuilder.HasKey(p => p.Id);
 
-        pBuilder.HasEntityName(200);
+        pBuilder.HasEntityName();
 
         pBuilder
             .Property(p => p.IsActive)

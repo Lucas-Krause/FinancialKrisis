@@ -12,7 +12,7 @@ public class SubcategoryConfiguration : IEntityTypeConfiguration<Subcategory>
 
         pBuilder.HasKey(p => p.Id);
 
-        pBuilder.HasEntityName(100);
+        pBuilder.HasEntityName();
 
         pBuilder
             .Property(p => p.IsActive)
